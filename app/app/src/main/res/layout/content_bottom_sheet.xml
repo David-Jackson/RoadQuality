@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bottom_sheet_height"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical"
+    android:elevation="@dimen/bottom_sheet_elevation"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/bottom_sheet_starting_peek_height"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <TextView
+        android:id="@+id/bottom_sheet_title"
+        android:onClick="toggleBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_sheet_title_height"
+        android:background="@android:color/white"
+        android:gravity="left|center"
+        android:text="Recent Trips"
+        android:textSize="@dimen/bottom_sheet_title_text_size"
+        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
+        android:paddingRight="@dimen/bottom_sheet_margin_left_right"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="Content"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

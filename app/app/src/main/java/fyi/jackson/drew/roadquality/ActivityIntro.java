@@ -101,9 +101,8 @@ public class ActivityIntro extends AppCompatActivity {
     }
 
     private void launchMainActivity() {
-//        TODO: 12/12/2017 implement Main activity
-//        startActivity(new Intent(ActivityIntro.this, MainActivity.class));
-//        finish();
+        startActivity(new Intent(ActivityIntro.this, ActivityMain.class));
+        finish();
     }
 
     // TODO: 12/12/2017 Do not allow ViewPager to scroll past permission screen until permissions are accepted
