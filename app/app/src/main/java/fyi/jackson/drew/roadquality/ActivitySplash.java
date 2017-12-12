@@ -21,23 +21,26 @@ public class ActivitySplash extends AppCompatActivity {
         int timesOpened = settings.getInt(PREFS_TIMES_OPENED, 0);
         Log.d(TAG, "onCreate: This app has been opened " + timesOpened + " time(s) before");
         
-        Intent intent;
+        Intent intent = null;
         
         if (timesOpened == 0) {
             Log.d(TAG, "onCreate: First time opened, starting Intro Activity");
-            // intent = new Intent(this, ActivityIntro.class);
+            intent = new Intent(this, ActivityIntro.class);
         } else {
             Log.d(TAG, "onCreate: Not the first time opened, starting Main Activity");
+            // TODO: 12/12/2017 implement Main activity
             // intent = new Intent(this, ActivityMain.class);
         }
         
-        timesOpened++;
+        timesOpened = 0;
         settings.edit()
                 .putInt(PREFS_TIMES_OPENED, timesOpened)
                 .apply();
-        
-//        startActivity(intent);
-//        finish();
+
+        if (intent != null) {
+            startActivity(intent);
+            finish();
+        }
 
     }
 }
