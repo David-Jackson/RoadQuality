@@ -23,6 +23,11 @@
         </activity>
         <activity android:name=".ActivityIntro" />
         <activity android:name=".ActivityMain"></activity>
+
+
+        <service android:name=".service.ForegroundService" />
+        <service android:name=".service.DatabaseService" />
+
     </application>
 
 </manifest>
