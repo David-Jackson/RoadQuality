@@ -24,6 +24,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
+import fyi.jackson.drew.roadquality.service.ForegroundConstants;
+import fyi.jackson.drew.roadquality.service.ForegroundService;
+import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 
 
 public class ActivityMain extends AppCompatActivity implements OnMapReadyCallback {
@@ -37,19 +40,34 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
     AnimationManager animationManager;
 
+    private BroadcastManager broadcastManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setupMap(savedInstanceState);
+        setupFab();
+        setupBottomSheet();
+        setupAnimations();
 
-        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
+        broadcastManager = new BroadcastManager(this);
+    }
+
+    //
+    // SETUP FUNCTIONS
+    //
+
+    void setupMap(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
+        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+    }
 
-
+    void setupFab() {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -59,24 +77,9 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
-
-        initBottomSheet();
-
-        animationManager = new AnimationManager(this);
-        animationManager.setFab(fab);
-        animationManager.setMap(mapView);
-        animationManager.setBottomSheet(bottomSheetLayout);
-        animationManager.setBottomSheetBehavior(bottomSheetBehavior);
-
-
     }
 
-    public void fabClicked(View view) {
-        Snackbar.make(view, "Fab Clicked.", Snackbar.LENGTH_SHORT).show();
-    }
-
-
-    void initBottomSheet() {
+    void setupBottomSheet() {
         // get the bottom sheet view
         View view = findViewById(R.id.bottom_sheet_title);
         bottomSheetLayout = (LinearLayout) view.getParent();
@@ -102,6 +105,31 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
                 animationManager.update(slideOffset);
             }
         });
+    }
+
+    void setupAnimations() {
+        animationManager = new AnimationManager(this);
+        animationManager.setFab(fab);
+        animationManager.setMap(mapView);
+        animationManager.setBottomSheet(bottomSheetLayout);
+        animationManager.setBottomSheetBehavior(bottomSheetBehavior);
+    }
+
+    //
+    // END OF SETUP FUNCTIONS
+    //
+
+    public void fabClicked(View view) {
+        Snackbar.make(view, "Fab Clicked.", Snackbar.LENGTH_SHORT).show();
+        Intent service = new Intent(ActivityMain.this, ForegroundService.class);
+        if (!ForegroundService.IS_SERVICE_RUNNING) {
+            service.setAction(ForegroundConstants.ACTION.STARTFOREGROUND_ACTION);
+            ForegroundService.IS_SERVICE_RUNNING = true;
+        } else {
+            service.setAction(ForegroundConstants.ACTION.STOPFOREGROUND_ACTION);
+            ForegroundService.IS_SERVICE_RUNNING = false;
+        }
+        startService(service);
     }
 
     void toggleBottomSheet(View view) {
@@ -149,6 +177,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     public void onPause() {
         super.onPause();
         mapView.onPause();
+        broadcastManager.onPause();
     }
 
     @Override
