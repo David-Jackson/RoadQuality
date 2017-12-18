@@ -9,10 +9,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ViewTreeObserver;
+import android.view.View;
 import android.widget.LinearLayout;
 
-import com.mapbox.mapboxsdk.maps.MapView;
 
 import fyi.jackson.drew.roadquality.R;
 import fyi.jackson.drew.roadquality.animation.listeners.FabPositionListener;
@@ -75,24 +74,19 @@ public class AnimationManager {
     }
 
 
-    public void setMap(MapView view) {
+    public void setMap(View view) {
         mapPositionListener.setMapView(view);
 
-        ViewTreeObserver viewTreeObserver = view.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onGlobalLayout() {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        timerExpired = true;
-                        Log.d(TAG, "run: Timer Expired, " + timerExpired);
-                        animateIn();
-                    }
-                }, 300);
+            public void run() {
+                timerExpired = true;
+                Log.d(TAG, "run: Timer Expired, " + timerExpired);
+                animateIn();
             }
-        });
+        }, 300);
     }
 
     public void setBottomSheet(LinearLayout bottomSheet) {

@@ -32,7 +32,5 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile "android.arch.lifecycle:runtime:1.0.3"
 
-    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.2.0@aar') {
-        transitive = true
-    }
+    implementation 'com.google.android.gms:play-services-maps:11.6.0'
 }

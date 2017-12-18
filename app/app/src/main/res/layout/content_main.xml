@@ -17,19 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.mapbox.mapboxsdk.maps.MapView
-            android:id="@+id/mapView"
+        <include layout="@layout/fragment_google_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bottomView"
-            mapbox:mapbox_cameraTargetLat="42.4801636"
-            mapbox:mapbox_cameraTargetLng="-83.2684713"
-            mapbox:mapbox_cameraZoom="13"
-            mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10" />
+            app:layout_constraintTop_toBottomOf="@+id/bottomView" />
 
+        <!-- Bottom view is just so that the map has something to be constrained under -->
         <TextView
             android:id="@+id/bottomView"
             android:layout_width="wrap_content"

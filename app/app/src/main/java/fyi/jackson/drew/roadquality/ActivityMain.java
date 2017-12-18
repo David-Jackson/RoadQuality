@@ -16,12 +16,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapView;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
@@ -32,7 +31,9 @@ import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 public class ActivityMain extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final String TAG = "ActivityMain";
-    private MapView mapView;
+
+    private GoogleMap googleMap;
+    private View mapView;
     LinearLayout bottomSheetLayout;
 
     private BottomSheetBehavior bottomSheetBehavior;
@@ -46,8 +47,9 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        setupMap(savedInstanceState);
+        setupMap();
         setupFab();
         setupBottomSheet();
         setupAnimations();
@@ -59,12 +61,11 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     // SETUP FUNCTIONS
     //
 
-    void setupMap(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
-        Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
-        mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+    void setupMap() {
+        mapView = findViewById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     void setupFab() {
@@ -141,7 +142,8 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
 
         // show the last known location
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
@@ -156,51 +158,16 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
         if (latLng == null) {
             latLng = new LatLng(42.3314, -83.0458);
         }
-        mapboxMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+
+        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
 
         animationManager.onMapReady();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
-        mapView.onPause();
         broadcastManager.onPause();
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mapView.onSaveInstanceState(outState);
-    }
 }

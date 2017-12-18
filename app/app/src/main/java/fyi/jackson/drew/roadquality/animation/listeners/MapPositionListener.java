@@ -1,20 +1,20 @@
 package fyi.jackson.drew.roadquality.animation.listeners;
 
-import com.mapbox.mapboxsdk.maps.MapView;
+import android.view.View;
 
 import fyi.jackson.drew.roadquality.utils.helpers;
 
 public class MapPositionListener {
 
-    MapView mapView;
+    View mapView;
 
     float startY = 0, endY = -200, curY;
 
-    public MapPositionListener(MapView mapView) {
+    public MapPositionListener(View mapView) {
         this.mapView = mapView;
     }
 
-    public MapPositionListener(MapView mapView, float startY, float endY) {
+    public MapPositionListener(View mapView, float startY, float endY) {
         this.mapView = mapView;
         this.startY = startY;
         this.endY = endY;
@@ -26,11 +26,11 @@ public class MapPositionListener {
         mapView.setY(curY);
     }
 
-    public MapView getMapView() {
+    public View getMapView() {
         return mapView;
     }
 
-    public void setMapView(MapView mapView) {
+    public void setMapView(View mapView) {
         this.mapView = mapView;
     }
 
