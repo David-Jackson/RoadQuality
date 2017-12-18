@@ -28,7 +28,6 @@ public class BroadcastManager {
                 int deletedAccelRows = intent.getIntExtra(ServiceConstants.LONG_TERM_DATA_SERVICE_DELETED_ACCELEROMETER_ENTRIES_COUNT, -998);
                 int deletedGpsRows = intent.getIntExtra(ServiceConstants.LONG_TERM_DATA_SERVICE_DELETED_GPS_ENTRIES_COUNT, -987);
                 Toast.makeText(context, "Data Received: total = " + totalRows + " | delA = " + deletedAccelRows + " | delG =" + deletedGpsRows, Toast.LENGTH_LONG).show();
-//                button.setText("Data Received: total = " + totalRows + " | delA= " + deletedAccelRows + " | delG =" + deletedGpsRows);
             }
         };
 

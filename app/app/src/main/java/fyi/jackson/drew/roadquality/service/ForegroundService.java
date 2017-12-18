@@ -19,7 +19,6 @@ import fyi.jackson.drew.roadquality.R;
 import fyi.jackson.drew.roadquality.data.AsynchronousDatabase;
 import fyi.jackson.drew.roadquality.sensors.AccelerometerSensor;
 import fyi.jackson.drew.roadquality.sensors.LocationSensor;
-import fyi.jackson.drew.roadquality.service.DatabaseService;
 import fyi.jackson.drew.roadquality.utils.Vector3D;
 
 public class ForegroundService extends Service {
