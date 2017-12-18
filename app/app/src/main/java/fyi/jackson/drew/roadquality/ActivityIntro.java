@@ -3,6 +3,7 @@ package fyi.jackson.drew.roadquality;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -205,6 +206,12 @@ public class ActivityIntro extends AppCompatActivity {
     }
 
     private void permissionGranted() {
+        SharedPreferences settings = getSharedPreferences(
+                getString(R.string.PREFS_NAME), 0);
+        settings.edit()
+                .putBoolean(getString(R.string.PREFS_PERMISSION_GRANTED), true)
+                .apply();
+
         btnNext.setEnabled(true);
         btnNext.performClick();
     }

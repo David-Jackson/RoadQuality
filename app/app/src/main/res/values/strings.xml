@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Road Quality</string>
+
+    <!-- SharedPreferences Strings -->
+    <string name="PREFS_NAME" translatable="false">RoadQualityPrefsFile</string>
+    <string name="PREFS_TIMES_OPENED" translatable="false">NumberOfTimesOpened</string>
+    <string name="PREFS_PERMISSION_GRANTED" translatable="false">PermissionsGranted</string>
 </resources>
