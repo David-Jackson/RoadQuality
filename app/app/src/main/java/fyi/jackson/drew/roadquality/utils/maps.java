@@ -52,7 +52,7 @@ public class maps {
 
             ArrayList<RoadPoint> roadPointList = new ArrayList<RoadPoint>();
 
-            if (gpsList.size() == 0) return roadPointList;
+            if (gpsList.size() == 0 || accelerometerList.size() == 0) return roadPointList;
 
             int gpsIndex = 0;
             int accelIndex = 0;
