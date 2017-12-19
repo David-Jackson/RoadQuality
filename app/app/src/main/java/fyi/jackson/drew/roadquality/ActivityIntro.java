@@ -185,6 +185,8 @@ public class ActivityIntro extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+        } else {
+            permissionGranted();
         }
     }
 
