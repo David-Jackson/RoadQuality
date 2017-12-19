@@ -43,6 +43,8 @@ public abstract class AccelerometerSensor implements SensorEventListener {
     public void start() {
         sensorManager.registerListener(this, this.accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, this.gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        this.sensorNeedsToSettle = true;
+        this.timeWhenSensorIsSettled = System.currentTimeMillis() + TEN_SENCONDS_IN_MILLIS;
     }
 
     public void stop() {
@@ -80,13 +82,6 @@ public abstract class AccelerometerSensor implements SensorEventListener {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
-
-            if (x == 0 && y == 0 && z == 0) {
-                Log.d(TAG, "onSensorChanged: GRAVITY IS ZERO");
-                sensorNeedsToSettle = true;
-                timeWhenSensorIsSettled = System.currentTimeMillis() + TEN_SENCONDS_IN_MILLIS;
-                Log.d(TAG, "onSensorChanged: sensorNeedsToSettle = " + sensorNeedsToSettle + " | timeWhenSensorIsSettled = " + timeWhenSensorIsSettled);
-            }
 
             setGravity(x, y, z);
         }
