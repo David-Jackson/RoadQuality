@@ -31,8 +31,8 @@ public class ActivityTest extends AppCompatActivity {
         reveal = findViewById(R.id.fab_reveal);
         fab = findViewById(R.id.fab);
         revealImageView = findViewById(R.id.fab_reveal_image);
-        playToStopAvd = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.avd_play_to_pause);
-        stopToPlayAvd = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.avd_pause_to_play);
+        playToStopAvd = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.avd_play_to_pause_96dp);
+        stopToPlayAvd = (AnimatedVectorDrawable) getResources().getDrawable(R.drawable.avd_pause_to_play_96dp);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fab.setElevation(0);
@@ -76,7 +76,6 @@ public class ActivityTest extends AppCompatActivity {
                 });
                 revealImageView.setImageDrawable(stopToPlayAvd);
                 stopToPlayAvd.start();
-                revealImageView.animate().scaleX(1).scaleY(1).start();
             } else { // FAB Clicked
                 Log.d(TAG, "revealViewClicked: fab clicked");
                 Log.d(TAG, "revealViewClicked: fab elevation:" + fab.getElevation());
@@ -91,7 +90,6 @@ public class ActivityTest extends AppCompatActivity {
                 fab.setVisibility(View.INVISIBLE);
                 revealImageView.setImageDrawable(playToStopAvd);
                 playToStopAvd.start();
-                revealImageView.animate().scaleX(4).scaleY(4).start();
             }
 
             circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
