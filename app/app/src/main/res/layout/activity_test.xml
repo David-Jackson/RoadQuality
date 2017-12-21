@@ -24,9 +24,9 @@
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/fab_reveal_image"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_play_arrow"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/avd_play_to_pause_96dp"
             android:layout_centerInParent="true"/>
     </RelativeLayout>
 
