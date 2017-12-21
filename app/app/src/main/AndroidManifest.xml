@@ -22,8 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActivityIntro" />
-        <activity android:name=".ActivityMain"></activity>
-
+        <activity android:name=".ActivityMain" />
 
         <service android:name=".service.ForegroundService" />
         <service android:name=".service.DatabaseService" />
@@ -33,8 +32,9 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
 
+        <activity android:name=".ActivityTest"></activity>
     </application>
 
 </manifest>
