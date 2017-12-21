@@ -31,12 +31,24 @@ public class BroadcastManager {
             }
         };
 
+        register();
+    }
+
+    public void register() {
         IntentFilter longTermDataFilter = new IntentFilter(ServiceConstants.PROCESS_LONG_TERM_STORAGE);
         longTermDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        context.registerReceiver(longTermDataReceiver, longTermDataFilter);
+        this.context.registerReceiver(longTermDataReceiver, longTermDataFilter);
+    }
+
+    public void unregister() {
+        this.context.unregisterReceiver(longTermDataReceiver);
+    }
+
+    public void onResume() {
+        register();
     }
 
     public void onPause() {
-        context.unregisterReceiver(longTermDataReceiver);
+        unregister();
     }
 }

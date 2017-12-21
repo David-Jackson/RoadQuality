@@ -165,9 +165,15 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onResume() {
+        broadcastManager.onResume();
+        super.onResume();
+    }
+
+    @Override
     public void onPause() {
-        super.onPause();
         broadcastManager.onPause();
+        super.onPause();
     }
 
 }
