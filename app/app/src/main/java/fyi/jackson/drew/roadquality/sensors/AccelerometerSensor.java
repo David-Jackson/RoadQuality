@@ -24,7 +24,7 @@ public abstract class AccelerometerSensor implements SensorEventListener {
 
     private Vector3D acceleration, gravity, jolt, MOTION_TRIGGER;
     private static final float DEFAULT_MOTION_TRIGGER_LIMIT = 2;
-
+    private static final float PROJECTION_SCALING_FACTOR_TRIGGER = 0.2f;
 
     public AccelerometerSensor(Context context) {
         this.acceleration = new Vector3D();
@@ -52,7 +52,8 @@ public abstract class AccelerometerSensor implements SensorEventListener {
     }
 
     public boolean significantMotionDetected() {
-        return this.jolt.greaterThanAny(this.MOTION_TRIGGER) && this.sensorSettled();
+        return Math.abs(acceleration.project(gravity) - 1) > PROJECTION_SCALING_FACTOR_TRIGGER &&
+                this.sensorSettled();
     }
 
     public boolean sensorSettled() {
