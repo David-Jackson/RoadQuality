@@ -73,7 +73,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent mainActivityIntent = new Intent(getApplicationContext(), ActivityMain.class);
+                Intent mainActivityIntent = new Intent(getApplicationContext(), ActivityTest.class);
                 startActivity(mainActivityIntent);
                 return true;
             }
