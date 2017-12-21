@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fyi.jackson.drew.roadquality.SplashActivity">
+    tools:context="fyi.jackson.drew.roadquality.ActivitySplash">
 
 </android.support.constraint.ConstraintLayout>
