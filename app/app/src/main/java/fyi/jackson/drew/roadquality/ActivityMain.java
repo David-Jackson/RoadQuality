@@ -91,7 +91,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
                 R.drawable.avd_pause_to_play_96dp) {
             @Override
             public void onFabClick() {
-                //fabClicked(null);
+                fabClicked(null);
             }
         };
 
