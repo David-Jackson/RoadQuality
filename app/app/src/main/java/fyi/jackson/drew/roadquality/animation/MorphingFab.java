@@ -92,10 +92,10 @@ public abstract class MorphingFab {
 
     void setImageInitialPosition() {
         sharedElement.setX(
-                viewBefore.getX() - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2)
+                viewBefore.getX() - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2) - viewAfter.getX()
         );
         sharedElement.setY(
-                viewBefore.getY() - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2)
+                viewBefore.getY() - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2) - viewAfter.getY()
         );
     }
 
@@ -104,8 +104,8 @@ public abstract class MorphingFab {
             setImageInitialPosition();
             Animator circularReveal = ViewAnimationUtils.createCircularReveal(
                     viewAfter,
-                    (int) viewBefore.getX() + (viewBefore.getWidth() / 2),
-                    (int) viewBefore.getY() + (viewBefore.getHeight() / 2),
+                    (int) (viewBefore.getX() + (viewBefore.getWidth() / 2) - viewAfter.getX()),
+                    (int) (viewBefore.getY() + (viewBefore.getHeight() / 2) - viewAfter.getY()),
                     viewBefore.getWidth() / 2,
                     (float) Math.hypot(viewAfter.getWidth(), viewAfter.getHeight())
             );
@@ -127,8 +127,8 @@ public abstract class MorphingFab {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Animator circularReveal = ViewAnimationUtils.createCircularReveal(
                     viewAfter,
-                    (int) viewBefore.getX() + (viewBefore.getWidth() / 2),
-                    (int) viewBefore.getY() + (viewBefore.getHeight() / 2),
+                    (int) (viewBefore.getX() + (viewBefore.getWidth() / 2) - viewAfter.getX()),
+                    (int) (viewBefore.getY() + (viewBefore.getHeight() / 2) - viewAfter.getY()),
                     (float) Math.hypot(viewAfter.getWidth(), viewAfter.getHeight()),
                     viewBefore.getWidth() / 2
             );
@@ -157,8 +157,8 @@ public abstract class MorphingFab {
             sharedElement.setImageDrawable(avdOut);
             avdOut.start();
             sharedElement.animate()
-                    .x((viewBefore.getX()) - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2))
-                    .y((viewBefore.getY()) - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2))
+                    .x((viewBefore.getX()) - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2) - viewAfter.getX())
+                    .y((viewBefore.getY()) - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2) - viewAfter.getY())
                     .start();
 
             circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
