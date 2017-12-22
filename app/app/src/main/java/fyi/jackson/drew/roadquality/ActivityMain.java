@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
+import fyi.jackson.drew.roadquality.animation.MorphingFab;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
@@ -43,6 +44,8 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
     private BroadcastManager broadcastManager;
 
+    MorphingFab morphingFab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
         setupAnimations();
 
         broadcastManager = new BroadcastManager(this);
+
     }
 
     //
@@ -78,6 +82,19 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
+
+        morphingFab = new MorphingFab(this,
+                fab,
+                findViewById(R.id.fab_reveal),
+                R.id.fab_reveal_image,
+                R.drawable.avd_play_to_pause_96dp,
+                R.drawable.avd_pause_to_play_96dp) {
+            @Override
+            public void onFabClick() {
+                //fabClicked(null);
+            }
+        };
+
     }
 
     void setupBottomSheet() {
@@ -121,7 +138,6 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     //
 
     public void fabClicked(View view) {
-        Snackbar.make(view, "Fab Clicked.", Snackbar.LENGTH_SHORT).show();
         Intent service = new Intent(ActivityMain.this, ForegroundService.class);
         if (!ForegroundService.IS_SERVICE_RUNNING) {
             service.setAction(ForegroundConstants.ACTION.STARTFOREGROUND_ACTION);

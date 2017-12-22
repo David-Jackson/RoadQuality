@@ -1,0 +1,169 @@
+package fyi.jackson.drew.roadquality.animation;
+
+
+import android.animation.Animator;
+import android.app.Application;
+import android.content.Context;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.media.Image;
+import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+public abstract class MorphingFab {
+
+    Context context;
+
+    View viewAfter; // thing fab morphs into
+    View viewBefore; // fab
+
+    AnimatedVectorDrawable avdIn, avdOut;
+
+    ImageView sharedElement;
+
+    boolean state = true; // before (false = after)
+
+    public MorphingFab(Context context) {
+        this.context = context;
+    }
+
+    public MorphingFab(Context context,
+                       FloatingActionButton fab,
+                       View viewAfter,
+                       int sharedElementId,
+                       int avdInId,
+                       int avdOutId) {
+        this.context = context;
+        this.setFab(fab);
+        this.setViewAfter(viewAfter);
+        this.setSharedElement(sharedElementId);
+        this.setAvd(avdInId, avdOutId);
+    }
+
+    public abstract void onFabClick();
+
+    public void setFab(FloatingActionButton fab) {
+        this.viewBefore = fab;
+        this.viewBefore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MorphingFab.this.open();
+                MorphingFab.this.onFabClick();
+            }
+        });
+    }
+
+    public void setViewAfter(View view) {
+        this.viewAfter = view;
+        this.viewAfter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MorphingFab.this.close();
+                MorphingFab.this.onFabClick();
+            }
+        });
+    }
+
+    public void setSharedElement(int id) {
+        if (this.viewAfter == null) {
+            throw new Error("viewAfter not yet defined");
+        }
+        ImageView imageView = (ImageView) this.viewAfter.findViewById(id);
+        this.sharedElement = imageView;
+    }
+
+    public void setAvd(int inId, int outId) {
+        AnimatedVectorDrawable in = (AnimatedVectorDrawable)
+                context.getResources().getDrawable(inId);
+        AnimatedVectorDrawable out = (AnimatedVectorDrawable)
+                context.getResources().getDrawable(outId);
+        this.avdIn = in;
+        this.avdOut = out;
+    }
+
+    public void setAvd(int avdId) {
+        this.setAvd(avdId, avdId);
+    }
+
+
+    void setImageInitialPosition() {
+        sharedElement.setX(
+                viewBefore.getX() - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2)
+        );
+        sharedElement.setY(
+                viewBefore.getY() - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2)
+        );
+    }
+
+    public void open() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            setImageInitialPosition();
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(
+                    viewAfter,
+                    (int) viewBefore.getX() + (viewBefore.getWidth() / 2),
+                    (int) viewBefore.getY() + (viewBefore.getHeight() / 2),
+                    viewBefore.getWidth() / 2,
+                    (float) Math.hypot(viewAfter.getWidth(), viewAfter.getHeight())
+            );
+            viewAfter.setVisibility(View.VISIBLE);
+            viewBefore.setVisibility(View.INVISIBLE);
+            sharedElement.setImageDrawable(avdIn);
+            avdIn.start();
+            sharedElement.animate()
+                    .x(((viewAfter.getWidth() - sharedElement.getWidth()) / 2))
+                    .y(((viewAfter.getHeight() - sharedElement.getHeight()) / 2))
+                    .start();
+
+            circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
+            circularReveal.start();
+        }
+    }
+
+    public void close() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(
+                    viewAfter,
+                    (int) viewBefore.getX() + (viewBefore.getWidth() / 2),
+                    (int) viewBefore.getY() + (viewBefore.getHeight() / 2),
+                    (float) Math.hypot(viewAfter.getWidth(), viewAfter.getHeight()),
+                    viewBefore.getWidth() / 2
+            );
+            circularReveal.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+                    viewAfter.setVisibility(View.GONE);
+                    viewBefore.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            });
+            sharedElement.setImageDrawable(avdOut);
+            avdOut.start();
+            sharedElement.animate()
+                    .x((viewBefore.getX()) - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2))
+                    .y((viewBefore.getY()) - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2))
+                    .start();
+
+            circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
+            circularReveal.start();
+        }
+    }
+
+}

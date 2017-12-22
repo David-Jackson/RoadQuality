@@ -9,9 +9,11 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
+        android:layout_margin="16dp"
         android:src="@drawable/ic_play_arrow"
         android:onClick="revealViewClicked"/>
 
@@ -26,8 +28,7 @@
             android:id="@+id/fab_reveal_image"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:src="@drawable/avd_play_to_pause_96dp"
-            android:layout_centerInParent="true"/>
+            android:src="@drawable/avd_play_to_pause_96dp"/>
     </RelativeLayout>
 
     <!--<View-->

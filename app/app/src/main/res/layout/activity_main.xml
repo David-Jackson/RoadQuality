@@ -17,4 +17,17 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_play_arrow"  />
 
+    <RelativeLayout
+        android:id="@+id/fab_reveal"
+        android:background="@color/colorAccent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+        <ImageView
+            android:id="@+id/fab_reveal_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/avd_play_to_pause_96dp"/>
+    </RelativeLayout>
+
 </android.support.design.widget.CoordinatorLayout>
