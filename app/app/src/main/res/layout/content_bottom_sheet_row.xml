@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="96dp"
+    android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
+    android:paddingStart="@dimen/bottom_sheet_margin_left_right">
+
+    <View
+        android:id="@+id/view_trip_line_top"
+        android:layout_width="16dp"
+        android:layout_height="48dp"
+        android:background="@color/colorBlue"
+        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
+        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <View
+        android:id="@+id/view_trip_line_bottom"
+        android:layout_width="16dp"
+        android:layout_height="48dp"
+        android:background="@color/colorBlue"
+        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
+        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <View
+        android:id="@+id/view_trip_line_circle"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@drawable/background_trip_line_circle"
+        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
+        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tv_row_title"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
+        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/view_trip_line_circle"
+        android:text="TEST"/>
+
+</RelativeLayout>

@@ -4,7 +4,7 @@
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="@dimen/bottom_sheet_height"
-    android:background="@android:color/darker_gray"
+    android:background="@android:color/white"
     android:orientation="vertical"
     android:elevation="@dimen/bottom_sheet_elevation"
     app:behavior_hideable="false"
@@ -16,18 +16,31 @@
         android:onClick="toggleBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_sheet_title_height"
-        android:background="@android:color/white"
         android:gravity="left|center"
         android:text="Recent Trips"
         android:textSize="@dimen/bottom_sheet_title_text_size"
         android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
         android:paddingRight="@dimen/bottom_sheet_margin_left_right"/>
 
-    <TextView
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Content"
-        android:textColor="@android:color/white" />
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:visibility="invisible"
+            android:id="@+id/progress_bar_bottom_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_bottom_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </RelativeLayout>
 
 </LinearLayout>
