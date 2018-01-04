@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
+import fyi.jackson.drew.roadquality.data.entities.Trip;
 import fyi.jackson.drew.roadquality.utils.maps;
 
 
@@ -43,6 +48,10 @@ public class DatabaseService extends IntentService {
             case ServiceConstants.PROCESS_GET_ALL_TRIP_IDS:
                 Log.d(TAG, "onHandleIntent: Process: Get all Trip Ids");
                 getAllTripIds(intent);
+                break;
+            case ServiceConstants.PROCESS_GET_ALL_TRIPS:
+                Log.d(TAG, "onHandleIntent: Process: Get all Trips");
+                getAllTrips(intent);
                 break;
             case ServiceConstants.PROCESS_GET_ALL_POINTS_FROM_TRIP:
                 Log.d(TAG, "onHandleIntent: Process: Get all Points from Trip");
@@ -103,6 +112,27 @@ public class DatabaseService extends IntentService {
 
         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_TRIP_IDS);
         broadcastIntent.putExtra(ServiceConstants.TRIP_IDS_COUNT, tripIdsCount);
+        sendBroadcast(broadcastIntent);
+
+        db.close();
+    }
+
+    private void getAllTrips(Intent intent) {
+        AppDatabase db = Room.databaseBuilder(this,
+                AppDatabase.class, AppDatabase.DATABASE_NAME)
+                .fallbackToDestructiveMigration().build();
+
+        List<Trip> trips = db.roadPointDao().getAllTrips();
+
+        String tripsJsonExtra = "[";
+        for (int i = 0; i < trips.size(); i++) {
+                tripsJsonExtra += trips.get(i).toJSONString();
+                if (i < trips.size() - 1) tripsJsonExtra += ",";
+        }
+        tripsJsonExtra += "]";
+
+        Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_TRIPS);
+        broadcastIntent.putExtra(ServiceConstants.TRIP_JSON_ARRAY_STRING, tripsJsonExtra);
         sendBroadcast(broadcastIntent);
 
         db.close();
