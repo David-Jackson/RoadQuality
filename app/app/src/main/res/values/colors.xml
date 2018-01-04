@@ -13,6 +13,7 @@
     <color name="colorAccent">#FFEB3B</color>
     <color name="colorAccentDark">#fdd835</color>
     <color name="colorBlue">#2962ff</color>
+    <color name="colorBlueLight">#6ec6ff</color>
 
 
     <color name="darkOverlay">#80000000</color>

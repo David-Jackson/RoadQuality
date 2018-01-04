@@ -17,7 +17,7 @@ public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewHeader;
-        private View tripLineTop, tripLineBottom;
+        private View tripLineTop, tripLineBottom, bottomDividerLine;
         private View layout;
 
         public ViewHolder(View v) {
@@ -26,6 +26,7 @@ public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.
             textViewHeader = (TextView) v.findViewById(R.id.tv_row_title);
             tripLineTop = v.findViewById(R.id.view_trip_line_top);
             tripLineBottom = v.findViewById(R.id.view_trip_line_bottom);
+            bottomDividerLine = v.findViewById(R.id.bottom_divider_line);
         }
     }
 
@@ -48,11 +49,13 @@ public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.
     public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.tripLineTop.setVisibility(View.VISIBLE);
         holder.tripLineBottom.setVisibility(View.VISIBLE);
+        holder.bottomDividerLine.setVisibility(View.VISIBLE);
         if (position == 0) {
             holder.tripLineTop.setVisibility(View.INVISIBLE);
         }
         if (position == getItemCount() - 1) {
             holder.tripLineBottom.setVisibility(View.INVISIBLE);
+            holder.bottomDividerLine.setVisibility(View.INVISIBLE);
         }
         try {
             holder.textViewHeader.setText(

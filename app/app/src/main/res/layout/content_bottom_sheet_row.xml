@@ -1,53 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="96dp"
-    android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
-    android:paddingStart="@dimen/bottom_sheet_margin_left_right">
+    android:layout_height="96dp">
+
 
     <View
         android:id="@+id/view_trip_line_top"
         android:layout_width="16dp"
         android:layout_height="48dp"
         android:background="@color/colorBlue"
-        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
-        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        app:layout_constraintBottom_toTopOf="@+id/view_trip_line_bottom"
+        app:layout_constraintEnd_toEndOf="@+id/view_trip_line_circle"
+        app:layout_constraintStart_toStartOf="@+id/view_trip_line_circle"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/view_trip_line_bottom"
         android:layout_width="16dp"
         android:layout_height="48dp"
         android:background="@color/colorBlue"
-        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
-        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/view_trip_line_circle"
+        app:layout_constraintStart_toStartOf="@+id/view_trip_line_circle" />
 
     <View
+        android:id="@+id/view_trip_line_circle_big"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/background_trip_line_circle_big"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:visibility="invisible"
         android:id="@+id/view_trip_line_circle"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginStart="28dp"
         android:background="@drawable/background_trip_line_circle"
-        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
-        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/tv_row_title"
-        android:textSize="16sp"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
-        android:paddingStart="@dimen/bottom_sheet_margin_left_right"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/view_trip_line_circle"
-        android:text="TEST"/>
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="TEST"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_trip_line_circle"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+
+    <View
+        android:id="@+id/bottom_divider_line"
+        android:layout_width="wrap_content"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_row_title" />
+
+</android.support.constraint.ConstraintLayout>
