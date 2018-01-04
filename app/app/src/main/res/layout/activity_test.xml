@@ -14,16 +14,16 @@
         android:layout_width="@dimen/fab_size"
         android:layout_height="@dimen/fab_size"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_play_arrow"
-        android:onClick="revealViewClicked"/>
+        android:src="@drawable/ic_play_arrow"/>
 
     <RelativeLayout
         android:id="@+id/fab_reveal"
         android:background="@color/colorAccent"
         android:visibility="invisible"
-        android:onClick="revealViewClicked"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true">
         <ImageView
             android:id="@+id/fab_reveal_image"
             android:layout_width="96dp"

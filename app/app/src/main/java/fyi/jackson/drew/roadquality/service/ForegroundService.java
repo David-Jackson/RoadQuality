@@ -12,7 +12,6 @@ import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 import fyi.jackson.drew.roadquality.ActivityMain;
 import fyi.jackson.drew.roadquality.R;
@@ -78,7 +77,6 @@ public class ForegroundService extends Service {
 
             Log.i(LOG_TAG, "Received Start Foreground Intent ");
             showNotification();
-            Toast.makeText(this, "Service Started!", Toast.LENGTH_SHORT).show();
 
         } else if (intent.getAction().equals(
                 ForegroundConstants.ACTION.STOPFOREGROUND_ACTION)) {
@@ -90,7 +88,6 @@ public class ForegroundService extends Service {
 
             Intent longTermStorageIntent = new Intent(this, DatabaseService.class);
             longTermStorageIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_LONG_TERM_STORAGE);
-            Toast.makeText(this, "Started LongTermDataService", Toast.LENGTH_SHORT).show();
             startService(longTermStorageIntent);
 
             stopSelf();
@@ -140,12 +137,12 @@ public class ForegroundService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.i(LOG_TAG, "In onDestroy");
-        Toast.makeText(this, "Service Detroyed!", Toast.LENGTH_SHORT).show();
 
         accelerometerSensor.stop();
         locationSensor.stop();
 
-        database.transferIntoTripDatabase(this);
+        // TODO: See if below line is doing anything? Do I still need AsyncDb?
+        //database.transferIntoTripDatabase(this);
 
     }
 

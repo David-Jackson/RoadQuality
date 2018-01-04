@@ -20,20 +20,18 @@ import fyi.jackson.drew.roadquality.animation.MorphingFab;
 public class ActivityTest extends AppCompatActivity {
 
     MorphingFab morphingFab;
-    FloatingActionButton fab;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
         morphingFab = new MorphingFab(this,
-                fab,
-                findViewById(R.id.fab_reveal),
-                R.id.fab_reveal_image,
-                R.drawable.avd_play_to_pause_96dp,
-                R.drawable.avd_pause_to_play_96dp) {
+                (FloatingActionButton) findViewById(R.id.fab), // FAB
+                findViewById(R.id.fab_reveal),                 // View after FAB Clicked
+                R.id.fab_reveal_image,                         // Shared Element
+                R.drawable.avd_play_to_pause_96dp,             // Animated Vector Drawable (AVD) closed to open
+                R.drawable.avd_pause_to_play_96dp) {           // AVD open to close
             @Override
             public void onFabClick() {
 
