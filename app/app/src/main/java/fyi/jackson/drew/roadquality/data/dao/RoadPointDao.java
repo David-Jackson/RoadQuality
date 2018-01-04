@@ -9,6 +9,7 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
+import fyi.jackson.drew.roadquality.data.entities.Trip;
 
 @Dao
 public interface RoadPointDao {
@@ -26,6 +27,15 @@ public interface RoadPointDao {
 
     @Query("SELECT DISTINCT trip_id from roadpoint ORDER BY trip_id ASC")
     List<Long> getAllTripIds();
+
+    @Query("SELECT trip_id" +
+            ", min(timestamp) AS timestamp_start" +
+            ", max(timestamp) AS timestamp_end" +
+            ", count(*) AS number_of_points " +
+            "FROM roadpoint " +
+            "GROUP BY trip_id " +
+            "ORDER BY trip_id ASC")
+    List<Trip> getAllTrips();
 
     @Insert
     void insertAll(RoadPoint... roadPoints);
