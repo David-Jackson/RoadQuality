@@ -2,6 +2,9 @@ package fyi.jackson.drew.roadquality.utils;
 
 import android.content.Context;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class helpers {
     static public float map(float value,
                               float istart,
@@ -22,5 +25,11 @@ public class helpers {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+
+    public static String epochToLocalString(long epoch) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:m a");
+        return sdf.format(new Date(epoch));
     }
 }
