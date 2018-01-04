@@ -43,6 +43,9 @@ public class AnimationManager {
 
     int bottomSheetPeekHeight;
 
+    private Runnable onAnimationComplete = null;
+    private int onAnimationCompleteDelay = 0;
+
     public AnimationManager(Activity activity) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -128,6 +131,9 @@ public class AnimationManager {
                             public void run() {
                                 bottomSheet.setY(bottomSheet.getY() + bottomSheetPeekHeight);
                                 bottomSheetBehavior.setPeekHeight(bottomSheetPeekHeight);
+                                if (onAnimationComplete != null) {
+                                    animationComplete();
+                                }
                             }
                         })
                         .start();
@@ -138,6 +144,23 @@ public class AnimationManager {
 
             animatedIn = true;
         }
+    }
+
+    private void animationComplete() {
+        Handler handler = new Handler();
+        handler.postDelayed(this.onAnimationComplete, this.onAnimationCompleteDelay);
+    }
+
+    public void setOnAnimationComplete(Runnable runnable, int delay) {
+        this.onAnimationComplete = runnable;
+        this.onAnimationCompleteDelay = delay;
+        if (this.animatedIn) {
+            animationComplete();
+        }
+    }
+
+    public void setOnAnimationComplete(Runnable runnable) {
+        this.setOnAnimationComplete(runnable, 0);
     }
 
 }
