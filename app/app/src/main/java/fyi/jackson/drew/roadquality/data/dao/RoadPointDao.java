@@ -34,7 +34,7 @@ public interface RoadPointDao {
             ", count(*) AS number_of_points " +
             "FROM roadpoint " +
             "GROUP BY trip_id " +
-            "ORDER BY trip_id ASC")
+            "ORDER BY trip_id DESC")
     List<Trip> getAllTrips();
 
     @Insert
