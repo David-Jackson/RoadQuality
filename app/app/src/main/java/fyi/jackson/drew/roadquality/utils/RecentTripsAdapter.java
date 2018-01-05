@@ -1,5 +1,6 @@
 package fyi.jackson.drew.roadquality.utils;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import fyi.jackson.drew.roadquality.R;
 
@@ -16,6 +18,7 @@ import fyi.jackson.drew.roadquality.R;
 public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.ViewHolder> {
     private static String TAG = "RecentTripsAdapter";
     private JSONArray values;
+    private ViewHolder activeViewHolder = null;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewDate, textViewTime, textViewPoints;
@@ -81,8 +84,26 @@ public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: Row clicked: " + position + " - " + holder.textViewTime.getText());
+                rowClicked(holder, position);
             }
         });
+    }
+
+    public void rowClicked(ViewHolder holder, int position) {
+        try {
+            JSONObject data = values.getJSONObject(position);
+            clearActiveTrips();
+            holder.layout.setBackgroundColor(Color.GRAY);
+            activeViewHolder = holder;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearActiveTrips() {
+        if (activeViewHolder != null) {
+            activeViewHolder.layout.setBackgroundColor(Color.WHITE);
+        }
     }
 
     @Override

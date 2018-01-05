@@ -54,6 +54,8 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
     MorphingFab morphingFab;
 
+    RecyclerView recyclerView = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +141,9 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
+                if (recyclerView != null && newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    ((RecentTripsAdapter)recyclerView.getAdapter()).clearActiveTrips();
+                }
             }
 
             @Override
@@ -152,7 +156,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
     void setupBottomSheetRecyclerView(JSONArray tripData) {
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_bottom_sheet);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_bottom_sheet);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView.Adapter adapter = new RecentTripsAdapter(tripData);
 
