@@ -1,6 +1,7 @@
 package fyi.jackson.drew.roadquality.utils;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +14,20 @@ import fyi.jackson.drew.roadquality.R;
 
 
 public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.ViewHolder> {
+    private static String TAG = "RecentTripsAdapter";
     private JSONArray values;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewHeader;
+        private TextView textViewDate, textViewTime, textViewPoints;
         private View tripLineTop, tripLineBottom, bottomDividerLine;
         private View layout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            textViewHeader = (TextView) v.findViewById(R.id.tv_row_title);
+            textViewDate = (TextView) v.findViewById(R.id.tv_date);
+            textViewTime = (TextView) v.findViewById(R.id.tv_time);
+            textViewPoints = (TextView) v.findViewById(R.id.tv_points);
             tripLineTop = v.findViewById(R.id.view_trip_line_top);
             tripLineBottom = v.findViewById(R.id.view_trip_line_bottom);
             bottomDividerLine = v.findViewById(R.id.bottom_divider_line);
@@ -46,7 +50,8 @@ public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+
         holder.tripLineTop.setVisibility(View.VISIBLE);
         holder.tripLineBottom.setVisibility(View.VISIBLE);
         holder.bottomDividerLine.setVisibility(View.VISIBLE);
@@ -58,15 +63,26 @@ public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.
             holder.bottomDividerLine.setVisibility(View.INVISIBLE);
         }
         try {
-            holder.textViewHeader.setText(
-                    helpers.epochToLocalString(
-                            values.getJSONObject(position).getLong("tripId")) +
-                            " (" + values.getJSONObject(position).getLong("numberOfPoints") + " points)"
+            long startEpoch = values.getJSONObject(position).getLong("startTime");
+            long endEpoch = values.getJSONObject(position).getLong("endTime");
+            int points = values.getJSONObject(position).getInt("numberOfPoints");
+            holder.textViewDate.setText(
+                    helpers.epochToDateString(endEpoch));
+            holder.textViewTime.setText(
+                    helpers.epochToTimeString(startEpoch) + " - " + helpers.epochToTimeString(endEpoch)
             );
+            holder.textViewPoints.setText(points + " points");
         } catch (JSONException e) {
-            holder.textViewHeader.setText("Parse Error: " + position);
+            holder.textViewDate.setText("Parse Error: " + position);
             e.printStackTrace();
         }
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: Row clicked: " + position + " - " + holder.textViewTime.getText());
+            }
+        });
     }
 
     @Override

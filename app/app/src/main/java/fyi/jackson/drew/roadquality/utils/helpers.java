@@ -32,4 +32,14 @@ public class helpers {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:m a");
         return sdf.format(new Date(epoch));
     }
+
+    public static String epochToDateString(long epoch) {
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        return sdf.format(new Date(epoch));
+    }
+
+    public static String epochToTimeString(long epoch) {
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+        return sdf.format(new Date(epoch));
+    }
 }

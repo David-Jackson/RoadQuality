@@ -9,7 +9,7 @@
 
     <View
         android:id="@+id/view_trip_line_top"
-        android:layout_width="16dp"
+        android:layout_width="8dp"
         android:layout_height="48dp"
         android:background="@color/colorBlue"
         app:layout_constraintBottom_toTopOf="@+id/view_trip_line_bottom"
@@ -19,7 +19,7 @@
 
     <View
         android:id="@+id/view_trip_line_bottom"
-        android:layout_width="16dp"
+        android:layout_width="8dp"
         android:layout_height="48dp"
         android:background="@color/colorBlue"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -53,10 +53,11 @@
 
 
     <TextView
-        android:id="@+id/tv_row_title"
+        android:id="@+id/tv_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="TEST"
@@ -65,6 +66,33 @@
         app:layout_constraintStart_toEndOf="@+id/view_trip_line_circle"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:id="@+id/aligner_view_1"
+        android:layout_width="10dp"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_time"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TIME"
+        app:layout_constraintBottom_toTopOf="@+id/aligner_view_1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="POINTS"
+        app:layout_constraintEnd_toEndOf="@+id/tv_time"
+        app:layout_constraintTop_toBottomOf="@+id/aligner_view_1" />
 
     <View
         android:id="@+id/bottom_divider_line"
@@ -72,6 +100,6 @@
         android:layout_height="1px"
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/tv_row_title" />
+        app:layout_constraintStart_toStartOf="@+id/tv_date" />
 
 </android.support.constraint.ConstraintLayout>
