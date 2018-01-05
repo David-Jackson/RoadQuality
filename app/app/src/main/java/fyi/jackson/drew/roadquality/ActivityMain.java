@@ -206,12 +206,6 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
             public void onTripListReceived(JSONArray tripList) {
                 Toast.makeText(ActivityMain.this, "Got Trip List: " + tripList.length() + " trip(s)", Toast.LENGTH_SHORT).show();
                 setupBottomSheetRecyclerView(tripList);
-                animationManager.setOnAnimationComplete(new Runnable() {
-                    @Override
-                    public void run() {
-                        bumpBottomSheet();
-                    }
-                }, 1000);
             }
 
             @Override
