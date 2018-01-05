@@ -44,7 +44,7 @@ public abstract class MorphingFab {
         this.setAvd(avdInId, avdOutId);
     }
 
-    public abstract void onFabClick();
+    public abstract boolean onFabClick(); // returning true morphs FAB, false does not
 
     public void setFab(FloatingActionButton fab) {
         this.viewBefore = fab;
@@ -120,6 +120,7 @@ public abstract class MorphingFab {
 
             circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
             circularReveal.start();
+            state = false;
         }
     }
 
@@ -163,7 +164,16 @@ public abstract class MorphingFab {
 
             circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
             circularReveal.start();
+            state = true;
         }
+    }
+
+    public boolean isOpen() {
+        return !state;
+    }
+
+    public boolean isClosed() {
+        return state;
     }
 
 }

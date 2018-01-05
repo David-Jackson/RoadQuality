@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -20,6 +21,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -105,10 +107,25 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
                 R.drawable.avd_play_to_pause_96dp,
                 R.drawable.avd_pause_to_play_96dp) {
             @Override
-            public void onFabClick() {
+            public boolean onFabClick() {
                 fabClicked(null);
+                return false;
             }
         };
+
+        final CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.activity_main_layout);
+        layout.post(new Runnable() {
+            @Override
+            public void run() {
+                if (ForegroundService.IS_SERVICE_RUNNING) {
+                    Log.d(TAG, "onGlobalLayout: FAB SHOULD BE OPEN ON START");
+                    morphingFab.open();
+                } else {
+                    Log.d(TAG, "onGlobalLayout: FAB SHOULD BE CLOSED ON START");
+                    morphingFab.close();
+                }
+            }
+        });
 
     }
 
@@ -163,6 +180,18 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     void setupBroadcastManager() {
         broadcastManager = new BroadcastManager(this) {
             @Override
+            public void onServiceStatusChanged(int serviceStatus) {
+                switch (serviceStatus) {
+                    case ForegroundConstants.STATUS_ACTIVE:
+                        morphingFab.open();
+                        break;
+                    case ForegroundConstants.STATUS_INACTIVE:
+                        morphingFab.close();
+                        break;
+                }
+            }
+
+            @Override
             public void onDataTransferredToLongTerm(int totalRows, int deletedAccelRows, int deletedGpsRows) {
                 Toast.makeText(ActivityMain.this,
                         "Data Received: total = " +
@@ -200,10 +229,8 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
         Intent service = new Intent(ActivityMain.this, ForegroundService.class);
         if (!ForegroundService.IS_SERVICE_RUNNING) {
             service.setAction(ForegroundConstants.ACTION.STARTFOREGROUND_ACTION);
-            ForegroundService.IS_SERVICE_RUNNING = true;
         } else {
             service.setAction(ForegroundConstants.ACTION.STOPFOREGROUND_ACTION);
-            ForegroundService.IS_SERVICE_RUNNING = false;
         }
         startService(service);
     }

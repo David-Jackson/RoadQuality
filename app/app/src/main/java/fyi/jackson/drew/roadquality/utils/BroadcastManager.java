@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import fyi.jackson.drew.roadquality.service.DatabaseService;
+import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ServiceConstants;
 
 // Manager to receive broadcasts from various services
@@ -19,6 +20,7 @@ import fyi.jackson.drew.roadquality.service.ServiceConstants;
 public abstract class BroadcastManager {
     private String TAG = "BroadcastManager";
 
+    private BroadcastReceiver serviceStatusReceiver;
     private BroadcastReceiver longTermDataReceiver;
     private BroadcastReceiver tripListReceiver;
     private Context context;
@@ -29,6 +31,15 @@ public abstract class BroadcastManager {
     }
 
     public void setup() {
+        serviceStatusReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int status = intent.getIntExtra(ForegroundConstants.STATUS_NAME,
+                        ForegroundConstants.STATUS_INACTIVE); // default status inactive
+                onServiceStatusChanged(status);
+            }
+        };
+
         longTermDataReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context receiveContext, Intent intent) {
@@ -64,6 +75,10 @@ public abstract class BroadcastManager {
     }
 
     public void register() {
+        IntentFilter serviceStatusFilter = new IntentFilter(ServiceConstants.PROCESS_SERVICE_STATUS);
+        serviceStatusFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        this.context.registerReceiver(serviceStatusReceiver, serviceStatusFilter);
+
         IntentFilter longTermDataFilter = new IntentFilter(ServiceConstants.PROCESS_LONG_TERM_STORAGE);
         longTermDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
         this.context.registerReceiver(longTermDataReceiver, longTermDataFilter);
@@ -74,6 +89,7 @@ public abstract class BroadcastManager {
     }
 
     public void unregister() {
+        this.context.unregisterReceiver(serviceStatusReceiver);
         this.context.unregisterReceiver(longTermDataReceiver);
         this.context.unregisterReceiver(tripListReceiver);
     }
@@ -85,6 +101,8 @@ public abstract class BroadcastManager {
     public void onPause() {
         unregister();
     }
+
+    public abstract void onServiceStatusChanged(int serviceStatus);
 
     public abstract void onDataTransferredToLongTerm(int totalRows,
                                                      int deletedAccelRows,

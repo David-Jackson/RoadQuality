@@ -33,8 +33,8 @@ public class ActivityTest extends AppCompatActivity {
                 R.drawable.avd_play_to_pause_96dp,             // Animated Vector Drawable (AVD) closed to open
                 R.drawable.avd_pause_to_play_96dp) {           // AVD open to close
             @Override
-            public void onFabClick() {
-
+            public boolean onFabClick() {
+                return true;
             }
         };
 

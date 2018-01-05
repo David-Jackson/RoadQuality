@@ -72,15 +72,19 @@ public class ForegroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals(ForegroundConstants.ACTION.STARTFOREGROUND_ACTION)) {
 
+            broadcastStatus(ForegroundConstants.STATUS_ACTIVE);
+
             accelerometerSensor.start();
             locationSensor.start();
 
             Log.i(LOG_TAG, "Received Start Foreground Intent ");
             showNotification();
+            IS_SERVICE_RUNNING = true;
 
         } else if (intent.getAction().equals(
                 ForegroundConstants.ACTION.STOPFOREGROUND_ACTION)) {
 
+            broadcastStatus(ForegroundConstants.STATUS_INACTIVE);
 
             Log.i(LOG_TAG, "Received Stop Foreground Intent");
             stopForeground(true);
@@ -131,6 +135,12 @@ public class ForegroundService extends Service {
     public void updateNotification() {
         notificationBuilder.setContentText("Recording... Accel: " + accelRecordCount + ", GPS: " + gpsRecordCount);
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    }
+
+    private void broadcastStatus(int status) {
+        Intent serviceStatusIntent = new Intent(ServiceConstants.PROCESS_SERVICE_STATUS);
+        serviceStatusIntent.putExtra(ForegroundConstants.STATUS_NAME, status);
+        sendBroadcast(serviceStatusIntent);
     }
 
     @Override
