@@ -27,6 +27,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
@@ -35,6 +36,7 @@ import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
+import fyi.jackson.drew.roadquality.utils.maps;
 
 
 public class ActivityMain extends AppCompatActivity implements OnMapReadyCallback {
@@ -50,7 +52,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
     AnimationManager animationManager;
 
-    private BroadcastManager broadcastManager;
+    private BroadcastManager broadcastManager = null;
 
     MorphingFab morphingFab;
 
@@ -142,7 +144,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 if (recyclerView != null && newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    ((RecentTripsAdapter)recyclerView.getAdapter()).clearActiveTrips();
+                    //((RecentTripsAdapter)recyclerView.getAdapter()).clearActiveTrips();
                 }
             }
 
@@ -158,7 +160,14 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_bottom_sheet);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        RecyclerView.Adapter adapter = new RecentTripsAdapter(tripData);
+        RecyclerView.Adapter adapter = new RecentTripsAdapter(tripData) {
+            @Override
+            public void onRowClicked(long tripId) {
+                if (broadcastManager != null) {
+                    broadcastManager.askToGetTripData(tripId);
+                }
+            }
+        };
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
@@ -208,7 +217,14 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
             @Override
             public void onTripDataReceived(JSONObject tripData) {
-
+                String toastString = "Beep boop";
+                try {
+                    toastString = "Received " + tripData.getJSONObject("trip").getJSONArray("coordinates").length();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(ActivityMain.this, toastString, Toast.LENGTH_SHORT).show();
+                maps.helpers.putTripDataOnMap(googleMap, tripData);
             }
         };
     }

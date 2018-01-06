@@ -7,6 +7,7 @@ public class ServiceConstants {
     public static final String LONG_TERM_DATA_SERVICE_ROAD_POINT_ENTRIES_COUNT = "ROAD_POINT_ENTRY_COUNT";
 
     public static final String TRIP_IDS_COUNT = "TRIP_IDS_COUNT";
+    public static final String TRIP_ID = "TRIP_ID";
 
     public static final String TRIP_JSON_ARRAY_STRING = "TRIP_JSON_ARRAY_STRING";
     public static final String TRIP_DATA_JSON_STRING = "TRIP_DATA_JSON_STRING";

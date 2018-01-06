@@ -20,7 +20,7 @@ public interface RoadPointDao {
 //    LiveData<List<RoadPoint>> getAllLiveData();
 
     @Query("SELECT * FROM roadpoint WHERE trip_id = :tripId ORDER BY timestamp ASC")
-    List<RoadPoint> getAllFromTrip(int tripId);
+    List<RoadPoint> getAllFromTrip(long tripId);
 
     @Query("SELECT * FROM roadpoint WHERE not interpolated ORDER BY timestamp ASC")
     List<RoadPoint> getAllGpsPoints();

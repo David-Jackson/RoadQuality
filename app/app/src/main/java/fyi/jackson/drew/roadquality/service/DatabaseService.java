@@ -8,6 +8,7 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,10 +65,14 @@ public class DatabaseService extends IntentService {
         }
     }
 
-    private void longTermStorage(Intent intent) {
-        AppDatabase db = Room.databaseBuilder(this,
+    private AppDatabase getAppDatabase() {
+        return Room.databaseBuilder(this,
                 AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .fallbackToDestructiveMigration().build();
+                .fallbackToDestructiveMigration().build(); // TODO: Add database migration processes
+    }
+
+    private void longTermStorage(Intent intent) {
+        AppDatabase db = getAppDatabase();
 
         List<Accelerometer> accelerometerList = db.accelerometerDao().getAll();
         List<Gps> gpsList = db.gpsDao().getAll();
@@ -98,9 +103,7 @@ public class DatabaseService extends IntentService {
     }
 
     private void getAllTripIds(Intent intent) {
-        AppDatabase db = Room.databaseBuilder(this,
-                AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .fallbackToDestructiveMigration().build();
+        AppDatabase db = getAppDatabase();
 
         List<Long> tripIds = db.roadPointDao().getAllTripIds();
 
@@ -118,9 +121,7 @@ public class DatabaseService extends IntentService {
     }
 
     private void getAllTrips(Intent intent) {
-        AppDatabase db = Room.databaseBuilder(this,
-                AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .fallbackToDestructiveMigration().build();
+        AppDatabase db = getAppDatabase();
 
         List<Trip> trips = db.roadPointDao().getAllTrips();
 
@@ -139,13 +140,41 @@ public class DatabaseService extends IntentService {
     }
 
     private void getAllPointsFromTrip(Intent intent) {
+        long tripId = intent.getLongExtra(ServiceConstants.TRIP_ID, -1);
+        if (tripId == -1) {
+            Log.e(TAG, "getAllPointsFromTrip: tripId was not set in intent");
+            return;
+        }
+        AppDatabase db = getAppDatabase();
 
+        List<RoadPoint> tripRoadPoints = db.roadPointDao().getAllFromTrip(tripId);
+
+        JSONObject response = new JSONObject();
+
+        try {
+            JSONObject trip = new JSONObject();
+            JSONArray coordinates = new JSONArray();
+            for (RoadPoint roadPoint : tripRoadPoints) {
+                maps.LatLng coord = new maps.LatLng(
+                        roadPoint.getLatitude(), roadPoint.getLongitude());
+                coordinates.put(coord.toJSON());
+            }
+            trip.put("id", tripId);
+            trip.put("coordinates", coordinates);
+            response.put("trip", trip);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_TRIP_DATA);
+        broadcastIntent.putExtra(ServiceConstants.TRIP_DATA_JSON_STRING, response.toString());
+        sendBroadcast(broadcastIntent);
+
+        db.close();
     }
 
     private void getAllGpsPoints(Intent intent) {
-        AppDatabase db = Room.databaseBuilder(this,
-                AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .fallbackToDestructiveMigration().build();
+        AppDatabase db = getAppDatabase();
 
         List<RoadPoint> gpsRoadPoints = db.roadPointDao().getAllGpsPoints();
 

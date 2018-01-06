@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import fyi.jackson.drew.roadquality.R;
 
 
-public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.ViewHolder> {
+public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.ViewHolder> {
     private static String TAG = "RecentTripsAdapter";
     private JSONArray values;
     private ViewHolder activeViewHolder = null;
@@ -95,10 +95,13 @@ public class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.
             clearActiveTrips();
             holder.layout.setBackgroundColor(Color.GRAY);
             activeViewHolder = holder;
+            onRowClicked(data.getLong("tripId"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    public abstract void onRowClicked(long tripId);
 
     public void clearActiveTrips() {
         if (activeViewHolder != null) {

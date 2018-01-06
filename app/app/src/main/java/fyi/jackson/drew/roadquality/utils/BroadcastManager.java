@@ -139,4 +139,12 @@ public abstract class BroadcastManager {
         Log.d(TAG, "askToUpdateTripList: Getting all trips");
         context.startService(getTripsListIntent);
     }
+
+    public void askToGetTripData(long tripId) {
+        Intent getTripDataIntent = new Intent(context, DatabaseService.class);
+        getTripDataIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_GET_ALL_POINTS_FROM_TRIP);
+        getTripDataIntent.putExtra(ServiceConstants.TRIP_ID, tripId);
+        Log.d(TAG, "askToGetTripData: Getting trip data for tripId # " + tripId);
+        context.startService(getTripDataIntent);
+    }
 }
