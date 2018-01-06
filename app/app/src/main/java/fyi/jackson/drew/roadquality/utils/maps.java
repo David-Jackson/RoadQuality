@@ -255,7 +255,7 @@ public class maps {
     }
 
     public static class helpers {
-        public static void putTripDataOnMap(GoogleMap map, JSONObject tripData) {
+        public static void putTripDataOnMap(GoogleMap map, JSONObject tripData, int mapWidth, int mapHeight) {
             map.clear();
             try {
                 JSONArray coordinates =
@@ -270,7 +270,7 @@ public class maps {
                     latLngBuilder.include(latLng);
                 }
                 map.addPolyline(polylineOptions);
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), 1000, 300, 10));
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), mapWidth, mapHeight, 10));
 
             } catch (JSONException e) {
                 e.printStackTrace();

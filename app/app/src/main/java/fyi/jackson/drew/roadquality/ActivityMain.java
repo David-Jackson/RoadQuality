@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
@@ -37,6 +38,8 @@ import fyi.jackson.drew.roadquality.service.ForegroundService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
 import fyi.jackson.drew.roadquality.utils.maps;
+
+import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
 
 
 public class ActivityMain extends AppCompatActivity implements OnMapReadyCallback {
@@ -224,7 +227,13 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
                     e.printStackTrace();
                 }
                 Toast.makeText(ActivityMain.this, toastString, Toast.LENGTH_SHORT).show();
-                maps.helpers.putTripDataOnMap(googleMap, tripData);
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                ActivityMain.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
+                int screenWidth = displayMetrics.widthPixels;
+                int mapHeight = screenHeight - bottomSheetLayout.getHeight();
+                maps.helpers.putTripDataOnMap(googleMap, tripData, screenHeight, mapHeight);
             }
         };
     }

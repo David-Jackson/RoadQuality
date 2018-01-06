@@ -69,7 +69,11 @@ public class AnimationManager {
                 screenWidth - activity.getResources().getDimension(R.dimen.fab_margin) - fabSize,
                 endY
         );
-        mapPositionListener = new MapPositionListener(null, 0, -screenHeight/4f);
+
+        int bottomSheetHeight = (int) activity.getResources().getDimension(R.dimen.bottom_sheet_height);
+        mapPositionListener = new MapPositionListener(null,
+                0,
+                -bottomSheetHeight/2);
     }
 
     public void setFab(FloatingActionButton fab) {
