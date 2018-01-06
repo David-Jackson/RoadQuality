@@ -9,6 +9,7 @@ public class ServiceConstants {
     public static final String TRIP_IDS_COUNT = "TRIP_IDS_COUNT";
 
     public static final String TRIP_JSON_ARRAY_STRING = "TRIP_JSON_ARRAY_STRING";
+    public static final String TRIP_DATA_JSON_STRING = "TRIP_DATA_JSON_STRING";
 
     public static final String SERVICE_PROCESS_TAG = "IntentServiceProcess";
 
@@ -17,6 +18,7 @@ public class ServiceConstants {
     public static final String PROCESS_LONG_TERM_STORAGE = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_LONG_TERM_STORAGE";
     public static final String PROCESS_GET_ALL_TRIP_IDS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_TRIP_IDS";
     public static final String PROCESS_GET_ALL_TRIPS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_TRIPS";
+    public static final String PROCESS_GET_TRIP_DATA = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_TRIP_DATA";
     public static final String PROCESS_GET_ALL_POINTS_FROM_TRIP = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_POINTS_FROM_TRIP";
     public static final String PROCESS_GET_ALL_GPS_ROAD_POINTS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_GPS_ROAD_POINTS";
 
