@@ -36,6 +36,7 @@ import fyi.jackson.drew.roadquality.animation.MorphingFab;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
+import fyi.jackson.drew.roadquality.utils.MapData;
 import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
 import fyi.jackson.drew.roadquality.utils.maps;
 
@@ -46,6 +47,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
 
     public static final String TAG = "ActivityMain";
 
+    private MapData mapData;
     private GoogleMap googleMap;
     private View mapView;
     LinearLayout bottomSheetLayout;
@@ -86,6 +88,8 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mapData = new MapData(null, mapView);
     }
 
     void setupFab() {
@@ -293,6 +297,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        mapData.setGoogleMap(googleMap);
 
         // show the last known location
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
