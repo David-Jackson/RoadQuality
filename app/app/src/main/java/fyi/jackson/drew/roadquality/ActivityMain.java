@@ -243,6 +243,7 @@ public class ActivityMain extends AppCompatActivity {
                 int screenWidth = displayMetrics.widthPixels;
                 int mapHeight = screenHeight - bottomSheetLayout.getHeight();
                 mapData.putTripDataOnMap(tripData, screenWidth, mapHeight);
+                setProperFabStartingPosition();
             }
         };
     }
@@ -250,6 +251,14 @@ public class ActivityMain extends AppCompatActivity {
     //
     // END OF SETUP FUNCTIONS
     //
+
+    private void setProperFabStartingPosition() {
+        if (mapData.isShowingData()) {
+            animationManager.setFabStartPositionAtBottomSheet();
+        } else {
+            animationManager.setFabStartPositionAtScreenCenter();
+        }
+    }
 
     private void fabClicked() {
         Intent service = new Intent(ActivityMain.this, ForegroundService.class);

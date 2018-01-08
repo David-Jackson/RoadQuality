@@ -46,6 +46,8 @@ public class AnimationManager {
     private Runnable onAnimationComplete = null;
     private int onAnimationCompleteDelay = 0;
 
+    private float fabXScreenCenter, fabYScreenCenter, fabXBottomSheet, fabYBottomSheet;
+
     public AnimationManager(Activity activity) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -63,10 +65,15 @@ public class AnimationManager {
             endY = activity.getResources().getDimension(R.dimen.bottom_sheet_title_height) - (fabSize / 2f);
         }
 
+        fabXScreenCenter = (screenWidth - fabSize) / 2f;
+        fabYScreenCenter = (screenHeight - fabSize) / 2f;
+        fabXBottomSheet = screenWidth - activity.getResources().getDimension(R.dimen.fab_margin) - fabSize;
+        fabYBottomSheet = screenHeight - bottomSheetPeekHeight - (fabSize / 2f);
+
         fabPositionListener = new FabPositionListener(null,
-                (screenWidth - fabSize) / 2f,
-                (screenHeight - fabSize) / 2f,
-                screenWidth - activity.getResources().getDimension(R.dimen.fab_margin) - fabSize,
+                fabXScreenCenter,
+                fabYScreenCenter,
+                fabXBottomSheet,
                 endY
         );
 
@@ -167,4 +174,15 @@ public class AnimationManager {
         this.setOnAnimationComplete(runnable, 0);
     }
 
+    public void setFabStartPositionAtScreenCenter() {
+        fabPositionListener.setStartX(fabXScreenCenter);
+        fabPositionListener.setStartY(fabYScreenCenter);
+        fabPositionListener.setInterpolator(FabPositionListener.CUBIC_INTERPOLATOR);
+    }
+
+    public void setFabStartPositionAtBottomSheet() {
+        fabPositionListener.setStartX(fabXBottomSheet);
+        fabPositionListener.setStartY(fabYBottomSheet);
+        fabPositionListener.setInterpolator(FabPositionListener.LINEAR_INTERPOLATOR);
+    }
 }

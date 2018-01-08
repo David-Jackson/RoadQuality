@@ -6,12 +6,12 @@ import static fyi.jackson.drew.roadquality.utils.helpers.map;
 
 public class FabPositionListener {
 
-    private static final int LINEAR_INTERPOLATOR = 510;
-    private static final int CUBIC_INTERPOLATOR = 511;
+    public static final int LINEAR_INTERPOLATOR = 510;
+    public static final int CUBIC_INTERPOLATOR = 511;
 
     private FloatingActionButton fab;
     private float startX, startY, endX, endY, curX, curY;
-    private int interpolator;
+    private int interpolator = CUBIC_INTERPOLATOR;
     private float quadConstant;
 
 
@@ -28,17 +28,19 @@ public class FabPositionListener {
 
     public void update(float offset) {
         this.curX = map(offset, 0, 1, startX, endX);
-        // linear
-        // this.curY = map(offset, 0, 1, startY, endY);
 
-        // quad
-        float dx = this.curX - this.startX;
-        this.curY = this.startY + (this.quadConstant * dx * dx);
+        if (interpolator == LINEAR_INTERPOLATOR) {
+            // linear
+            this.curY = map(offset, 0, 1, startY, endY);
+        } else {
+            // quad
+            float dx = this.curX - this.startX;
+            this.curY = this.startY + (this.quadConstant * dx * dx);
+        }
 
         fab.setX(curX);
         fab.setY(curY);
     }
-
 
     // GETTERS AND SETTERS
 
