@@ -34,7 +34,9 @@ public class MapPositionListener {
 
     public void setMapData(MapData mapData) {
         this.mapData = mapData;
-        this.mapView = mapData.getMapView();
+        if (this.mapData != null) {
+            this.mapView = mapData.getMapView();
+        }
     }
 
     public View getMapView() {

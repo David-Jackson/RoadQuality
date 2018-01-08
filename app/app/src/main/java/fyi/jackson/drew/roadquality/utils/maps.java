@@ -250,27 +250,4 @@ public class maps {
 
     }
 
-    public static class helpers {
-        public static void putTripDataOnMap(GoogleMap map, JSONObject tripData, int mapWidth, int mapHeight) {
-            map.clear();
-            try {
-                JSONArray coordinates =
-                        tripData.getJSONObject("trip").getJSONArray("coordinates");
-                PolylineOptions polylineOptions = new PolylineOptions();
-                LatLngBounds.Builder latLngBuilder = new LatLngBounds.Builder();
-                for (int i = 0; i < coordinates.length(); i++) {
-                    JSONObject coord = coordinates.getJSONObject(i);
-                    com.google.android.gms.maps.model.LatLng latLng =
-                            new com.google.android.gms.maps.model.LatLng(coord.getDouble("lat"), coord.getDouble("lng"));
-                    polylineOptions.add(latLng);
-                    latLngBuilder.include(latLng);
-                }
-                map.addPolyline(polylineOptions);
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), mapWidth, mapHeight, 10));
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

@@ -177,6 +177,7 @@ public class ActivityMain extends AppCompatActivity {
                 if (broadcastManager != null) {
                     broadcastManager.askToGetTripData(tripId);
                 }
+                setProperFabStartingPosition();
             }
         };
 
@@ -241,7 +242,7 @@ public class ActivityMain extends AppCompatActivity {
                 int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
                 int screenWidth = displayMetrics.widthPixels;
                 int mapHeight = screenHeight - bottomSheetLayout.getHeight();
-                maps.helpers.putTripDataOnMap(mapData.getGoogleMap(), tripData, screenWidth, mapHeight);
+                mapData.putTripDataOnMap(tripData, screenWidth, mapHeight);
             }
         };
     }
