@@ -43,13 +43,12 @@ import fyi.jackson.drew.roadquality.utils.maps;
 import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
 
 
-public class ActivityMain extends AppCompatActivity implements OnMapReadyCallback {
+public class ActivityMain extends AppCompatActivity {
 
     public static final String TAG = "ActivityMain";
 
     private MapData mapData;
-    private GoogleMap googleMap;
-    private View mapView;
+
     LinearLayout bottomSheetLayout;
 
     private BottomSheetBehavior bottomSheetBehavior;
@@ -84,12 +83,18 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     //
 
     void setupMap() {
-        mapView = findViewById(R.id.map);
+        View mapView = findViewById(R.id.map);
+        mapData = new MapData(null, mapView);
+        mapData.setOnMapReadyRunnable(new Runnable() {
+            @Override
+            public void run() {
+                showLastKnownLocation(mapData.getGoogleMap());
+                animationManager.onMapReady();
+            }
+        });
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        mapData = new MapData(null, mapView);
+        mapFragment.getMapAsync(mapData);
     }
 
     void setupFab() {
@@ -184,7 +189,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
     void setupAnimations() {
         animationManager = new AnimationManager(this);
         animationManager.setFab(fab);
-        animationManager.setMap(mapView);
+        animationManager.setMap(mapData.getMapView());
         animationManager.setBottomSheet(bottomSheetLayout);
         animationManager.setBottomSheetBehavior(bottomSheetBehavior);
     }
@@ -237,7 +242,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
                 int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
                 int screenWidth = displayMetrics.widthPixels;
                 int mapHeight = screenHeight - bottomSheetLayout.getHeight();
-                maps.helpers.putTripDataOnMap(googleMap, tripData, screenHeight, mapHeight);
+                maps.helpers.putTripDataOnMap(mapData.getGoogleMap(), tripData, screenWidth, mapHeight);
             }
         };
     }
@@ -294,12 +299,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        mapData.setGoogleMap(googleMap);
-
-        // show the last known location
+    private void showLastKnownLocation(GoogleMap googleMap) {
         LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
 
         LatLng latLng = null;
@@ -313,9 +313,7 @@ public class ActivityMain extends AppCompatActivity implements OnMapReadyCallbac
             latLng = new LatLng(42.3314, -83.0458);
         }
 
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-
-        animationManager.onMapReady();
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
     }
 
     @Override
