@@ -102,10 +102,16 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
     public void rowClicked(ViewHolder holder, int position) {
         try {
             JSONObject data = values.getJSONObject(position);
-            clearActiveTrips();
-            holder.layout.setBackgroundColor(Color.GRAY);
-            activeViewHolder = holder;
-            onRowClicked(data.getLong("tripId"));
+            if (activeViewHolder != null && position == activeViewHolder.getAdapterPosition()) {
+                if (onRowClickedAgain(data.getLong("tripId"))) {
+                    clearActiveTrips();
+                }
+            } else {
+                clearActiveTrips();
+                holder.layout.setBackgroundColor(Color.GRAY);
+                onRowClicked(data.getLong("tripId"));
+                activeViewHolder = holder;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -113,9 +119,12 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
 
     public abstract void onRowClicked(long tripId);
 
+    public abstract boolean onRowClickedAgain(long tripId);
+
     public void clearActiveTrips() {
         if (activeViewHolder != null) {
             activeViewHolder.layout.setBackgroundColor(Color.WHITE);
+            activeViewHolder = null;
         }
     }
 

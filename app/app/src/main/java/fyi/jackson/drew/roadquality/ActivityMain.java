@@ -179,6 +179,13 @@ public class ActivityMain extends AppCompatActivity {
                 }
                 setProperFabStartingPosition();
             }
+
+            @Override
+            public boolean onRowClickedAgain(long tripId) {
+                mapData.clearMap();
+                setProperFabStartingPosition();
+                return true;
+            }
         };
 
         recyclerView.setHasFixedSize(true);
