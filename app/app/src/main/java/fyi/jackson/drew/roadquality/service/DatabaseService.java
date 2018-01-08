@@ -10,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import fyi.jackson.drew.roadquality.data.AppDatabase;
@@ -125,12 +124,14 @@ public class DatabaseService extends IntentService {
 
         List<Trip> trips = db.roadPointDao().getAllTrips();
 
-        String tripsJsonExtra = "[";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("[");
         for (int i = 0; i < trips.size(); i++) {
-                tripsJsonExtra += trips.get(i).toJSONString();
-                if (i < trips.size() - 1) tripsJsonExtra += ",";
+                stringBuilder.append(trips.get(i).toJSONString());
+                if (i < trips.size() - 1) stringBuilder.append(",");
         }
-        tripsJsonExtra += "]";
+        stringBuilder.append("]");
+        String tripsJsonExtra = stringBuilder.toString();
 
         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_TRIPS);
         broadcastIntent.putExtra(ServiceConstants.TRIP_JSON_ARRAY_STRING, tripsJsonExtra);

@@ -2,30 +2,26 @@ package fyi.jackson.drew.roadquality.animation;
 
 
 import android.animation.Animator;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.drawable.AnimatedVectorDrawable;
-import android.media.Image;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 public abstract class MorphingFab {
 
-    Context context;
+    private final Context context;
 
-    View viewAfter; // thing fab morphs into
-    View viewBefore; // fab
+    private View viewAfter; // thing fab morphs into
+    private View viewBefore; // fab
 
-    AnimatedVectorDrawable avdIn, avdOut;
+    private AnimatedVectorDrawable avdIn, avdOut;
 
-    ImageView sharedElement;
+    private ImageView sharedElement;
 
-    boolean state = true; // before (false = after)
+    private boolean state = true; // before (false = after)
 
     public MorphingFab(Context context) {
         this.context = context;
@@ -72,8 +68,7 @@ public abstract class MorphingFab {
         if (this.viewAfter == null) {
             throw new Error("viewAfter not yet defined");
         }
-        ImageView imageView = (ImageView) this.viewAfter.findViewById(id);
-        this.sharedElement = imageView;
+        this.sharedElement = this.viewAfter.findViewById(id);
     }
 
     public void setAvd(int inId, int outId) {
@@ -90,7 +85,7 @@ public abstract class MorphingFab {
     }
 
 
-    void setImageInitialPosition() {
+    private void setImageInitialPosition() {
         sharedElement.setX(
                 viewBefore.getX() - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2) - viewAfter.getX()
         );

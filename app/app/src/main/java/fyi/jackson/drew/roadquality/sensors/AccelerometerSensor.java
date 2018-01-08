@@ -12,15 +12,14 @@ import fyi.jackson.drew.roadquality.utils.Vector3D;
 
 public abstract class AccelerometerSensor implements SensorEventListener {
 
-    public static final String TAG = "AccelerometerSensor";
+    private static final String TAG = "AccelerometerSensor";
 
-    private SensorManager sensorManager;
-    private Sensor accelerometerSensor;
-    private Sensor gravitySensor;
+    private final SensorManager sensorManager;
+    private final Sensor accelerometerSensor;
+    private final Sensor gravitySensor;
 
     private boolean sensorNeedsToSettle = true;
     private long timeWhenSensorIsSettled = 0;
-    private long TEN_SENCONDS_IN_MILLIS = 10 * 1000;
 
     private Vector3D acceleration, gravity, jolt, MOTION_TRIGGER;
     private static final float DEFAULT_MOTION_TRIGGER_LIMIT = 2;
@@ -44,7 +43,8 @@ public abstract class AccelerometerSensor implements SensorEventListener {
         sensorManager.registerListener(this, this.accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         sensorManager.registerListener(this, this.gravitySensor, SensorManager.SENSOR_DELAY_NORMAL);
         this.sensorNeedsToSettle = true;
-        this.timeWhenSensorIsSettled = System.currentTimeMillis() + TEN_SENCONDS_IN_MILLIS;
+        long TEN_SECONDS_IN_MILLIS = 10 * 1000;
+        this.timeWhenSensorIsSettled = System.currentTimeMillis() + TEN_SECONDS_IN_MILLIS;
     }
 
     public void stop() {

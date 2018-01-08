@@ -8,11 +8,7 @@ import android.util.Log;
 
 public class ActivitySplash extends AppCompatActivity {
 
-    public static final String TAG = "ActivitySplash";
-
-    public static final String PREFS_NAME = "RoadQualityPrefsFile";
-    public static final String PREFS_TIMES_OPENED = "NumberOfTimesOpened";
-    public static final String PREFS_PERMISSION_GRANTED = "PermissionsGranted";
+    private static final String TAG = "ActivitySplash";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +23,7 @@ public class ActivitySplash extends AppCompatActivity {
 
         Log.d(TAG, "onCreate: This app has been opened " + timesOpened + " time(s) before");
         
-        Intent intent = null;
+        Intent intent;
         
         if (permissionGranted) {
             Log.d(TAG, "onCreate: Permissions have been granted, starting Main Activity");
@@ -39,13 +35,10 @@ public class ActivitySplash extends AppCompatActivity {
         
         timesOpened++;
         settings.edit()
-                .putInt(PREFS_TIMES_OPENED, timesOpened)
+                .putInt(getString(R.string.PREFS_TIMES_OPENED), timesOpened)
                 .apply();
 
-        if (intent != null) {
-            startActivity(intent);
-            finish();
-        }
-
+        startActivity(intent);
+        finish();
     }
 }

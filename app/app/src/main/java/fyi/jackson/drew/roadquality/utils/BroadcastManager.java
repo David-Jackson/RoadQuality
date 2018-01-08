@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,13 +17,13 @@ import fyi.jackson.drew.roadquality.service.ServiceConstants;
 // Manager to receive broadcasts from various services
 
 public abstract class BroadcastManager {
-    private String TAG = "BroadcastManager";
+    private final String TAG = "BroadcastManager";
 
     private BroadcastReceiver serviceStatusReceiver;
     private BroadcastReceiver longTermDataReceiver;
     private BroadcastReceiver tripListReceiver;
     private BroadcastReceiver tripDataReceiver;
-    private Context context;
+    private final Context context;
 
     public BroadcastManager (Context context) {
         this.context = context;

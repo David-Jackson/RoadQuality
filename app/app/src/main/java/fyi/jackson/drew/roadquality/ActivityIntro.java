@@ -5,12 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.AnimatedVectorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
@@ -18,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +28,7 @@ public class ActivityIntro extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 2978;
 
     private ViewPager viewPager;
-    private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
-    private TextView[] dots;
     private int[] layouts;
     private boolean[] nextButtonActiveDefaults;
     private Button btnNext;
@@ -46,9 +38,9 @@ public class ActivityIntro extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        viewPager = (ViewPager) findViewById(R.id.view_pager_intro);
-        dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
-        btnNext = (Button) findViewById(R.id.btn_next);
+        viewPager = findViewById(R.id.view_pager_intro);
+        dotsLayout = findViewById(R.id.layoutDots);
+        btnNext = findViewById(R.id.btn_next);
 
         layouts = new int[] {
                 R.layout.intro_slide_1,
@@ -65,7 +57,7 @@ public class ActivityIntro extends AppCompatActivity {
         addBottomDots(0);
 
 
-        myViewPagerAdapter = new MyViewPagerAdapter();
+        MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
@@ -83,7 +75,7 @@ public class ActivityIntro extends AppCompatActivity {
 
     }
     private void addBottomDots(int currentPage) {
-        dots = new TextView[layouts.length];
+        TextView[] dots = new TextView[layouts.length];
 
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
@@ -107,7 +99,7 @@ public class ActivityIntro extends AppCompatActivity {
     }
 
     // TODO: 12/12/2017 Do not allow ViewPager to scroll past permission screen until permissions are accepted
-    ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -119,9 +111,9 @@ public class ActivityIntro extends AppCompatActivity {
             addBottomDots(position);
 
             if (position == layouts.length - 1) {
-                btnNext.setText("Got it");
+                btnNext.setText(getString(R.string.got_it));
             } else {
-                btnNext.setText("Next");
+                btnNext.setText(getString(R.string.next));
             }
 
             btnNext.setEnabled(
@@ -202,7 +194,7 @@ public class ActivityIntro extends AppCompatActivity {
                 } else {
                     permissionDenied();
                 }
-                return;
+                break;
             }
         }
     }
@@ -220,7 +212,7 @@ public class ActivityIntro extends AppCompatActivity {
 
     private void permissionDenied() {
         btnNext.setEnabled(false);
-        // TODO: 12/12/2017 Make this toast into a snackbar
+        // TODO: 12/12/2017 Make this toast into a SnackBar
         Toast.makeText(this,
                 "Location Access is required for use of this app.",
                 Toast.LENGTH_LONG).show();

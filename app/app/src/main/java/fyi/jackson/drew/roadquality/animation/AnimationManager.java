@@ -25,23 +25,23 @@ import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
 
 public class AnimationManager {
 
-    public static final String TAG = "AnimationManager";
+    private static final String TAG = "AnimationManager";
 
-    public static final int ENTRANCE_ANIMATION_DURATION = 600;
+    private static final int ENTRANCE_ANIMATION_DURATION = 600;
 
-    int screenHeight, screenWidth;
+    private final int screenHeight, screenWidth;
 
-    FabPositionListener fabPositionListener;
-    MapPositionListener mapPositionListener;
+    private final FabPositionListener fabPositionListener;
+    private final MapPositionListener mapPositionListener;
 
-    LinearLayout bottomSheet;
-    BottomSheetBehavior bottomSheetBehavior;
+    private LinearLayout bottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
-    boolean mapReady = false;
-    boolean timerExpired = false;
-    boolean animatedIn = false;
+    private boolean mapReady = false;
+    private boolean timerExpired = false;
+    private boolean animatedIn = false;
 
-    int bottomSheetPeekHeight;
+    private final int bottomSheetPeekHeight;
 
     private Runnable onAnimationComplete = null;
     private int onAnimationCompleteDelay = 0;
@@ -90,7 +90,7 @@ public class AnimationManager {
             @Override
             public void run() {
                 timerExpired = true;
-                Log.d(TAG, "run: Timer Expired, " + timerExpired);
+                Log.d(TAG, "run: Timer Expired");
                 animateIn();
             }
         }, 300);
@@ -111,7 +111,7 @@ public class AnimationManager {
 
     public void onMapReady() {
         this.mapReady = true;
-        Log.d(TAG, "onMapReady: Map Ready, " + mapReady);
+        Log.d(TAG, "onMapReady: Map Ready");
         animateIn();
     }
 

@@ -1,7 +1,7 @@
 package fyi.jackson.drew.roadquality.utils;
 
 public class Vector3D {
-    public float x, y, z;
+    public final float x, y, z;
 
     public Vector3D() {
         x = 0;

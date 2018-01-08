@@ -16,12 +16,13 @@
             android:layout_height="200dp"
             android:layout_margin="10dp"
             android:src="@drawable/ic_done_black_24dp"
-            android:onClick="imageViewClicked"/>
+            android:onClick="imageViewClicked"
+            android:contentDescription="@string/content_desc_checkmark"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Setup Complete!"
+            android:text="@string/setup_complete"
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -33,7 +34,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:text="Start recording your road quality right away!"
+            android:text="@string/setup_complete_description"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>

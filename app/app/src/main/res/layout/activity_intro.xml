@@ -43,7 +43,7 @@
             android:layout_alignParentBottom="true"
             android:background="@null"
             android:textColor="@android:color/white"
-            android:text="NEXT" />
+            android:text="@string/next_all_caps" />
     </RelativeLayout>
 
 </RelativeLayout>

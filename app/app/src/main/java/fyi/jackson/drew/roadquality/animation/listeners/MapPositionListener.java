@@ -7,10 +7,10 @@ import fyi.jackson.drew.roadquality.utils.helpers;
 
 public class MapPositionListener {
 
-    MapData mapData;
-    View mapView;
+    private MapData mapData;
+    private View mapView;
 
-    float startY = 0, endY = -200, curY;
+    private float startY = 0, endY = -200, curY;
 
     public MapPositionListener(MapData mapData) {
         setMapData(mapData);

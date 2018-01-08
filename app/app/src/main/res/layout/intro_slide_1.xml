@@ -17,12 +17,13 @@
             android:layout_margin="10dp"
             android:src="@drawable/avd_road_animation"
             android:onClick="imageViewClicked"
-            android:transitionName="launcher"/>
+            android:transitionName="launcher"
+            android:contentDescription="@string/content_desc_road_image"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Road Quality"
+            android:text="@string/app_name"
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -34,7 +35,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:text="An app for improving your roads"
+            android:text="@string/app_tagline"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>

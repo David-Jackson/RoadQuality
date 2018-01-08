@@ -17,12 +17,13 @@
             android:layout_height="200dp"
             android:layout_margin="10dp"
             android:src="@drawable/avd_satellite_signal_animated"
-            android:onClick="imageViewClicked"/>
+            android:onClick="imageViewClicked"
+            android:contentDescription="@string/content_desc_gps_image"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GPS Permissions"
+            android:text="@string/gps_permissions"
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -34,7 +35,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
-            android:text="We use your phone's GPS and Accelerometer to determine where road quality is the worst."
+            android:text="@string/gps_permissions_description"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
@@ -48,6 +49,6 @@
         android:id="@+id/btn_ask_permission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Grant Permission"
+        android:text="@string/grant_permission"
         android:onClick="askPermission"/>
 </RelativeLayout>

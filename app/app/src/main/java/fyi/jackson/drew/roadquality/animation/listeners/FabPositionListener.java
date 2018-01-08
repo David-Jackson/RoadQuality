@@ -9,10 +9,10 @@ public class FabPositionListener {
     private static final int LINEAR_INTERPOLATOR = 510;
     private static final int CUBIC_INTERPOLATOR = 511;
 
-    FloatingActionButton fab;
-    float startX, startY, endX, endY, curX, curY;
-    int interpolator;
-    float quadConstant;
+    private FloatingActionButton fab;
+    private float startX, startY, endX, endY, curX, curY;
+    private int interpolator;
+    private float quadConstant;
 
 
     public FabPositionListener(FloatingActionButton fab, float startX, float startY, float endX, float endY) {

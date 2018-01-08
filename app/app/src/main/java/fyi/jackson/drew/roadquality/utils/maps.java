@@ -2,11 +2,7 @@ package fyi.jackson.drew.roadquality.utils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONArray;
@@ -59,7 +55,7 @@ public class maps {
         public static List<RoadPoint> interpolateAccelerometerAndGpsData(
                 List<Accelerometer> accelerometerList, List<Gps> gpsList) {
 
-            ArrayList<RoadPoint> roadPointList = new ArrayList<RoadPoint>();
+            ArrayList<RoadPoint> roadPointList = new ArrayList<>();
 
             if (gpsList.size() == 0 || accelerometerList.size() == 0) return roadPointList;
 
@@ -135,7 +131,7 @@ public class maps {
     }
 
     public static class LatLng {
-        double x, y;
+        final double x, y;
 
         public LatLng(double lat, double lng) {
             this.y = lat;
@@ -151,25 +147,25 @@ public class maps {
         }
 
         public JSONObject toJSON() {
-            JSONObject latlng = new JSONObject();
+            JSONObject latLng = new JSONObject();
             try {
-                latlng.put("lat", this.lat());
-                latlng.put("lng", this.lng());
+                latLng.put("lat", this.lat());
+                latLng.put("lng", this.lng());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return latlng;
+            return latLng;
         }
 
         public JSONArray toGeoJSON() {
-            JSONArray latlng = new JSONArray();
+            JSONArray latLng = new JSONArray();
             try {
-                latlng.put(this.lng());
-                latlng.put(this.lat());
+                latLng.put(this.lng());
+                latLng.put(this.lat());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return latlng;
+            return latLng;
         }
 
         public String toString() {

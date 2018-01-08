@@ -24,15 +24,15 @@ public class ForegroundService extends Service {
     private static final String LOG_TAG = "ForegroundService";
     public static boolean IS_SERVICE_RUNNING = false;
 
-    AccelerometerSensor accelerometerSensor;
-    LocationSensor locationSensor;
+    private AccelerometerSensor accelerometerSensor;
+    private LocationSensor locationSensor;
 
-    AsynchronousDatabase database;
+    private AsynchronousDatabase database;
 
-    int gpsRecordCount = 0;
-    int accelRecordCount = 0;
-    NotificationManager notificationManager;
-    Notification.Builder notificationBuilder;
+    private int gpsRecordCount = 0;
+    private int accelRecordCount = 0;
+    private NotificationManager notificationManager;
+    private Notification.Builder notificationBuilder;
     private static final int NOTIFICATION_ID = ForegroundConstants.NOTIFICATION_ID.FOREGROUND_SERVICE;
 
     @Override

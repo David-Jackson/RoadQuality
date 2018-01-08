@@ -1,5 +1,6 @@
 package fyi.jackson.drew.roadquality.utils;
 
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,30 +17,30 @@ import fyi.jackson.drew.roadquality.R;
 
 
 public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.ViewHolder> {
-    private static String TAG = "RecentTripsAdapter";
-    private JSONArray values;
+    private final static String TAG = "RecentTripsAdapter";
+    private final JSONArray values;
     private ViewHolder activeViewHolder = null;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView textViewDate, textViewTime, textViewPoints;
-        private View tripLineTop, tripLineBottom, bottomDividerLine;
-        private View layout;
+        private final TextView textViewDate, textViewTime, textViewPoints;
+        private final View tripLineTop, tripLineBottom, bottomDividerLine;
+        private final View layout;
 
         public ViewHolder(View v) {
             super(v);
             layout = v;
-            textViewDate = (TextView) v.findViewById(R.id.tv_date);
-            textViewTime = (TextView) v.findViewById(R.id.tv_time);
-            textViewPoints = (TextView) v.findViewById(R.id.tv_points);
+            textViewDate = v.findViewById(R.id.tv_date);
+            textViewTime = v.findViewById(R.id.tv_time);
+            textViewPoints = v.findViewById(R.id.tv_points);
             tripLineTop = v.findViewById(R.id.view_trip_line_top);
             tripLineBottom = v.findViewById(R.id.view_trip_line_bottom);
             bottomDividerLine = v.findViewById(R.id.bottom_divider_line);
         }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public RecentTripsAdapter(JSONArray myDataset) {
-        values = myDataset;
+    // Provide a suitable constructor (depends on the kind of data set)
+    public RecentTripsAdapter(JSONArray myDataSet) {
+        values = myDataSet;
     }
 
     @Override
@@ -48,8 +49,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.content_bottom_sheet_row, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -69,20 +69,30 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
             long startEpoch = values.getJSONObject(position).getLong("startTime");
             long endEpoch = values.getJSONObject(position).getLong("endTime");
             int points = values.getJSONObject(position).getInt("numberOfPoints");
-            holder.textViewDate.setText(
-                    helpers.epochToDateString(endEpoch));
-            holder.textViewTime.setText(
-                    helpers.epochToTimeString(startEpoch) + " - " + helpers.epochToTimeString(endEpoch)
+
+            Resources res = holder.layout.getResources();
+            String dateString = helpers.epochToDateString(endEpoch);
+            String durationString = String.format(
+                    res.getString(R.string.duration_string),
+                    helpers.epochToTimeString(startEpoch),
+                    helpers.epochToTimeString(endEpoch)
             );
-            holder.textViewPoints.setText(points + " points");
+            String numberOfPoints = res.getQuantityString(R.plurals.number_of_points, points, points);
+
+            holder.textViewDate.setText(dateString);
+            holder.textViewTime.setText(durationString);
+            holder.textViewPoints.setText(numberOfPoints);
         } catch (JSONException e) {
-            holder.textViewDate.setText("Parse Error: " + position);
+            Resources res = holder.layout.getResources();
+            String parseErrorString = String.format(res.getString(R.string.points_parse_error), position);
+            holder.textViewDate.setText(parseErrorString);
             e.printStackTrace();
         }
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Log.d(TAG, "onClick: Row clicked: " + position + " - " + holder.textViewTime.getText());
                 rowClicked(holder, position);
             }

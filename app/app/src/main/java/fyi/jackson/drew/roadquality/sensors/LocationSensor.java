@@ -7,16 +7,12 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-/**
- * Created by USPLYDJ on 10/20/2017.
- */
-
 public abstract class LocationSensor implements LocationListener {
 
-    private static final String TAG = "LOCATIONLISTENER";
+    private static final String TAG = "LOCATION_LISTENER";
     private static final long MIN_TIME_BETWEEN_UPDATES = 2000;
     private static final float MIN_DIST_BETWEEN_UPDATES = 10f;
-    private LocationManager locationManager;
+    private final LocationManager locationManager;
     
     public LocationSensor(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);

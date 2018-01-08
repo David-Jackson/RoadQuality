@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -45,22 +44,22 @@ import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
 
 public class ActivityMain extends AppCompatActivity {
 
-    public static final String TAG = "ActivityMain";
+    private static final String TAG = "ActivityMain";
 
     private MapData mapData;
 
-    LinearLayout bottomSheetLayout;
+    private LinearLayout bottomSheetLayout;
 
     private BottomSheetBehavior bottomSheetBehavior;
-    FloatingActionButton fab;
+    private FloatingActionButton fab;
 
-    AnimationManager animationManager;
+    private AnimationManager animationManager;
 
     private BroadcastManager broadcastManager = null;
 
-    MorphingFab morphingFab;
+    private MorphingFab morphingFab;
 
-    RecyclerView recyclerView = null;
+    private RecyclerView recyclerView = null;
 
 
     @Override
@@ -82,7 +81,7 @@ public class ActivityMain extends AppCompatActivity {
     // SETUP FUNCTIONS
     //
 
-    void setupMap() {
+    private void setupMap() {
         View mapView = findViewById(R.id.map);
         mapData = new MapData(null, mapView);
         mapData.setOnMapReadyRunnable(new Runnable() {
@@ -97,8 +96,8 @@ public class ActivityMain extends AppCompatActivity {
         mapFragment.getMapAsync(mapData);
     }
 
-    void setupFab() {
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+    private void setupFab() {
+        fab = findViewById(R.id.fab);
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -116,12 +115,12 @@ public class ActivityMain extends AppCompatActivity {
                 R.drawable.avd_pause_to_play_96dp) {
             @Override
             public boolean onFabClick() {
-                fabClicked(null);
+                fabClicked();
                 return false;
             }
         };
 
-        final CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.activity_main_layout);
+        final CoordinatorLayout layout = findViewById(R.id.activity_main_layout);
         layout.post(new Runnable() {
             @Override
             public void run() {
@@ -137,13 +136,13 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-    void setupBottomSheet() {
+    private void setupBottomSheet() {
         // get the bottom sheet view
         View view = findViewById(R.id.bottom_sheet_title);
         bottomSheetLayout = (LinearLayout) view.getParent();
 
         if (bottomSheetLayout == null) {
-            Log.d(TAG, "initBottomSheet: Bottomsheet null");
+            Log.d(TAG, "initBottomSheet: BottomSheet null");
             return;
         }
         // init the bottom sheet behavior
@@ -168,9 +167,9 @@ public class ActivityMain extends AppCompatActivity {
 
     }
 
-    void setupBottomSheetRecyclerView(JSONArray tripData) {
+    private void setupBottomSheetRecyclerView(JSONArray tripData) {
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_bottom_sheet);
+        recyclerView = findViewById(R.id.recycler_view_bottom_sheet);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView.Adapter adapter = new RecentTripsAdapter(tripData) {
             @Override
@@ -186,7 +185,7 @@ public class ActivityMain extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    void setupAnimations() {
+    private void setupAnimations() {
         animationManager = new AnimationManager(this);
         animationManager.setFab(fab);
         animationManager.setMap(mapData.getMapView());
@@ -194,7 +193,7 @@ public class ActivityMain extends AppCompatActivity {
         animationManager.setBottomSheetBehavior(bottomSheetBehavior);
     }
 
-    void setupBroadcastManager() {
+    private void setupBroadcastManager() {
         broadcastManager = new BroadcastManager(this) {
             @Override
             public void onServiceStatusChanged(int serviceStatus) {
@@ -229,7 +228,7 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onTripDataReceived(JSONObject tripData) {
-                String toastString = "Beep boop";
+                String toastString = "Nothing received";
                 try {
                     toastString = "Received " + tripData.getJSONObject("trip").getJSONArray("coordinates").length();
                 } catch (JSONException e) {
@@ -251,7 +250,7 @@ public class ActivityMain extends AppCompatActivity {
     // END OF SETUP FUNCTIONS
     //
 
-    public void fabClicked(View view) {
+    private void fabClicked() {
         Intent service = new Intent(ActivityMain.this, ForegroundService.class);
         if (!ForegroundService.IS_SERVICE_RUNNING) {
             service.setAction(ForegroundConstants.ACTION.STARTFOREGROUND_ACTION);
@@ -265,7 +264,7 @@ public class ActivityMain extends AppCompatActivity {
         bumpBottomSheet(1);
     }
 
-    void bumpBottomSheet(final int numberOfTimes) {
+    private void bumpBottomSheet(final int numberOfTimes) {
         if (numberOfTimes == 0) return;
         final int bumpHeight = 50;
         bottomSheetLayout.animate()
@@ -291,7 +290,7 @@ public class ActivityMain extends AppCompatActivity {
                 .start();
     }
 
-    void toggleBottomSheet(View view) {
+    public void toggleBottomSheet(View view) {
         if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {

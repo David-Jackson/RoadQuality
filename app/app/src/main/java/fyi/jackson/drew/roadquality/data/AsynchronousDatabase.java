@@ -16,7 +16,7 @@ import fyi.jackson.drew.roadquality.utils.maps;
 
 public class AsynchronousDatabase {
 
-    AppDatabase db;
+    private final AppDatabase db;
     public long accelerationDbRowId = -1;
     public long gpsDbRowId = -1;
 

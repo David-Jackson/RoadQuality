@@ -16,8 +16,8 @@
         android:onClick="toggleBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_sheet_title_height"
-        android:gravity="left|center"
-        android:text="Recent Trips"
+        android:gravity="start|center"
+        android:text="@string/recent_trips"
         android:textSize="@dimen/bottom_sheet_title_text_size"
         android:paddingLeft="@dimen/bottom_sheet_margin_left_right"
         android:paddingRight="@dimen/bottom_sheet_margin_left_right"/>
