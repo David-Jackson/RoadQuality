@@ -11,8 +11,8 @@ This app is still very much a work in progress, but this is what is implemented 
 - [X] Able to record individual trips
 - [X] Runs as a foreground service (Independent of the app)
 - [X] Implements Material Design and fluid animations
+- [X] View past trips on a map
 
 And this is what still needs to be added in the future:
-- [ ] View past trips on a map
 - [ ] Automatically start recording when connected to Bluetooth device or navigating with Google Maps
 - [ ] Upload anonymous data to a cloud server
