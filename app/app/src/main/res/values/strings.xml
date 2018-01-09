@@ -21,7 +21,7 @@
     <string name="setup_complete_description">Start recording your road quality right away!</string>
     <string name="got_it">Got it</string>
     <string name="next">Next</string>
-    <string name="duration_string">%1$s! - %2$s!</string>
+    <string name="duration_string">%1$s - %2$s</string>
     <plurals name="number_of_points">
         <item quantity="one">%d point</item>
         <item quantity="other">%d points</item>
