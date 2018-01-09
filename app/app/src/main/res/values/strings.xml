@@ -35,4 +35,31 @@
     <string name="content_desc_road_image">Image of road</string>
     <string name="content_desc_gps_image">Image of GPS</string>
     <string name="content_desc_checkmark">Image of checkmark</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_data_title">Data</string>
+    <string name="pref_automatic_upload_title">Automatic uploads</string>
+    <string name="pref_automatic_upload_wifi_only_title">Only upload on wifi</string>
+    <string name="pref_automatic_upload_wifi_only_summary_on">Uses less cellular data</string>
+    <string name="pref_automatic_upload_wifi_only_summary_off">Uploads immediately</string>
+    <string name="pref_recording_title">Recording</string>
+    <string name="pref_bluetooth_device_title">Bluetooth Automatic Recording</string>
+    <string name="pref_bluetooth_device_summary_off">Start recording when connected to Bluetooth device</string>
+    <string name="pref_bluetooth_device_summary_on">Recording start when connected to $s</string>
+    <string name="pref_recording_deadzone_title">Set Recording Deadzone</string>
+    <string name="pref_recording_deadzone_summary">Set a region where nothing will be recorded</string>
+
+
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
 </resources>

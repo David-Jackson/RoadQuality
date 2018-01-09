@@ -101,7 +101,7 @@ public class ActivityMain extends AppCompatActivity {
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent mainActivityIntent = new Intent(getApplicationContext(), ActivityTest.class);
+                Intent mainActivityIntent = new Intent(getApplicationContext(), ActivitySettings.class);
                 startActivity(mainActivityIntent);
                 return true;
             }

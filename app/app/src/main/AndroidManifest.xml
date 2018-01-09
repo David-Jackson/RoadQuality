@@ -34,7 +34,15 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ActivityTest"></activity>
+        <activity android:name=".ActivityTest" />
+        <activity
+            android:name=".ActivitySettings"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".ActivityMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="fyi.jackson.drew.roadquality.ActivityMain" />
+        </activity>
     </application>
 
 </manifest>
