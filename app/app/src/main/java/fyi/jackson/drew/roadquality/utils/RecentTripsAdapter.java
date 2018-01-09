@@ -123,7 +123,8 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
 
     public void clearActiveTrips() {
         if (activeViewHolder != null) {
-            activeViewHolder.layout.setBackgroundColor(Color.WHITE);
+            activeViewHolder.layout.setBackgroundColor(
+                    activeViewHolder.layout.getResources().getColor(R.color.bottom_sheet_background));
             activeViewHolder = null;
         }
     }

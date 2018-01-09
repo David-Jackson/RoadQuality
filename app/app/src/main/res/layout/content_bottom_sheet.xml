@@ -4,7 +4,7 @@
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="@dimen/bottom_sheet_height"
-    android:background="@android:color/white"
+    android:background="@color/bottom_sheet_background"
     android:orientation="vertical"
     android:elevation="@dimen/bottom_sheet_elevation"
     app:behavior_hideable="false"
@@ -14,6 +14,7 @@
     <TextView
         android:id="@+id/bottom_sheet_title"
         android:onClick="toggleBottomSheet"
+        android:textColor="@android:color/primary_text_dark"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_sheet_title_height"
         android:gravity="start|center"
@@ -25,7 +26,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/background_light"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

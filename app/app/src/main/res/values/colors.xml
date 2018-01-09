@@ -5,6 +5,7 @@
     <color name="primaryDarkColor">#c54a00</color>
     <color name="primaryTextColor">#000000</color>
 
+    <color name="bottom_sheet_background">@color/colorPrimary</color>
 
     <color name="colorPrimary">#ff7900</color>
     <color name="colorPrimaryLight">#ffaa42</color>
