@@ -71,7 +71,7 @@ public class MapData implements OnMapReadyCallback {
         try {
             JSONArray coordinates =
                     tripData.getJSONObject("trip").getJSONArray("coordinates");
-            LatLngBounds.Builder latLngBuilder = new LatLngBounds.Builder();
+            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
 
             float[] hsv = {0, 1, 1};
             Color color = new Color();
@@ -90,10 +90,18 @@ public class MapData implements OnMapReadyCallback {
                 hsv[0] = i % 360;
                 polylineOptions.color(color.HSVToColor(hsv));
 
-                latLngBuilder.include(latLng1);
+                boundsBuilder.include(latLng1);
+                boundsBuilder.include(latLng2);
                 googleMap.addPolyline(polylineOptions);
             }
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(latLngBuilder.build(), mapWidth, mapHeight, 10));
+            if (coordinates.length() > 1) {
+                googleMap.animateCamera(
+                        CameraUpdateFactory.newLatLngBounds(
+                                boundsBuilder.build(),
+                                mapWidth,
+                                mapHeight,
+                                10));
+            }
             isShowingData = true;
         } catch (JSONException e) {
             e.printStackTrace();
