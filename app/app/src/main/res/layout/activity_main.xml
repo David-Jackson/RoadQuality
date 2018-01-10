@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_play_arrow"  />
+        android:src="@drawable/ic_play"  />
 
     <RelativeLayout
         android:id="@+id/fab_reveal"
@@ -26,7 +26,7 @@
             android:id="@+id/fab_reveal_image"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:src="@drawable/avd_play_to_pause_96dp"
+            android:src="@drawable/ic_pause_96dp"
             android:contentDescription="@string/content_desc_fab_reveal" />
     </RelativeLayout>
 
