@@ -16,8 +16,7 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_margin="10dp"
-            android:src="@drawable/avd_satellite_signal_animated"
-            android:onClick="imageViewClicked"
+            android:src="@mipmap/satellite_200px"
             android:contentDescription="@string/content_desc_gps_image"/>
 
         <TextView

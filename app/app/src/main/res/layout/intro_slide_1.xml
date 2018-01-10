@@ -15,8 +15,7 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_margin="10dp"
-            android:src="@drawable/avd_road_animation"
-            android:onClick="imageViewClicked"
+            android:src="@mipmap/road_variant_200px"
             android:transitionName="launcher"
             android:contentDescription="@string/content_desc_road_image"/>
 

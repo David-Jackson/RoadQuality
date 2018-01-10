@@ -161,14 +161,6 @@ public class ActivityIntro extends AppCompatActivity {
         }
     }
 
-    public void imageViewClicked(final View view) {
-        if (view instanceof ImageView) {
-            ImageView imageView = (ImageView) view;
-            final AnimatedVectorDrawable drawable = (AnimatedVectorDrawable) imageView.getDrawable();
-            drawable.start();
-        }
-    }
-
     public void askPermission(View view) {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
