@@ -10,7 +10,7 @@ import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 
-@Database(entities = {Accelerometer.class, Gps.class, RoadPoint.class}, version = 7)
+@Database(entities = {Accelerometer.class, Gps.class, RoadPoint.class}, version = 8)
 public abstract class AppDatabase extends RoomDatabase{
     public static final String DATABASE_NAME = "RoadQualityDatabase.db";
     public abstract AccelerometerDao accelerometerDao();

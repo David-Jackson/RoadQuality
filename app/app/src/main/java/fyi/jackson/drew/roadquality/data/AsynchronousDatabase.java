@@ -11,6 +11,7 @@ import java.util.List;
 import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
+import fyi.jackson.drew.roadquality.data.migrations.Migrations;
 import fyi.jackson.drew.roadquality.utils.Vector3D;
 import fyi.jackson.drew.roadquality.utils.maps;
 
@@ -23,7 +24,8 @@ public class AsynchronousDatabase {
     public AsynchronousDatabase(Context context) {
         db = Room.databaseBuilder(context,
                 AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .fallbackToDestructiveMigration().build();
+                .addMigrations(Migrations.MIGRATION_7_8)
+                .build();
     }
 
     public void addAccelerometerEntry(Vector3D a, Vector3D g, Vector3D j) {
@@ -58,6 +60,7 @@ public class AsynchronousDatabase {
         gps.setLongitude(location.getLongitude());
         gps.setAccuracy(location.getAccuracy());
         gps.setAltitude(location.getAltitude());
+        gps.setSpeed(location.getSpeed());
 
         final AsynchronousDatabase context = this;
 

@@ -17,6 +17,7 @@ import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 import fyi.jackson.drew.roadquality.data.entities.Trip;
+import fyi.jackson.drew.roadquality.data.migrations.Migrations;
 import fyi.jackson.drew.roadquality.utils.maps;
 
 
@@ -67,7 +68,8 @@ public class DatabaseService extends IntentService {
     private AppDatabase getAppDatabase() {
         return Room.databaseBuilder(this,
                 AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .fallbackToDestructiveMigration().build(); // TODO: Add database migration processes
+                .addMigrations(Migrations.MIGRATION_7_8)
+                .build();
     }
 
     private void longTermStorage(Intent intent) {

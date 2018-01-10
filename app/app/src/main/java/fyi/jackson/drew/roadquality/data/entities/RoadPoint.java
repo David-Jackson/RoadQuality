@@ -74,6 +74,9 @@ public class RoadPoint {
     @ColumnInfo(name = "distance")
     private float distance;
 
+    @ColumnInfo(name = "speed")
+    private double speed = -1;
+
 
     // RoadPoint GENERATORS
     public static RoadPoint fromGps(Gps gps, long tripId) {
@@ -88,12 +91,13 @@ public class RoadPoint {
         roadPoint.setProvider(gps.getProvider());
         roadPoint.setAccuracy(gps.getAccuracy());
         roadPoint.setAltitude(gps.getAltitude());
+        roadPoint.setSpeed(gps.getSpeed());
 
         return roadPoint;
     }
 
     public static RoadPoint fromAccelerometer(Accelerometer accelerometer,
-                                              LatLng latLng, long tripId, float duration, float distance) {
+                                              LatLng latLng, long tripId, float duration, float distance, double speed) {
         RoadPoint roadPoint = new RoadPoint();
 
         roadPoint.setTripId(tripId);
@@ -113,6 +117,7 @@ public class RoadPoint {
         roadPoint.setJz(accelerometer.getJz());
         roadPoint.setDuration(duration);
         roadPoint.setDistance(distance);
+        roadPoint.setSpeed(speed);
 
         return roadPoint;
     }
@@ -276,5 +281,13 @@ public class RoadPoint {
 
     public void setDistance(float distance) {
         this.distance = distance;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 }

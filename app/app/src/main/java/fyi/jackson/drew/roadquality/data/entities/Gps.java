@@ -28,6 +28,9 @@ public class Gps {
     @ColumnInfo(name = "altitude")
     private double altitude;
 
+    @ColumnInfo(name = "speed")
+    private double speed = -1;
+
     public int getUid() {
         return uid;
     }
@@ -82,5 +85,13 @@ public class Gps {
 
     public void setAltitude(double altitude) {
         this.altitude = altitude;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
     }
 }

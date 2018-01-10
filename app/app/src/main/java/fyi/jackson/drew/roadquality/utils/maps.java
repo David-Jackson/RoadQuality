@@ -107,7 +107,8 @@ public class maps {
                                     interpolatedLatLng,
                                     tripId,
                                     (float) interpolatedDuration,
-                                    (float) interpolatedDistance
+                                    (float) interpolatedDistance,
+                                    gpsSpeed
                             )
                     );
 
