@@ -27,6 +27,7 @@
         <item quantity="other">%d points</item>
     </plurals>
     <string name="points_parse_error">Parse error position: %d</string>
+    <string name="share_database_intent_title">Save Database</string>
 
 
     <!-- Accessibility strings -->

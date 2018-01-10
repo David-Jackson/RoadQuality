@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +31,8 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
@@ -186,6 +190,11 @@ public class ActivityMain extends AppCompatActivity {
                 setProperFabStartingPosition();
                 return true;
             }
+
+            @Override
+            public void onShareButtonClick() {
+                shareDatabase();
+            }
         };
 
         recyclerView.setHasFixedSize(true);
@@ -330,6 +339,20 @@ public class ActivityMain extends AppCompatActivity {
         }
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+    }
+
+    private void shareDatabase() {
+        try {
+            File dbFile = getDatabasePath("RoadQualityDatabase.db").getAbsoluteFile();
+            Uri dbUri = Uri.fromFile(dbFile);
+            Log.d(TAG, "shareDatabase: Mime type:" + getContentResolver().getType(dbUri));
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setDataAndType(dbUri, "text/*");
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_database_intent_title)));
+        } catch (IllegalArgumentException e) {
+            Log.e("File Selector",
+                    "The selected file can't be shared: RoadQualityDatabase.db");
+        }
     }
 
     @Override

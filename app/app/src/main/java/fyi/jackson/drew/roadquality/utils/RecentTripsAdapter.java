@@ -1,5 +1,6 @@
 package fyi.jackson.drew.roadquality.utils;
 
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -16,17 +18,19 @@ import org.json.JSONObject;
 import fyi.jackson.drew.roadquality.R;
 
 
-public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTripsAdapter.ViewHolder> {
+public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final static String TAG = "RecentTripsAdapter";
     private final JSONArray values;
-    private ViewHolder activeViewHolder = null;
+    private TripViewHolder activeTripViewHolder = null;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    private static final int TRIP = 0, SHARE = 1;
+
+    public class TripViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewDate, textViewTime, textViewPoints;
         private final View tripLineTop, tripLineBottom, bottomDividerLine;
         private final View layout;
 
-        public ViewHolder(View v) {
+        public TripViewHolder(View v) {
             super(v);
             layout = v;
             textViewDate = v.findViewById(R.id.tv_date);
@@ -38,30 +42,77 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
         }
     }
 
+    public class ShareViewHolder extends RecyclerView.ViewHolder {
+        private final View layout;
+        private final Button shareButton;
+        public ShareViewHolder(View v) {
+            super(v);
+            layout = v;
+            shareButton = v.findViewById(R.id.share_button);
+        }
+    }
+
     // Provide a suitable constructor (depends on the kind of data set)
     public RecentTripsAdapter(JSONArray myDataSet) {
+        myDataSet.put("Share Item");
         values = myDataSet;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View v = inflater.inflate(R.layout.content_bottom_sheet_row, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        return new ViewHolder(v);
+        RecyclerView.ViewHolder viewHolder;
+        switch (viewType) {
+            case SHARE:
+                View v1 = inflater.inflate(R.layout.content_bottom_sheet_last_row, parent, false);
+                viewHolder = new ShareViewHolder(v1);
+                break;
+            default: // TRIP
+                View v = inflater.inflate(R.layout.content_bottom_sheet_row, parent, false);
+                viewHolder = new TripViewHolder(v);
+                break;
+        }
+        return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public int getItemViewType(int position) {
+        if (position == values.length() - 1) {
+            return SHARE;
+        } else {
+            return TRIP;
+        }
+    }
 
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (holder.getItemViewType()) {
+            case SHARE:
+                onBindShareViewHolder((ShareViewHolder) holder, position);
+                break;
+            default: // TRIP
+                onBindTripViewHolder((TripViewHolder) holder, position);
+                break;
+        }
+    }
+
+    private void onBindShareViewHolder(ShareViewHolder holder, int position) {
+        holder.shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onShareButtonClick();
+            }
+        });
+    }
+
+    private void onBindTripViewHolder(final TripViewHolder holder, final int position) {
         holder.tripLineTop.setVisibility(View.VISIBLE);
         holder.tripLineBottom.setVisibility(View.VISIBLE);
         holder.bottomDividerLine.setVisibility(View.VISIBLE);
         if (position == 0) {
             holder.tripLineTop.setVisibility(View.INVISIBLE);
         }
-        if (position == getItemCount() - 1) {
+        if (position == getItemCount() - 2) {
             holder.tripLineBottom.setVisibility(View.INVISIBLE);
             holder.bottomDividerLine.setVisibility(View.INVISIBLE);
         }
@@ -99,10 +150,10 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
         });
     }
 
-    public void rowClicked(ViewHolder holder, int position) {
+    public void rowClicked(TripViewHolder holder, int position) {
         try {
             JSONObject data = values.getJSONObject(position);
-            if (activeViewHolder != null && position == activeViewHolder.getAdapterPosition()) {
+            if (activeTripViewHolder != null && position == activeTripViewHolder.getAdapterPosition()) {
                 if (onRowClickedAgain(data.getLong("tripId"))) {
                     clearActiveTrips();
                 }
@@ -110,7 +161,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
                 clearActiveTrips();
                 holder.layout.setBackgroundColor(Color.GRAY);
                 onRowClicked(data.getLong("tripId"));
-                activeViewHolder = holder;
+                activeTripViewHolder = holder;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -121,11 +172,13 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecentTrip
 
     public abstract boolean onRowClickedAgain(long tripId);
 
+    public abstract void onShareButtonClick();
+
     public void clearActiveTrips() {
-        if (activeViewHolder != null) {
-            activeViewHolder.layout.setBackgroundColor(
-                    activeViewHolder.layout.getResources().getColor(R.color.bottom_sheet_background));
-            activeViewHolder = null;
+        if (activeTripViewHolder != null) {
+            activeTripViewHolder.layout.setBackgroundColor(
+                    activeTripViewHolder.layout.getResources().getColor(R.color.bottom_sheet_background));
+            activeTripViewHolder = null;
         }
     }
 
