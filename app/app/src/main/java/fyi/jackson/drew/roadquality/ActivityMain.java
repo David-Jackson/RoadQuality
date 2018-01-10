@@ -105,7 +105,7 @@ public class ActivityMain extends AppCompatActivity {
         fab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Intent mainActivityIntent = new Intent(getApplicationContext(), ActivitySettings.class);
+                Intent mainActivityIntent = new Intent(getApplicationContext(), ActivityTest.class);
                 startActivity(mainActivityIntent);
                 return true;
             }
@@ -194,6 +194,11 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onShareButtonClick() {
                 shareDatabase();
+            }
+
+            @Override
+            public void onSettingsButtonClick() {
+                openSettings();
             }
         };
 
@@ -353,6 +358,11 @@ public class ActivityMain extends AppCompatActivity {
             Log.e("File Selector",
                     "The selected file can't be shared: RoadQualityDatabase.db");
         }
+    }
+
+    private void openSettings() {
+        Intent mainActivityIntent = new Intent(getApplicationContext(), ActivitySettings.class);
+        startActivity(mainActivityIntent);
     }
 
     @Override

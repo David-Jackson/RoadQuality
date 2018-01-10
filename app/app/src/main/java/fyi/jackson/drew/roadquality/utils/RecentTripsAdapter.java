@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -44,11 +45,12 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class ShareViewHolder extends RecyclerView.ViewHolder {
         private final View layout;
-        private final Button shareButton;
+        private final ImageButton shareButton, settingsButton;
         public ShareViewHolder(View v) {
             super(v);
             layout = v;
             shareButton = v.findViewById(R.id.share_button);
+            settingsButton = v.findViewById(R.id.settings_button);
         }
     }
 
@@ -101,6 +103,12 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             @Override
             public void onClick(View view) {
                 onShareButtonClick();
+            }
+        });
+        holder.settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSettingsButtonClick();
             }
         });
     }
@@ -173,6 +181,8 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     public abstract boolean onRowClickedAgain(long tripId);
 
     public abstract void onShareButtonClick();
+
+    public abstract void onSettingsButtonClick();
 
     public void clearActiveTrips() {
         if (activeTripViewHolder != null) {
