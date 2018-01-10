@@ -9,10 +9,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MapData implements OnMapReadyCallback {
@@ -71,37 +77,33 @@ public class MapData implements OnMapReadyCallback {
         try {
             JSONArray coordinates =
                     tripData.getJSONObject("trip").getJSONArray("coordinates");
+            PolylineOptions polylineOptions = new PolylineOptions();
             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+            List<LatLng> latLngs = new ArrayList<>();
 
-            float[] hsv = {0, 1, 1};
-            Color color = new Color();
-
-            for (int i = 0; i < coordinates.length() - 1; i++) {
-                PolylineOptions polylineOptions = new PolylineOptions();
-                JSONObject coord1 = coordinates.getJSONObject(i);
-                LatLng latLng1 =
-                        new LatLng(coord1.getDouble("lat"), coord1.getDouble("lng"));
-                polylineOptions.add(latLng1);
-                JSONObject coord2 = coordinates.getJSONObject(i + 1);
-                LatLng latLng2 =
-                        new LatLng(coord2.getDouble("lat"), coord2.getDouble("lng"));
-                polylineOptions.add(latLng2);
-
-                hsv[0] = i % 360;
-                polylineOptions.color(color.HSVToColor(hsv));
-
-                boundsBuilder.include(latLng1);
-                boundsBuilder.include(latLng2);
-                googleMap.addPolyline(polylineOptions);
+            for (int i = 0; i < coordinates.length(); i++) {
+                JSONObject c = coordinates.getJSONObject(i);
+                LatLng latLng = new LatLng(
+                        c.getDouble("lat"), c.getDouble("lng"));
+                polylineOptions.add(latLng);
+                boundsBuilder.include(latLng);
+                latLngs.add(latLng);
             }
-            if (coordinates.length() > 1) {
-                googleMap.animateCamera(
-                        CameraUpdateFactory.newLatLngBounds(
-                                boundsBuilder.build(),
-                                mapWidth,
-                                mapHeight,
-                                10));
-            }
+
+            TileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .data(latLngs)
+                    .build();
+
+            googleMap.addPolyline(polylineOptions);
+            googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+            googleMap.animateCamera(
+                    CameraUpdateFactory.newLatLngBounds(
+                            boundsBuilder.build(),
+                            mapWidth,
+                            mapHeight,
+                            30));
+
             isShowingData = true;
         } catch (JSONException e) {
             e.printStackTrace();

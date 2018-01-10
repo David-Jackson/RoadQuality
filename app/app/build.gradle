@@ -37,4 +37,6 @@ dependencies {
     compile 'com.android.support:preference-v7:25.1.0'
 
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
+
 }
