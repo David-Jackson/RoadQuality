@@ -31,6 +31,7 @@
     <string name="settings_intent_title">Settings</string>
     <string name="snackbar_update_play_services">Update</string>
     <string name="google_play_uri" translatable="false">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
+    <string name="gps_permission_denied_snackbar_text">Location access is required for use of this app.</string>
 
     <!-- Accessibility strings -->
     <string name="content_desc_fab_reveal">Pause trip</string>

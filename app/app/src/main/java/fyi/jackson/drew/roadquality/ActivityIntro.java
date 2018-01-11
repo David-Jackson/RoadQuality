@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.AnimatedVectorDrawable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
@@ -17,10 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ActivityIntro extends AppCompatActivity {
 
@@ -204,9 +202,8 @@ public class ActivityIntro extends AppCompatActivity {
 
     private void permissionDenied() {
         btnNext.setEnabled(false);
-        // TODO: 12/12/2017 Make this toast into a SnackBar
-        Toast.makeText(this,
-                "Location Access is required for use of this app.",
-                Toast.LENGTH_LONG).show();
+        Snackbar.make(dotsLayout,
+                getString(R.string.gps_permission_denied_snackbar_text),
+                Snackbar.LENGTH_LONG).show();
     }
 }
