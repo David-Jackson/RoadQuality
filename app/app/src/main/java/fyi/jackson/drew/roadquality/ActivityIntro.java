@@ -25,9 +25,10 @@ public class ActivityIntro extends AppCompatActivity {
     private static final String TAG = "ActivityIntro";
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 2978;
 
+    private MyViewPagerAdapter myViewPagerAdapter;
     private ViewPager viewPager;
     private LinearLayout dotsLayout;
-    private int[] layouts;
+    private int[] overallLayouts, currentLayouts;
     private boolean[] nextButtonActiveDefaults;
     private Button btnNext;
 
@@ -40,10 +41,15 @@ public class ActivityIntro extends AppCompatActivity {
         dotsLayout = findViewById(R.id.layoutDots);
         btnNext = findViewById(R.id.btn_next);
 
-        layouts = new int[] {
+        overallLayouts = new int[] {
                 R.layout.intro_slide_1,
                 R.layout.intro_slide_2,
                 R.layout.intro_slide_3
+        };
+
+        currentLayouts = new int[] {
+                R.layout.intro_slide_1,
+                R.layout.intro_slide_2
         };
 
         nextButtonActiveDefaults = new boolean[] {
@@ -55,7 +61,7 @@ public class ActivityIntro extends AppCompatActivity {
         addBottomDots(0);
 
 
-        MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter();
+        myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
@@ -63,7 +69,7 @@ public class ActivityIntro extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int current = getItem(+1);
-                if (current < layouts.length) {
+                if (current < currentLayouts.length) {
                     viewPager.setCurrentItem(current);
                 } else {
                     launchMainActivity();
@@ -73,7 +79,7 @@ public class ActivityIntro extends AppCompatActivity {
 
     }
     private void addBottomDots(int currentPage) {
-        TextView[] dots = new TextView[layouts.length];
+        TextView[] dots = new TextView[currentLayouts.length];
 
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
@@ -96,7 +102,6 @@ public class ActivityIntro extends AppCompatActivity {
         finish();
     }
 
-    // TODO: 12/12/2017 Do not allow ViewPager to scroll past permission screen until permissions are accepted
     private final ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -108,7 +113,7 @@ public class ActivityIntro extends AppCompatActivity {
 
             addBottomDots(position);
 
-            if (position == layouts.length - 1) {
+            if (position == overallLayouts.length - 1) {
                 btnNext.setText(getString(R.string.got_it));
             } else {
                 btnNext.setText(getString(R.string.next));
@@ -136,7 +141,7 @@ public class ActivityIntro extends AppCompatActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            View view = layoutInflater.inflate(layouts[position], container, false);
+            View view = layoutInflater.inflate(currentLayouts[position], container, false);
             container.addView(view);
 
             return view;
@@ -144,7 +149,7 @@ public class ActivityIntro extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return layouts.length;
+            return currentLayouts.length;
         }
 
         @Override
@@ -195,6 +200,9 @@ public class ActivityIntro extends AppCompatActivity {
         settings.edit()
                 .putBoolean(getString(R.string.PREFS_PERMISSION_GRANTED), true)
                 .apply();
+
+        currentLayouts = overallLayouts; // add third comfirmation slide
+        myViewPagerAdapter.notifyDataSetChanged();
 
         btnNext.setEnabled(true);
         btnNext.performClick();
