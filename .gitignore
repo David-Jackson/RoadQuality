@@ -58,3 +58,6 @@ freeline_project_description.json
 
 # API Keys
 api_keys.xml
+
+# Backup Databases
+data/backups/*
