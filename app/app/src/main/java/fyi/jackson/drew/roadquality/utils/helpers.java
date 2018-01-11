@@ -2,6 +2,9 @@ package fyi.jackson.drew.roadquality.utils;
 
 import android.content.Context;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -41,5 +44,11 @@ public class helpers {
     public static String epochToTimeString(long epoch) {
         SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
         return sdf.format(new Date(epoch));
+    }
+
+    public static boolean isGooglePlayServicesAvailable(Context context){
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        return resultCode == ConnectionResult.SUCCESS;
     }
 }

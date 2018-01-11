@@ -11,8 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +41,7 @@ import fyi.jackson.drew.roadquality.service.ForegroundService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 import fyi.jackson.drew.roadquality.utils.MapData;
 import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
+import fyi.jackson.drew.roadquality.utils.helpers;
 import fyi.jackson.drew.roadquality.utils.maps;
 
 import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
@@ -79,6 +80,21 @@ public class ActivityMain extends AppCompatActivity {
 
         broadcastManager.askToUpdateTripList();
 
+
+        if (!helpers.isGooglePlayServicesAvailable(this)) {
+            Snackbar
+                    .make(findViewById(R.id.activity_main_layout),
+                            "Google Play Services needed to view trips",
+                            Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.snackbar_update_play_services,
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    openPlayStore();
+                                }
+                            })
+                    .show();
+        }
     }
 
     //
@@ -363,6 +379,12 @@ public class ActivityMain extends AppCompatActivity {
     private void openSettings() {
         Intent mainActivityIntent = new Intent(getApplicationContext(), ActivitySettings.class);
         startActivity(mainActivityIntent);
+    }
+
+    private void openPlayStore() {
+        Intent playStoreIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(getString(R.string.google_play_uri)));
+        startActivity(playStoreIntent);
     }
 
     @Override
