@@ -8,6 +8,8 @@ The vision for this app is to make it as simple for the user as possible to reco
 
 ## Progress
 
+![](https://raw.githubusercontent.com/David-Jackson/RoadQuality/master/images/device-2018-01-11-131710.gif)
+
 This app is still very much a work in progress, but this is what is implemented so far:
 - [X] Detects and records bumps with accelerometer
 - [X] Records location with GPS
