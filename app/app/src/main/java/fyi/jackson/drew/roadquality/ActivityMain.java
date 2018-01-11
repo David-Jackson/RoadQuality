@@ -28,7 +28,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -350,9 +349,14 @@ public class ActivityMain extends AppCompatActivity {
         try {
             File dbFile = getDatabasePath("RoadQualityDatabase.db").getAbsoluteFile();
             Uri dbUri = Uri.fromFile(dbFile);
-            Log.d(TAG, "shareDatabase: Mime type:" + getContentResolver().getType(dbUri));
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setDataAndType(dbUri, "text/*");
+            shareIntent.setType("text/*");
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            shareIntent.setFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+            shareIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, dbUri);
             startActivity(Intent.createChooser(shareIntent, getString(R.string.share_database_intent_title)));
         } catch (IllegalArgumentException e) {
             Log.e("File Selector",
