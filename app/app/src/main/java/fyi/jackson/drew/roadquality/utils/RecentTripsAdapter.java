@@ -16,15 +16,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import fyi.jackson.drew.roadquality.R;
 
 
 public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final static String TAG = "RecentTripsAdapter";
-    private final JSONArray values;
+    private final ArrayList<Object> values;
     private TripViewHolder activeTripViewHolder = null;
 
-    private static final int TRIP = 0, SHARE = 1;
+    private static final int TRIP = 0, SHARE = 1, NO_TRIPS = 2;
 
     public class TripViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewDate, textViewTime, textViewPoints;
@@ -54,10 +56,28 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    public class NoTripsViewHolder extends RecyclerView.ViewHolder {
+        public NoTripsViewHolder(View v) {
+            super(v);
+        }
+    }
+
     // Provide a suitable constructor (depends on the kind of data set)
     public RecentTripsAdapter(JSONArray myDataSet) {
-        myDataSet.put("Share Item");
-        values = myDataSet;
+        values = new ArrayList<>();
+        if (myDataSet.length() == 0) {
+            values.add(NO_TRIPS);
+        }
+
+        try {
+            for (int i = 0; i < myDataSet.length(); i++) {
+                values.add(myDataSet.get(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        values.add(SHARE);
     }
 
     @Override
@@ -69,6 +89,10 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
                 View v1 = inflater.inflate(R.layout.content_bottom_sheet_last_row, parent, false);
                 viewHolder = new ShareViewHolder(v1);
                 break;
+            case NO_TRIPS:
+                View v2 = inflater.inflate(R.layout.content_bottom_sheet_no_trips_row, parent, false);
+                viewHolder = new NoTripsViewHolder(v2);
+                break;
             default: // TRIP
                 View v = inflater.inflate(R.layout.content_bottom_sheet_row, parent, false);
                 viewHolder = new TripViewHolder(v);
@@ -79,10 +103,10 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (position == values.length() - 1) {
-            return SHARE;
-        } else {
+        if (values.get(position) instanceof JSONObject) {
             return TRIP;
+        } else {
+            return (int) values.get(position);
         }
     }
 
@@ -92,10 +116,17 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             case SHARE:
                 onBindShareViewHolder((ShareViewHolder) holder, position);
                 break;
+            case NO_TRIPS:
+                onBindNoTripViewHolder((NoTripsViewHolder) holder, position);
+                break;
             default: // TRIP
                 onBindTripViewHolder((TripViewHolder) holder, position);
                 break;
         }
+    }
+
+    private void onBindNoTripViewHolder(NoTripsViewHolder holder, int position) {
+
     }
 
     private void onBindShareViewHolder(ShareViewHolder holder, int position) {
@@ -125,9 +156,10 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.bottomDividerLine.setVisibility(View.INVISIBLE);
         }
         try {
-            long startEpoch = values.getJSONObject(position).getLong("startTime");
-            long endEpoch = values.getJSONObject(position).getLong("endTime");
-            int points = values.getJSONObject(position).getInt("numberOfPoints");
+            JSONObject obj = (JSONObject) values.get(position);
+            long startEpoch = obj.getLong("startTime");
+            long endEpoch = obj.getLong("endTime");
+            int points = obj.getInt("numberOfPoints");
 
             Resources res = holder.layout.getResources();
             String dateString = helpers.epochToDateString(endEpoch);
@@ -160,7 +192,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public void rowClicked(TripViewHolder holder, int position) {
         try {
-            JSONObject data = values.getJSONObject(position);
+            JSONObject data = (JSONObject) values.get(position);
             if (activeTripViewHolder != null && position == activeTripViewHolder.getAdapterPosition()) {
                 if (onRowClickedAgain(data.getLong("tripId"))) {
                     clearActiveTrips();
@@ -194,7 +226,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemCount() {
-        return values.length();
+        return values.size();
     }
 
 
