@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -247,18 +246,11 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onDataTransferredToLongTerm(int totalRows, int deletedAccelRows, int deletedGpsRows) {
-                Toast.makeText(ActivityMain.this,
-                        "Data Received: total = " +
-                                totalRows + " | delA = " +
-                                deletedAccelRows + " | delG =" +
-                                deletedGpsRows, Toast.LENGTH_LONG
-                        ).show();
                 this.askToUpdateTripList();
             }
 
             @Override
             public void onTripListReceived(JSONArray tripList) {
-                Toast.makeText(ActivityMain.this, "Got Trip List: " + tripList.length() + " trip(s)", Toast.LENGTH_SHORT).show();
                 setupBottomSheetRecyclerView(tripList);
                 findViewById(R.id.progress_bar_bottom_sheet).setVisibility(View.INVISIBLE);
                 findViewById(R.id.recycler_view_bottom_sheet).setVisibility(View.VISIBLE);
@@ -266,14 +258,6 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onTripDataReceived(JSONObject tripData) {
-                String toastString = "Nothing received";
-                try {
-                    toastString = "Received " + tripData.getJSONObject("trip").getJSONArray("coordinates").length();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Toast.makeText(ActivityMain.this, toastString, Toast.LENGTH_SHORT).show();
-
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 ActivityMain.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                 int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
