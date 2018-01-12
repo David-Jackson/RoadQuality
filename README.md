@@ -36,3 +36,7 @@ And this is what still needs to be added in the future:
 - [ ] Automatically start recording when connected to Bluetooth device or navigating with Google Maps
 - [ ] Upload anonymous data to a cloud server
 - [ ] Add 'recording deadzones' where the app will not record data within a certain distance from a point
+
+## Methodology
+
+To get a better idea of the math behind the code, check out the [methodology](https://github.com/David-Jackson/RoadQuality/blob/master/METHODOLOGY.md)
