@@ -6,6 +6,19 @@ Tired of the bad roads? This app is a simple way to fix it. RoadQuality uses you
 
 The vision for this app is to make it as simple for the user as possible to record and upload anonymous data pertaining to the quality of roads that they drive on. To achieve this, the app should start when the user starts driving, automatically. The app should also do as much local processing of the data as possible, and only upload the anonymous data points that cannot be linked to any other data points, or be linked back to the user. The app should also provide the user control of their own data pertaining to the ability upload, share, and stop recording at any point in time. This is what the app should be striving to achieve throughout development.
 
+## Get Started
+
+To start contributing, clone the project with git (see [Cloning a repository](https://help.github.com/articles/cloning-a-repository/)) and import the `app` folder into Android Studio. Then you just need to create a new file called `api_keys.xml` in the project's `res/values/` folder (this is where we will be storing the Google Maps API key). Follow [these steps](https://developers.google.com/maps/documentation/android-api/signup) to get your own API Key, and add it to the `api_keys.xml` file you just created. Here's an example of how your file should look:
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">API_KEY_HERE</string>
+</resources>
+```
+
+From there, you should be all set to run the app on your device or emulator. If you have any issues, please [submit an issue](https://github.com/David-Jackson/RoadQuality/issues/new).
+
 ## Progress
 
 ![](https://raw.githubusercontent.com/David-Jackson/RoadQuality/master/images/device-2018-01-11-131710.gif)
