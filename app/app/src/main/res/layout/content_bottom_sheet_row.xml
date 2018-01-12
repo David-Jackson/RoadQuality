@@ -8,6 +8,13 @@
 
 
     <View
+        android:id="@+id/row_background_selected"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray"
+        android:visibility="invisible"/>
+
+    <View
         android:id="@+id/view_trip_line_top"
         android:layout_width="8dp"
         android:layout_height="48dp"
