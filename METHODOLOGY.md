@@ -14,7 +14,11 @@ The idea for this app is that we want to record bumps in the road, which would r
 
 [Khan Academy](https://www.khanacademy.org/) has a great [video](https://www.khanacademy.org/math/linear-algebra/matrix-transformations/lin-trans-examples/v/introduction-to-projections) on how to do this with two 3-dimensional vectors. This app implements this in the [`Vector3D`](https://github.com/David-Jackson/RoadQuality/blob/master/app/app/src/main/java/fyi/jackson/drew/roadquality/utils/Vector3D.java) class: 
 
-https://github.com/David-Jackson/RoadQuality/blob/3c55e90942b67d3277fbed95f4a81f9cfe549ebf/app/app/src/main/java/fyi/jackson/drew/roadquality/utils/Vector3D.java#L35-L37
-
-https://github.com/David-Jackson/RoadQuality/blob/3c55e90942b67d3277fbed95f4a81f9cfe549ebf/app/app/src/main/java/fyi/jackson/drew/roadquality/utils/Vector3D.java#L25-L27
-
+```
+public float project(Vector3D onToVector) {
+    return this.dot(onToVector) / onToVector.dot(onToVector);
+}
+public float dot(Vector3D v) {
+    return ((this.x * v.x) + (this.y * v.y) + (this.z * v.z));
+}
+````
