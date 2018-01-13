@@ -37,6 +37,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"/>
+        <Button
+            android:id="@+id/button_refresh_bottom_sheet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:alpha="0"
+            android:text="@string/refresh"
+            android:textColor="@android:color/primary_text_dark"
+            android:layout_below="@id/progress_bar_bottom_sheet"
+            android:layout_centerHorizontal="true"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
         <android.support.v7.widget.RecyclerView
             android:visibility="invisible"
             android:id="@+id/recycler_view_bottom_sheet"

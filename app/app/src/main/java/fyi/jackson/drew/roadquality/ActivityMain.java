@@ -20,6 +20,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -40,7 +41,6 @@ import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 import fyi.jackson.drew.roadquality.utils.MapData;
 import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
 import fyi.jackson.drew.roadquality.utils.helpers;
-import fyi.jackson.drew.roadquality.utils.maps;
 
 import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
 
@@ -64,6 +64,9 @@ public class ActivityMain extends AppCompatActivity {
 
     private RecyclerView recyclerView = null;
 
+    private Button refreshButton;
+    private Runnable refreshButtonRunnable;
+    private int refreshButtonRunnableDelay = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,6 +186,21 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
+        refreshButton = findViewById(R.id.button_refresh_bottom_sheet);
+        refreshButtonRunnable = new Runnable() {
+            @Override
+            public void run() {
+                refreshButton.setVisibility(View.VISIBLE);
+                refreshButton.animate().alpha(1).setDuration(300).start();
+            }
+        };
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRefreshButtonClick();
+            }
+        });
+        refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
     }
 
     private void setupBottomSheetRecyclerView(JSONArray tripData) {
@@ -253,6 +271,8 @@ public class ActivityMain extends AppCompatActivity {
                 setupBottomSheetRecyclerView(tripList);
                 findViewById(R.id.progress_bar_bottom_sheet).setVisibility(View.INVISIBLE);
                 findViewById(R.id.recycler_view_bottom_sheet).setVisibility(View.VISIBLE);
+                refreshButton.removeCallbacks(refreshButtonRunnable);
+                refreshButton.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -326,6 +346,12 @@ public class ActivityMain extends AppCompatActivity {
         } else {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
+    }
+
+    private void onRefreshButtonClick() {
+        broadcastManager.askToUpdateTripList();
+        refreshButton.setVisibility(View.INVISIBLE);
+        refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
     }
 
     private void showLastKnownLocation(GoogleMap googleMap) {
