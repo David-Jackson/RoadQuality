@@ -1,7 +1,10 @@
 package fyi.jackson.drew.roadquality;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,8 +21,9 @@ public class ActivitySplash extends AppCompatActivity {
                 getString(R.string.PREFS_NAME), 0);
         int timesOpened = settings.getInt(
                 getString(R.string.PREFS_TIMES_OPENED), 0);
-        boolean permissionGranted = settings.getBoolean(
-                getString(R.string.PREFS_PERMISSION_GRANTED), false);
+        boolean permissionGranted = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
 
         Log.d(TAG, "onCreate: This app has been opened " + timesOpened + " time(s) before");
         
