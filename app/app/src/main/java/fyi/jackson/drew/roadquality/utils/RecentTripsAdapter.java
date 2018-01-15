@@ -27,6 +27,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     private final static String TAG = "RecentTripsAdapter";
     private final ArrayList<Object> values;
     private TripViewHolder activeTripViewHolder = null;
+    private int activeTripPosition = -1;
 
     private static final int TRIP = 0, SHARE = 1, NO_TRIPS = 2;
 
@@ -151,12 +152,16 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
         holder.tripLineTop.setVisibility(View.VISIBLE);
         holder.tripLineBottom.setVisibility(View.VISIBLE);
         holder.bottomDividerLine.setVisibility(View.VISIBLE);
+        holder.backgroundSelected.setVisibility(View.INVISIBLE);
         if (position == 0) {
             holder.tripLineTop.setVisibility(View.INVISIBLE);
         }
         if (position == getItemCount() - 2) {
             holder.tripLineBottom.setVisibility(View.INVISIBLE);
             holder.bottomDividerLine.setVisibility(View.INVISIBLE);
+        }
+        if (position == activeTripPosition) {
+            holder.backgroundSelected.setVisibility(View.VISIBLE);
         }
         try {
             JSONObject obj = (JSONObject) values.get(position);
@@ -221,6 +226,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
                 onRowClicked(data.getLong("tripId"));
                 activeTripViewHolder = holder;
+                activeTripPosition = position;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -240,6 +246,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             if ((clickX == -1 && clickY == -1) || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 activeTripViewHolder.backgroundSelected.setVisibility(View.INVISIBLE);
                 activeTripViewHolder = null;
+                activeTripPosition = -1;
             } else {
                 // Get the distance from the click location to the bottom or top of the view,
                 // whichever is largest
@@ -263,6 +270,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
                     public void onAnimationEnd(Animator animator) {
                         activeTripViewHolder.backgroundSelected.setVisibility(View.INVISIBLE);
                         activeTripViewHolder = null;
+                        activeTripPosition = -1;
                     }
                 });
                 animator.start();
