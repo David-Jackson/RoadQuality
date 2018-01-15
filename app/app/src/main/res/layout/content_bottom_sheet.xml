@@ -14,7 +14,7 @@
     <TextView
         android:id="@+id/bottom_sheet_title"
         android:onClick="toggleBottomSheet"
-        android:textColor="@android:color/primary_text_dark"
+        android:textColor="@color/recent_trips_color"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_sheet_title_height"
         android:gravity="start|center"
