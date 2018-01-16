@@ -36,46 +36,37 @@ public class RoadPoint {
     private String provider;
 
     @ColumnInfo(name = "accuracy")
-    private float accuracy;
+    private Float accuracy;
 
     @ColumnInfo(name = "altitude")
-    private double altitude;
+    private Double altitude;
 
     @ColumnInfo(name = "ax")
-    private float ax;
+    private Float ax;
 
     @ColumnInfo(name = "ay")
-    private float ay;
+    private Float ay;
 
     @ColumnInfo(name = "az")
-    private float az;
+    private Float az;
 
     @ColumnInfo(name = "gx")
-    private float gx;
+    private Float gx;
 
     @ColumnInfo(name = "gy")
-    private float gy;
+    private Float gy;
 
     @ColumnInfo(name = "gz")
-    private float gz;
-
-    @ColumnInfo(name = "jx")
-    private float jx;
-
-    @ColumnInfo(name = "jy")
-    private float jy;
-
-    @ColumnInfo(name = "jz")
-    private float jz;
+    private Float gz;
 
     @ColumnInfo(name = "duration")
-    private float duration;
+    private Float duration;
 
     @ColumnInfo(name = "distance")
-    private float distance;
+    private Float distance;
 
     @ColumnInfo(name = "speed")
-    private double speed = -1;
+    private Double speed;
 
 
     // RoadPoint GENERATORS
@@ -112,16 +103,12 @@ public class RoadPoint {
         roadPoint.setGx(accelerometer.getGx());
         roadPoint.setGy(accelerometer.getGy());
         roadPoint.setGz(accelerometer.getGz());
-        roadPoint.setJx(accelerometer.getJx());
-        roadPoint.setJy(accelerometer.getJy());
-        roadPoint.setJz(accelerometer.getJz());
         roadPoint.setDuration(duration);
         roadPoint.setDistance(distance);
         roadPoint.setSpeed(speed);
 
         return roadPoint;
     }
-
 
     public int getUid() {
         return uid;
@@ -179,115 +166,91 @@ public class RoadPoint {
         this.provider = provider;
     }
 
-    public float getAccuracy() {
+    public Float getAccuracy() {
         return accuracy;
     }
 
-    public void setAccuracy(float accuracy) {
+    public void setAccuracy(Float accuracy) {
         this.accuracy = accuracy;
     }
 
-    public double getAltitude() {
+    public Double getAltitude() {
         return altitude;
     }
 
-    public void setAltitude(double altitude) {
+    public void setAltitude(Double altitude) {
         this.altitude = altitude;
     }
 
-    public float getAx() {
+    public Float getAx() {
         return ax;
     }
 
-    public void setAx(float ax) {
+    public void setAx(Float ax) {
         this.ax = ax;
     }
 
-    public float getAy() {
+    public Float getAy() {
         return ay;
     }
 
-    public void setAy(float ay) {
+    public void setAy(Float ay) {
         this.ay = ay;
     }
 
-    public float getAz() {
+    public Float getAz() {
         return az;
     }
 
-    public void setAz(float az) {
+    public void setAz(Float az) {
         this.az = az;
     }
 
-    public float getGx() {
+    public Float getGx() {
         return gx;
     }
 
-    public void setGx(float gx) {
+    public void setGx(Float gx) {
         this.gx = gx;
     }
 
-    public float getGy() {
+    public Float getGy() {
         return gy;
     }
 
-    public void setGy(float gy) {
+    public void setGy(Float gy) {
         this.gy = gy;
     }
 
-    public float getGz() {
+    public Float getGz() {
         return gz;
     }
 
-    public void setGz(float gz) {
+    public void setGz(Float gz) {
         this.gz = gz;
     }
 
-    public float getJx() {
-        return jx;
-    }
-
-    public void setJx(float jx) {
-        this.jx = jx;
-    }
-
-    public float getJy() {
-        return jy;
-    }
-
-    public void setJy(float jy) {
-        this.jy = jy;
-    }
-
-    public float getJz() {
-        return jz;
-    }
-
-    public void setJz(float jz) {
-        this.jz = jz;
-    }
-
-    public float getDuration() {
+    public Float getDuration() {
         return duration;
     }
 
-    public void setDuration(float duration) {
+    public void setDuration(Float duration) {
         this.duration = duration;
     }
 
-    public float getDistance() {
+    public Float getDistance() {
         return distance;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(Float distance) {
         this.distance = distance;
     }
 
-    public double getSpeed() {
+    public Double getSpeed() {
         return speed;
     }
 
-    public void setSpeed(double speed) {
+    public void setSpeed(Double speed) {
         this.speed = speed;
     }
 }

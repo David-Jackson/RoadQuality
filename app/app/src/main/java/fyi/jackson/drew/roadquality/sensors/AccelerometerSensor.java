@@ -21,14 +21,13 @@ public abstract class AccelerometerSensor implements SensorEventListener {
     private boolean sensorNeedsToSettle = true;
     private long timeWhenSensorIsSettled = 0;
 
-    private Vector3D acceleration, gravity, jolt, MOTION_TRIGGER;
+    private Vector3D acceleration, gravity, MOTION_TRIGGER;
     private static final float DEFAULT_MOTION_TRIGGER_LIMIT = 2;
     private static final float PROJECTION_SCALING_FACTOR_TRIGGER = 0.2f;
 
     public AccelerometerSensor(Context context) {
         this.acceleration = new Vector3D();
         this.gravity = new Vector3D();
-        this.jolt = new Vector3D();
         this.MOTION_TRIGGER = new Vector3D(
                 DEFAULT_MOTION_TRIGGER_LIMIT,
                 DEFAULT_MOTION_TRIGGER_LIMIT,
@@ -86,8 +85,7 @@ public abstract class AccelerometerSensor implements SensorEventListener {
 
             setGravity(x, y, z);
         }
-        updateJolt();
-        onUpdate(this.acceleration, this.gravity, this.jolt);
+        onUpdate(this.acceleration, this.gravity);
     }
 
     @Override
@@ -95,7 +93,7 @@ public abstract class AccelerometerSensor implements SensorEventListener {
 
     }
 
-    public abstract void onUpdate(Vector3D a, Vector3D g, Vector3D j);
+    public abstract void onUpdate(Vector3D a, Vector3D g);
 
     // Getters and setters
 
@@ -121,22 +119,6 @@ public abstract class AccelerometerSensor implements SensorEventListener {
 
     public void setGravity(float x, float y, float z) {
         this.gravity = new Vector3D(x, y, z);
-    }
-
-    public Vector3D getJolt() {
-        return jolt;
-    }
-
-    public void setJolt(Vector3D jolt) {
-        this.jolt = jolt;
-    }
-
-    public void setJolt(float x, float y, float z) {
-        this.jolt = new Vector3D(x, y, z);
-    }
-
-    public void updateJolt() {
-        this.jolt = this.acceleration.subtract(this.gravity);
     }
 
     public void setTriggerLimit(float limit) {

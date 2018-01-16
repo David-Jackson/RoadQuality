@@ -45,9 +45,9 @@ public class ForegroundService extends Service {
 
         accelerometerSensor = new AccelerometerSensor(this) {
             @Override
-            public void onUpdate(Vector3D a, Vector3D g, Vector3D j) {
+            public void onUpdate(Vector3D a, Vector3D g) {
                 if (accelerometerSensor.significantMotionDetected()) {
-                    database.addAccelerometerEntry(a, g, j);
+                    database.addAccelerometerEntry(a, g);
                     accelRecordCount++;
                     if (accelRecordCount % 100 == 0) {
                         updateNotification();

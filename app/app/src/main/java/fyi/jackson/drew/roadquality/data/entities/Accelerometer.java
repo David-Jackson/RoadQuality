@@ -30,15 +30,6 @@ public class Accelerometer {
     @ColumnInfo(name = "gz")
     private float gz;
 
-    @ColumnInfo(name = "jx")
-    private float jx;
-
-    @ColumnInfo(name = "jy")
-    private float jy;
-
-    @ColumnInfo(name = "jz")
-    private float jz;
-
     public int getUid() {
         return uid;
     }
@@ -101,29 +92,5 @@ public class Accelerometer {
 
     public void setGz(float gz) {
         this.gz = gz;
-    }
-
-    public float getJx() {
-        return jx;
-    }
-
-    public void setJx(float jx) {
-        this.jx = jx;
-    }
-
-    public float getJy() {
-        return jy;
-    }
-
-    public void setJy(float jy) {
-        this.jy = jy;
-    }
-
-    public float getJz() {
-        return jz;
-    }
-
-    public void setJz(float jz) {
-        this.jz = jz;
     }
 }

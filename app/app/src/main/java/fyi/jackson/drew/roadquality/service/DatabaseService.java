@@ -68,7 +68,7 @@ public class DatabaseService extends IntentService {
     private AppDatabase getAppDatabase() {
         return Room.databaseBuilder(this,
                 AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .addMigrations(Migrations.MIGRATION_7_8)
+                .addMigrations(Migrations.MIGRATION_7_8, Migrations.MIGRATION_8_9)
                 .build();
     }
 

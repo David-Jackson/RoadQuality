@@ -24,11 +24,11 @@ public class AsynchronousDatabase {
     public AsynchronousDatabase(Context context) {
         db = Room.databaseBuilder(context,
                 AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .addMigrations(Migrations.MIGRATION_7_8)
+                .addMigrations(Migrations.MIGRATION_7_8, Migrations.MIGRATION_8_9)
                 .build();
     }
 
-    public void addAccelerometerEntry(Vector3D a, Vector3D g, Vector3D j) {
+    public void addAccelerometerEntry(Vector3D a, Vector3D g) {
 
         final Accelerometer accelerometer = new Accelerometer();
         accelerometer.setTimestamp(System.currentTimeMillis());
@@ -38,9 +38,6 @@ public class AsynchronousDatabase {
         accelerometer.setGx(g.x);
         accelerometer.setGy(g.y);
         accelerometer.setGz(g.z);
-        accelerometer.setJx(j.x);
-        accelerometer.setJy(j.y);
-        accelerometer.setJz(j.z);
 
         final AsynchronousDatabase context = this;
 
