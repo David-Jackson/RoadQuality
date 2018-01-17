@@ -16,14 +16,15 @@
         <activity
             android:name=".ActivitySplash"
             android:theme="@style/SplashTheme">
+        </activity>
+        <activity android:name=".ActivityIntro" />
+        <activity android:name=".ActivityMain">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ActivityIntro" />
-        <activity android:name=".ActivityMain" />
 
         <service android:name=".service.ForegroundService" />
         <service android:name=".service.DatabaseService" />
