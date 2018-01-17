@@ -58,8 +58,9 @@ public class ActivityMain extends AppCompatActivity {
     private static final String TAG = "ActivityMain";
 
     private FloatingActionButton fab;
-
     private MorphingFab morphingFab;
+
+    private BroadcastManager broadcastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,11 @@ public class ActivityMain extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setupFab();
+
+        if (helpers.isIntroNeeded(this)) {
+            transitionToIntro();
+        }
+
     }
 
     private void setupFab() {
@@ -104,8 +110,73 @@ public class ActivityMain extends AppCompatActivity {
                     Log.d(TAG, "onGlobalLayout: FAB SHOULD BE CLOSED ON START");
                     morphingFab.close();
                 }
+                setupAfterFirstDraw();
             }
         });
+
+    }
+
+
+    private void setupAfterFirstDraw() {
+        setupBroadcastManager();
+
+        inflateMap();
+        setupMap();
+
+        inflateBottomSheet();
+        setupBottomSheet();
+
+        setupAnimations();
+    }
+
+    private void setupBroadcastManager() {
+        broadcastManager = new BroadcastManager(this) {
+            @Override
+            public void onServiceStatusChanged(int serviceStatus) {
+                switch (serviceStatus) {
+                    case ForegroundConstants.STATUS_ACTIVE:
+                        morphingFab.open();
+                        break;
+                    case ForegroundConstants.STATUS_INACTIVE:
+                        morphingFab.close();
+                        break;
+                }
+            }
+
+            @Override
+            public void onDataTransferredToLongTerm(int totalRows, int deletedAccelRows, int deletedGpsRows) {
+
+            }
+
+            @Override
+            public void onTripListReceived(JSONArray tripList) {
+
+            }
+
+            @Override
+            public void onTripDataReceived(JSONObject tripData) {
+
+            }
+        };
+    }
+
+    private void inflateMap() {
+
+    }
+
+    private void setupMap() {
+
+    }
+
+    private void inflateBottomSheet() {
+
+    }
+
+    private void setupBottomSheet() {
+
+    }
+
+    private void setupAnimations() {
 
     }
 
@@ -117,6 +188,16 @@ public class ActivityMain extends AppCompatActivity {
             service.setAction(ForegroundConstants.ACTION.STOPFOREGROUND_ACTION);
         }
         startService(service);
+    }
+
+    private void transitionToIntro() {
+        setupTransitionToIntro();
+        Intent introActivityIntent = new Intent(getApplicationContext(), ActivityIntro.class);
+        startActivity(introActivityIntent);
+    }
+
+    private void setupTransitionToIntro() {
+
     }
 
 }
