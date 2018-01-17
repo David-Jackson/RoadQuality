@@ -13,6 +13,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -32,9 +33,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
+import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
@@ -42,12 +49,15 @@ import fyi.jackson.drew.roadquality.utils.MapData;
 import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
 import fyi.jackson.drew.roadquality.utils.helpers;
 
+import static fyi.jackson.drew.roadquality.data.AppDatabase.DATABASE_NAME;
 import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
 
 
 public class ActivityMain extends AppCompatActivity {
 
     private static final String TAG = "ActivityMain";
+
+    private static final int MY_PERMISSIONS_REQUEST_STORAGE_ACCESS = 4378;
 
     private MapData mapData;
 
@@ -372,9 +382,45 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void shareDatabase() {
+        askPermissionToShareDatabase();
+    }
+
+    private void askPermissionToShareDatabase() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_STORAGE_ACCESS);
+        } else {
+            continueToShareDatabase();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_STORAGE_ACCESS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    continueToShareDatabase();
+                } else {
+                    permissionDenied();
+                }
+                break;
+            }
+        }
+    }
+
+    private void continueToShareDatabase() {
         try {
             File dbFile = getDatabasePath("RoadQualityDatabase.db").getAbsoluteFile();
-            Uri dbUri = Uri.fromFile(dbFile);
+            File outFile = new File(getExternalFilesDir(null), AppDatabase.DATABASE_NAME);
+            copyFile(dbFile, outFile);
+            Uri dbUri = Uri.fromFile(outFile);
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/*");
             shareIntent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
@@ -387,6 +433,33 @@ public class ActivityMain extends AppCompatActivity {
         } catch (IllegalArgumentException e) {
             Log.e("File Selector",
                     "The selected file can't be shared: RoadQualityDatabase.db");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void permissionDenied() {
+        Snackbar.make(bottomSheetLayout,
+                "Unable to share database",
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    public static void copyFile(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        try {
+            OutputStream out = new FileOutputStream(dst);
+            try {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
         }
     }
 
