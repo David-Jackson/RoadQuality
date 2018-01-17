@@ -18,6 +18,7 @@ import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 import fyi.jackson.drew.roadquality.data.entities.Trip;
 import fyi.jackson.drew.roadquality.data.migrations.Migrations;
+import fyi.jackson.drew.roadquality.utils.helpers;
 import fyi.jackson.drew.roadquality.utils.maps;
 
 
@@ -65,15 +66,8 @@ public class DatabaseService extends IntentService {
         }
     }
 
-    private AppDatabase getAppDatabase() {
-        return Room.databaseBuilder(this,
-                AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .addMigrations(Migrations.MIGRATION_7_8, Migrations.MIGRATION_8_9)
-                .build();
-    }
-
     private void longTermStorage(Intent intent) {
-        AppDatabase db = getAppDatabase();
+        AppDatabase db = helpers.getAppDatabase(this);
 
         List<Accelerometer> accelerometerList = db.accelerometerDao().getAll();
         List<Gps> gpsList = db.gpsDao().getAll();
@@ -104,7 +98,7 @@ public class DatabaseService extends IntentService {
     }
 
     private void getAllTripIds(Intent intent) {
-        AppDatabase db = getAppDatabase();
+        AppDatabase db = helpers.getAppDatabase(this);
 
         List<Long> tripIds = db.roadPointDao().getAllTripIds();
 
@@ -122,7 +116,7 @@ public class DatabaseService extends IntentService {
     }
 
     private void getAllTrips(Intent intent) {
-        AppDatabase db = getAppDatabase();
+        AppDatabase db = helpers.getAppDatabase(this);
 
         List<Trip> trips = db.roadPointDao().getAllTrips();
 
@@ -148,7 +142,7 @@ public class DatabaseService extends IntentService {
             Log.e(TAG, "getAllPointsFromTrip: tripId was not set in intent");
             return;
         }
-        AppDatabase db = getAppDatabase();
+        AppDatabase db = helpers.getAppDatabase(this);
 
         List<RoadPoint> tripRoadPoints = db.roadPointDao().getAllFromTrip(tripId);
 
@@ -177,7 +171,7 @@ public class DatabaseService extends IntentService {
     }
 
     private void getAllGpsPoints(Intent intent) {
-        AppDatabase db = getAppDatabase();
+        AppDatabase db = helpers.getAppDatabase(this);
 
         List<RoadPoint> gpsRoadPoints = db.roadPointDao().getAllGpsPoints();
 

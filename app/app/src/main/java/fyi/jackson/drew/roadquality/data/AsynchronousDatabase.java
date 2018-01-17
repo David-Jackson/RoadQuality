@@ -13,6 +13,7 @@ import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 import fyi.jackson.drew.roadquality.data.migrations.Migrations;
 import fyi.jackson.drew.roadquality.utils.Vector3D;
+import fyi.jackson.drew.roadquality.utils.helpers;
 import fyi.jackson.drew.roadquality.utils.maps;
 
 public class AsynchronousDatabase {
@@ -22,10 +23,7 @@ public class AsynchronousDatabase {
     public long gpsDbRowId = -1;
 
     public AsynchronousDatabase(Context context) {
-        db = Room.databaseBuilder(context,
-                AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .addMigrations(Migrations.MIGRATION_7_8, Migrations.MIGRATION_8_9)
-                .build();
+        db = helpers.getAppDatabase(context);   
     }
 
     public void addAccelerometerEntry(Vector3D a, Vector3D g) {

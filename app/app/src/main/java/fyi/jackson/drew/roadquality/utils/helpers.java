@@ -1,5 +1,6 @@
 package fyi.jackson.drew.roadquality.utils;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -8,8 +9,19 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import fyi.jackson.drew.roadquality.data.AppDatabase;
+import fyi.jackson.drew.roadquality.data.migrations.Migrations;
+
 public class helpers {
-    static public float map(float value,
+
+    public static AppDatabase getAppDatabase(Context context) {
+        return Room.databaseBuilder(context,
+                AppDatabase.class, AppDatabase.DATABASE_NAME)
+                .addMigrations(Migrations.MIGRATION_7_8, Migrations.MIGRATION_8_9)
+                .build();
+    }
+
+    public static float map(float value,
                               float iStart,
                               float iStop,
                               float oStart,
