@@ -1,3 +1,70 @@
 <resources>
-    <string name="app_name">RoadQuality</string>
+    <string name="app_name">Road Quality</string>
+    <string name="app_tagline">An app for improving your roads</string>
+
+    <!-- SharedPreferences Strings -->
+    <string name="PREFS_NAME" translatable="false">RoadQualityPrefsFile</string>
+    <string name="PREFS_TIMES_OPENED" translatable="false">NumberOfTimesOpened</string>
+    <string name="PREFS_PERMISSION_GRANTED" translatable="false">PermissionsGranted</string>
+
+    <!-- Strings in Layout files -->
+    <string name="next_all_caps">NEXT</string>
+    <string name="recent_trips">Recent Trips</string>
+    <string name="no_recent_trips">No Recent Trips</string>
+    <string name="placeholder_date">DATE</string>
+    <string name="placeholder_time">TIME</string>
+    <string name="placeholder_points">POINTS</string>
+    <string name="gps_permissions">GPS Permissions</string>
+    <string name="gps_permissions_description">We use your phone\'s GPS and Accelerometer to determine where road quality is the worst.</string>
+    <string name="grant_permission">Grant Permission</string>
+    <string name="setup_complete">Setup Complete!</string>
+    <string name="setup_complete_description">Start recording your road quality right away!</string>
+    <string name="got_it">Got it</string>
+    <string name="next">Next</string>
+    <string name="duration_string">%1$s - %2$s</string>
+    <plurals name="number_of_points">
+        <item quantity="one">%d point</item>
+        <item quantity="other">%d points</item>
+    </plurals>
+    <string name="points_parse_error">Parse error position: %d</string>
+    <string name="share_database_intent_title">Save Database</string>
+    <string name="settings_intent_title">Settings</string>
+    <string name="snackbar_update_play_services">Update</string>
+    <string name="google_play_uri" translatable="false">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
+    <string name="gps_permission_denied_snackbar_text">Location access is required for use of this app.</string>
+    <string name="refresh">Refresh</string>
+
+    <!-- Accessibility strings -->
+    <string name="content_desc_fab_reveal">Pause trip</string>
+    <string name="content_desc_no_recent_trips">No trips are saved</string>
+    <string name="content_desc_road_image">Image of road</string>
+    <string name="content_desc_gps_image">Image of GPS</string>
+    <string name="content_desc_checkmark">Image of checkmark</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_data_title">Data</string>
+    <string name="pref_automatic_upload_title">Automatic uploads</string>
+    <string name="pref_automatic_upload_wifi_only_title">Only upload on wifi</string>
+    <string name="pref_automatic_upload_wifi_only_summary_on">Uses less cellular data</string>
+    <string name="pref_automatic_upload_wifi_only_summary_off">Uploads immediately</string>
+    <string name="pref_recording_title">Recording</string>
+    <string name="pref_bluetooth_device_title">Bluetooth Automatic Recording</string>
+    <string name="pref_bluetooth_device_summary_off">Start recording when connected to Bluetooth device</string>
+    <string name="pref_bluetooth_device_summary_on">Recording start when connected to $s</string>
+    <string name="pref_recording_deadzone_title">Set Recording Deadzone</string>
+    <string name="pref_recording_deadzone_summary">Set a region where nothing will be recorded</string>
+
+
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
 </resources>

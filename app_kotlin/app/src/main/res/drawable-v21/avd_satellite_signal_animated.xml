@@ -1,0 +1,77 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:name="vector"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <path
+                android:name="mountains_path"
+                android:pathData="M 5 18 L 8.5 13.5 L 11 16.51 L 14.5 12 L 19 18 L 5 18 Z"
+                android:fillColor="#000000"/>
+            <clip-path
+                android:name="mask"
+                android:pathData="M 5 5 L 5 19 L 19 19 L 19 5 L 5 5 Z"/>
+            <path
+                android:name="signal_path"
+                android:pathData="M 5 5 C 5 5 5 5 5 5 L 5 5 C 5 5 5 5 5 5 L 5 5"
+                android:fillColor="#000000"/>
+            <path
+                android:name="signal_2_path"
+                android:pathData="M 5 7 C 6.107 7 7 6.107 7 5"
+                android:strokeColor="#000000"
+                android:strokeWidth="2"/>
+            <path
+                android:name="signal_3_path"
+                android:pathData="M 5 11 C 8.32 11 11 8.32 11 5"
+                android:strokeColor="#000000"
+                android:strokeWidth="2"/>
+        </vector>
+    </aapt:attr>
+    <target android:name="signal_path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:startOffset="270"
+                android:duration="730"
+                android:valueFrom="M 5 5 C 5 5 5 5 5 5 L 5 5 C 5 5 5 5 5 5 L 5 5"
+                android:valueTo="M 5 6 C 5.553 6 6 5.553 6 5 L 8 5 C 8 6.66 6.66 8 5 8 L 5 6"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/linear_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="signal_2_path">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:propertyName="pathData"
+                android:duration="1000"
+                android:valueFrom="M 5 7 C 6.107 7 7 6.107 7 5"
+                android:valueTo="M 5 11 C 8.32 11 11 8.32 11 5"
+                android:valueType="pathType"
+                android:interpolator="@android:anim/linear_interpolator"/>
+        </aapt:attr>
+    </target>
+    <target android:name="signal_3_path">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:duration="1000"
+                    android:valueFrom="M 5 11 C 8.32 11 11 8.32 11 5"
+                    android:valueTo="M 5 15 C 10.533 15 15 10.533 15 5"
+                    android:valueType="pathType"
+                    android:interpolator="@android:anim/linear_interpolator"/>
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:duration="1000"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:interpolator="@android:anim/linear_interpolator"/>
+            </set>
+        </aapt:attr>
+    </target>
+</animated-vector>

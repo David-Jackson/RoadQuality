@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+
+    <dimen name="bottom_sheet_height">400dp</dimen>
+    <dimen name="bottom_sheet_elevation">16dp</dimen>
+    <dimen name="bottom_sheet_starting_peek_height">0dp</dimen>
+    <dimen name="bottom_sheet_peek_height">56dp</dimen> <!--56dp-->
+    <dimen name="bottom_sheet_title_text_size">20sp</dimen><!--16dp-->
+    <dimen name="bottom_sheet_title_height">56dp</dimen><!--56dp-->
+    <dimen name="bottom_sheet_margin_left_right">24dp</dimen>
+</resources>
