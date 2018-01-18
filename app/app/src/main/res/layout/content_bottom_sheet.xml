@@ -25,7 +25,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@android:color/background_light"/>
+        android:background="@color/darkOverlay"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -9,7 +9,7 @@
         android:layout_width="112dp"
         android:layout_height="112dp"
         android:alpha="0.5"
-        app:srcCompat="@drawable/ic_road_variant_white_112dp"
+        app:srcCompat="@drawable/road_variant"
         android:contentDescription="@string/content_desc_no_recent_trips"
         android:layout_centerInParent="true"/>
 
