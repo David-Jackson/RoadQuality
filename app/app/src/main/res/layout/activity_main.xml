@@ -6,7 +6,12 @@
     tools:context="fyi.jackson.drew.roadquality.ActivityMain"
     android:id="@+id/activity_main_layout">
 
-    <include layout="@layout/content_main" />
+    <FrameLayout
+        android:id="@+id/layout_content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
