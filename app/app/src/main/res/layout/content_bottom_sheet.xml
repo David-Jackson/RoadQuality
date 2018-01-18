@@ -14,7 +14,6 @@
     <TextView
         android:id="@+id/bottom_sheet_title"
         android:onClick="toggleBottomSheet"
-        android:textColor="@color/recent_trips_color"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_sheet_title_height"
         android:gravity="start|center"
@@ -44,7 +43,7 @@
             android:visibility="invisible"
             android:alpha="0"
             android:text="@string/refresh"
-            android:textColor="@android:color/primary_text_dark"
+            android:textColor="@color/primaryTextColor"
             android:layout_below="@id/progress_bar_bottom_sheet"
             android:layout_centerHorizontal="true"
             style="@style/Widget.AppCompat.Button.Borderless"/>

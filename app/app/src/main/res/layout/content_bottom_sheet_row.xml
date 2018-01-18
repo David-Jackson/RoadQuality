@@ -68,7 +68,6 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:text="@string/placeholder_date"
-        android:textColor="@android:color/primary_text_dark"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/view_trip_line_circle"
@@ -90,7 +89,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/placeholder_time"
-        android:textColor="@android:color/primary_text_dark"
         app:layout_constraintBottom_toTopOf="@+id/aligner_view_1"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -100,7 +98,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:text="@string/placeholder_points"
-        android:textColor="@android:color/primary_text_dark"
         app:layout_constraintEnd_toEndOf="@+id/tv_time"
         app:layout_constraintTop_toBottomOf="@+id/aligner_view_1" />
 
