@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/primary_text_dark"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:src="@drawable/ic_share_white"
+        android:src="@drawable/ic_share"
         android:layout_weight="1"/>
     <ImageButton
         android:id="@+id/settings_button"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:textColor="@android:color/primary_text_dark"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:src="@drawable/ic_settings_white"
+        android:src="@drawable/ic_settings"
         android:layout_weight="1"/>
 
 </LinearLayout>
