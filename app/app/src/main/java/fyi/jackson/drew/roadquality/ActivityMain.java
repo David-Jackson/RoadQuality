@@ -64,7 +64,25 @@ public class ActivityMain extends AppCompatActivity {
     private FloatingActionButton fab;
     private MorphingFab morphingFab;
 
-    private BroadcastManager broadcastManager;
+    private BroadcastManager broadcastManager = null;
+
+    private FrameLayout layout;
+
+    private static final int MY_PERMISSIONS_REQUEST_STORAGE_ACCESS = 4378;
+
+    private MapData mapData;
+
+    private LinearLayout bottomSheetLayout;
+
+    private BottomSheetBehavior bottomSheetBehavior;
+
+    private AnimationManager animationManager;
+
+    private RecyclerView recyclerView = null;
+
+    private Button refreshButton;
+    private Runnable refreshButtonRunnable;
+    private int refreshButtonRunnableDelay = 5000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,13 +148,7 @@ public class ActivityMain extends AppCompatActivity {
 
         setupBroadcastManager();
 
-        inflateMap();
-        setupMap();
-
-        inflateBottomSheet();
-        setupBottomSheet();
-
-        setupAnimations();
+        inflateLayout();
     }
 
     private void setupBroadcastManager() {
@@ -155,39 +167,152 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onDataTransferredToLongTerm(int totalRows, int deletedAccelRows, int deletedGpsRows) {
-
+                this.askToUpdateTripList();
             }
 
             @Override
             public void onTripListReceived(JSONArray tripList) {
-
+                setupBottomSheetRecyclerView(tripList);
+                findViewById(R.id.progress_bar_bottom_sheet).setVisibility(View.INVISIBLE);
+                findViewById(R.id.recycler_view_bottom_sheet).setVisibility(View.VISIBLE);
+                refreshButton.removeCallbacks(refreshButtonRunnable);
+                refreshButton.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onTripDataReceived(JSONObject tripData) {
-
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                ActivityMain.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
+                int screenWidth = displayMetrics.widthPixels;
+                int mapHeight = screenHeight - bottomSheetLayout.getHeight();
+                mapData.putTripDataOnMap(tripData, screenWidth, mapHeight);
+                setProperFabStartingPosition();
             }
         };
     }
 
-    private void inflateMap() {
 
+
+    private void inflateLayout() {
+        layout = findViewById(R.id.layout_content_frame);
+        View child = getLayoutInflater().inflate(R.layout.content_main, layout);
+        child.post(new Runnable() {
+            @Override
+            public void run() {
+                setupMap();
+                setupBottomSheet();
+                setupAnimations();
+            }
+        });
     }
 
     private void setupMap() {
-
-    }
-
-    private void inflateBottomSheet() {
-
+        View mapView = findViewById(R.id.map);
+        mapData = new MapData(null, mapView);
+        mapData.setOnMapReadyRunnable(new Runnable() {
+            @Override
+            public void run() {
+                showLastKnownLocation(mapData.getGoogleMap());
+                animationManager.onMapReady();
+            }
+        });
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(mapData);
     }
 
     private void setupBottomSheet() {
+        // get the bottom sheet view
+        View view = findViewById(R.id.bottom_sheet_title);
+        bottomSheetLayout = (LinearLayout) view.getParent();
 
+        if (bottomSheetLayout == null) {
+            Log.d(TAG, "initBottomSheet: BottomSheet null");
+            return;
+        }
+        // init the bottom sheet behavior
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
+        // change the state of the bottom sheet
+        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        // set callback for changes
+        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (recyclerView != null && newState == BottomSheetBehavior.STATE_COLLAPSED) {
+                    //((RecentTripsAdapter)recyclerView.getAdapter()).clearActiveTrips();
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                animationManager.update(slideOffset);
+            }
+        });
+
+        refreshButton = findViewById(R.id.button_refresh_bottom_sheet);
+        refreshButtonRunnable = new Runnable() {
+            @Override
+            public void run() {
+                refreshButton.setVisibility(View.VISIBLE);
+                refreshButton.animate().alpha(1).setDuration(300).start();
+            }
+        };
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onRefreshButtonClick();
+            }
+        });
+        refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
+
+        // Bottom sheet ready, load trip list
+        //broadcastManager.askToUpdateTripList();
     }
 
     private void setupAnimations() {
+        animationManager = new AnimationManager(this);
+        animationManager.setFab(fab);
+        animationManager.setMap(mapData.getMapView());
+        animationManager.setBottomSheet(bottomSheetLayout);
+        animationManager.setBottomSheetBehavior(bottomSheetBehavior);
+    }
 
+    private void setupBottomSheetRecyclerView(JSONArray tripData) {
+
+        recyclerView = findViewById(R.id.recycler_view_bottom_sheet);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        RecyclerView.Adapter adapter = new RecentTripsAdapter(tripData) {
+            @Override
+            public void onRowClicked(long tripId) {
+                if (broadcastManager != null) {
+                    broadcastManager.askToGetTripData(tripId);
+                }
+                setProperFabStartingPosition();
+            }
+
+            @Override
+            public boolean onRowClickedAgain(long tripId) {
+                mapData.clearMap();
+                setProperFabStartingPosition();
+                return true;
+            }
+
+            @Override
+            public void onShareButtonClick() {
+                shareDatabase();
+            }
+
+            @Override
+            public void onSettingsButtonClick() {
+                openSettings();
+            }
+        };
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
     }
 
     private void fabClicked() {
@@ -200,8 +325,152 @@ public class ActivityMain extends AppCompatActivity {
         startService(service);
     }
 
+    private void setProperFabStartingPosition() {
+        if (mapData.isShowingData()) {
+            animationManager.setFabStartPositionAtBottomSheet();
+        } else {
+            animationManager.setFabStartPositionAtScreenCenter();
+        }
+    }
+
+    public void toggleBottomSheet(View view) {
+        if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        } else {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+    }
+
+    private void onRefreshButtonClick() {
+        broadcastManager.askToUpdateTripList();
+        refreshButton.setVisibility(View.INVISIBLE);
+        refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
+    }
+
+    private void showLastKnownLocation(GoogleMap googleMap) {
+        LocationManager locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+
+        LatLng latLng = null;
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (location != null) {
+                latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+        }
+        if (latLng == null) {
+            latLng = new LatLng(42.3314, -83.0458);
+        }
+
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+    }
+
+    private void shareDatabase() {
+        askPermissionToShareDatabase();
+    }
+
+    private void askPermissionToShareDatabase() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_STORAGE_ACCESS);
+        } else {
+            continueToShareDatabase();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_STORAGE_ACCESS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    continueToShareDatabase();
+                } else {
+                    permissionDenied();
+                }
+                break;
+            }
+        }
+    }
+
+    private void continueToShareDatabase() {
+        try {
+            File dbFile = getDatabasePath("RoadQualityDatabase.db").getAbsoluteFile();
+            File outFile = new File(getExternalFilesDir(null), AppDatabase.DATABASE_NAME);
+            copyFile(dbFile, outFile);
+            Uri dbUri = Uri.fromFile(outFile);
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/*");
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+            shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            shareIntent.setFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
+            shareIntent.setFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
+            shareIntent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, dbUri);
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_database_intent_title)));
+        } catch (IllegalArgumentException e) {
+            Log.e("File Selector",
+                    "The selected file can't be shared: RoadQualityDatabase.db");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void permissionDenied() {
+        Snackbar.make(bottomSheetLayout,
+                "Unable to share database",
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    public static void copyFile(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        try {
+            OutputStream out = new FileOutputStream(dst);
+            try {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
+        }
+    }
+
+    private void openSettings() {
+        Intent mainActivityIntent = new Intent(getApplicationContext(), ActivitySettings.class);
+        startActivity(mainActivityIntent);
+    }
+
+    private void openPlayStore() {
+        Intent playStoreIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(getString(R.string.google_play_uri)));
+        startActivity(playStoreIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        if (broadcastManager != null) broadcastManager.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (broadcastManager != null) broadcastManager.onPause();
+        super.onPause();
+    }
+
     private void transitionToIntro() {
-        FrameLayout layout = findViewById(R.id.layout_content_frame);
+        layout = findViewById(R.id.layout_content_frame);
         final View child = getLayoutInflater().inflate(R.layout.intro_slide_1, layout);
         child.setVisibility(View.INVISIBLE);
 
