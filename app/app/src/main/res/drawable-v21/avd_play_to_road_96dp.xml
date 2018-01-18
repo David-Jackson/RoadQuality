@@ -4,14 +4,16 @@
     <aapt:attr name="android:drawable">
         <vector
             android:name="vector"
-            android:width="24dp"
-            android:height="24dp"
-            android:viewportWidth="24"
-            android:viewportHeight="24">
+            android:width="96dp"
+            android:height="96dp"
+            android:viewportWidth="96"
+            android:viewportHeight="96">
             <group
                 android:name="group"
                 android:pivotX="12"
-                android:pivotY="12">
+                android:pivotY="12"
+                android:translateX="36"
+                android:translateY="36">
                 <path
                     android:name="path"
                     android:pathData="M 12 5 C 12 5 12 5 12 5 L 12 5 L 12 7 L 12 7 L 12 5 L 12 5 C 12 5 12 5 12 5 L 5 16 C 5 16 5 16 5 16 L 12 16 L 12 15 L 12 15 L 12 16 L 19 16 C 19 16 19 16 19 16 L 12 5 M 12 13 L 12 9 L 12 9 L 12 13 L 12 13 Z"
@@ -33,13 +35,29 @@
     </target>
     <target android:name="group">
         <aapt:attr name="android:animation">
-            <objectAnimator
-                android:propertyName="rotation"
-                android:duration="300"
-                android:valueFrom="90"
-                android:valueTo="0"
-                android:valueType="floatType"
-                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            <set>
+                <objectAnimator
+                    android:propertyName="rotation"
+                    android:duration="300"
+                    android:valueFrom="90"
+                    android:valueTo="0"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="scaleX"
+                    android:duration="300"
+                    android:valueFrom="1"
+                    android:valueTo="4"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="scaleY"
+                    android:duration="300"
+                    android:valueFrom="1"
+                    android:valueTo="4"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
         </aapt:attr>
     </target>
 </animated-vector>
