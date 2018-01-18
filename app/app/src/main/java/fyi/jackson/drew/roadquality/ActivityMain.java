@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,6 +44,7 @@ import java.io.OutputStream;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
+import fyi.jackson.drew.roadquality.animation.listeners.FabPositionListener;
 import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
@@ -69,16 +71,12 @@ public class ActivityMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupFab();
-
-        if (helpers.isIntroNeeded(this)) {
-            transitionToIntro();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Fade fade = new Fade(Fade.OUT);
             fade.setDuration(1000);
             getWindow().setExitTransition(fade);
         }
-
+        setupFab();
     }
 
     private void setupFab() {
@@ -124,6 +122,12 @@ public class ActivityMain extends AppCompatActivity {
 
 
     private void setupAfterFirstDraw() {
+
+        if (helpers.isIntroNeeded(this)) {
+            transitionToIntro();
+            return;
+        }
+
         setupBroadcastManager();
 
         inflateMap();
@@ -197,13 +201,34 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void transitionToIntro() {
-        setupTransitionToIntro();
-        Intent introActivityIntent = new Intent(getApplicationContext(), ActivityIntro.class);
-        startActivity(introActivityIntent);
-    }
+        FrameLayout layout = findViewById(R.id.layout_content_frame);
+        final View child = getLayoutInflater().inflate(R.layout.intro_slide_1, layout);
+        child.setVisibility(View.INVISIBLE);
 
-    private void setupTransitionToIntro() {
-
+        morphingFab = new MorphingFab(this,
+                fab,
+                child,
+                R.id.iv_road,
+                R.drawable.avd_play_to_road_96dp,
+                R.drawable.avd_road_animation) {
+            @Override
+            public boolean onFabClick() {
+                return false;
+            }
+        };
+        child.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                morphingFab.open();
+                child.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent introActivityIntent = new Intent(getApplicationContext(), ActivityIntro.class);
+                        startActivity(introActivityIntent);
+                    }
+                }, 300);
+            }
+        }, 1000);
     }
 
 }
