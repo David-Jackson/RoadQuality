@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -17,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -71,6 +73,10 @@ public class ActivityMain extends AppCompatActivity {
 
         if (helpers.isIntroNeeded(this)) {
             transitionToIntro();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Fade fade = new Fade(Fade.OUT);
+            fade.setDuration(1000);
+            getWindow().setExitTransition(fade);
         }
 
     }
