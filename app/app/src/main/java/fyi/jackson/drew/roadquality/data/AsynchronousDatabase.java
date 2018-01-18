@@ -23,7 +23,7 @@ public class AsynchronousDatabase {
     public long gpsDbRowId = -1;
 
     public AsynchronousDatabase(Context context) {
-        db = helpers.getAppDatabase(context);   
+        db = helpers.getAppDatabase(context);
     }
 
     public void addAccelerometerEntry(Vector3D a, Vector3D g) {
