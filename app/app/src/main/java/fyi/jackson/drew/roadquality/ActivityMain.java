@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -17,11 +18,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Fade;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,6 +44,7 @@ import java.io.OutputStream;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
+import fyi.jackson.drew.roadquality.animation.listeners.FabPositionListener;
 import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
@@ -57,6 +61,13 @@ public class ActivityMain extends AppCompatActivity {
 
     private static final String TAG = "ActivityMain";
 
+    private FloatingActionButton fab;
+    private MorphingFab morphingFab;
+
+    private BroadcastManager broadcastManager = null;
+
+    private FrameLayout layout;
+
     private static final int MY_PERMISSIONS_REQUEST_STORAGE_ACCESS = 4378;
 
     private MapData mapData;
@@ -64,13 +75,8 @@ public class ActivityMain extends AppCompatActivity {
     private LinearLayout bottomSheetLayout;
 
     private BottomSheetBehavior bottomSheetBehavior;
-    private FloatingActionButton fab;
 
     private AnimationManager animationManager;
-
-    private BroadcastManager broadcastManager = null;
-
-    private MorphingFab morphingFab;
 
     private RecyclerView recyclerView = null;
 
@@ -83,48 +89,12 @@ public class ActivityMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setupMap();
-        setupFab();
-        setupBottomSheet();
-        setupAnimations();
-        setupBroadcastManager();
-
-        broadcastManager.askToUpdateTripList();
-
-
-        if (!helpers.isGooglePlayServicesAvailable(this)) {
-            Snackbar
-                    .make(findViewById(R.id.activity_main_layout),
-                            "Google Play Services needed to view trips",
-                            Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.snackbar_update_play_services,
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    openPlayStore();
-                                }
-                            })
-                    .show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Fade fade = new Fade(Fade.OUT);
+            fade.setDuration(1000);
+            getWindow().setExitTransition(fade);
         }
-    }
-
-    //
-    // SETUP FUNCTIONS
-    //
-
-    private void setupMap() {
-        View mapView = findViewById(R.id.map);
-        mapData = new MapData(null, mapView);
-        mapData.setOnMapReadyRunnable(new Runnable() {
-            @Override
-            public void run() {
-                showLastKnownLocation(mapData.getGoogleMap());
-                animationManager.onMapReady();
-            }
-        });
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(mapData);
+        setupFab();
     }
 
     private void setupFab() {
@@ -162,9 +132,94 @@ public class ActivityMain extends AppCompatActivity {
                     Log.d(TAG, "onGlobalLayout: FAB SHOULD BE CLOSED ON START");
                     morphingFab.close();
                 }
+                setupAfterFirstDraw();
             }
         });
 
+    }
+
+
+    private void setupAfterFirstDraw() {
+
+        if (helpers.isIntroNeeded(this)) {
+            transitionToIntro();
+            return;
+        }
+
+        setupBroadcastManager();
+
+        inflateLayout();
+    }
+
+    private void setupBroadcastManager() {
+        broadcastManager = new BroadcastManager(this) {
+            @Override
+            public void onServiceStatusChanged(int serviceStatus) {
+                switch (serviceStatus) {
+                    case ForegroundConstants.STATUS_ACTIVE:
+                        morphingFab.open();
+                        break;
+                    case ForegroundConstants.STATUS_INACTIVE:
+                        morphingFab.close();
+                        break;
+                }
+            }
+
+            @Override
+            public void onDataTransferredToLongTerm(int totalRows, int deletedAccelRows, int deletedGpsRows) {
+                this.askToUpdateTripList();
+            }
+
+            @Override
+            public void onTripListReceived(JSONArray tripList) {
+                setupBottomSheetRecyclerView(tripList);
+                findViewById(R.id.progress_bar_bottom_sheet).setVisibility(View.INVISIBLE);
+                findViewById(R.id.recycler_view_bottom_sheet).setVisibility(View.VISIBLE);
+                refreshButton.removeCallbacks(refreshButtonRunnable);
+                refreshButton.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onTripDataReceived(JSONObject tripData) {
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                ActivityMain.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
+                int screenWidth = displayMetrics.widthPixels;
+                int mapHeight = screenHeight - bottomSheetLayout.getHeight();
+                mapData.putTripDataOnMap(tripData, screenWidth, mapHeight);
+                setProperFabStartingPosition();
+            }
+        };
+    }
+
+
+
+    private void inflateLayout() {
+        layout = findViewById(R.id.layout_content_frame);
+        View child = getLayoutInflater().inflate(R.layout.content_main, layout);
+        child.post(new Runnable() {
+            @Override
+            public void run() {
+                setupMap();
+                setupBottomSheet();
+                setupAnimations();
+            }
+        });
+    }
+
+    private void setupMap() {
+        View mapView = findViewById(R.id.map);
+        mapData = new MapData(null, mapView);
+        mapData.setOnMapReadyRunnable(new Runnable() {
+            @Override
+            public void run() {
+                showLastKnownLocation(mapData.getGoogleMap());
+                animationManager.onMapReady();
+            }
+        });
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(mapData);
     }
 
     private void setupBottomSheet() {
@@ -211,6 +266,17 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
         refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
+
+        // Bottom sheet ready, load trip list
+        broadcastManager.askToUpdateTripList();
+    }
+
+    private void setupAnimations() {
+        animationManager = new AnimationManager(this);
+        animationManager.setFab(fab);
+        animationManager.setMap(mapData.getMapView());
+        animationManager.setBottomSheet(bottomSheetLayout);
+        animationManager.setBottomSheetBehavior(bottomSheetBehavior);
     }
 
     private void setupBottomSheetRecyclerView(JSONArray tripData) {
@@ -249,67 +315,6 @@ public class ActivityMain extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupAnimations() {
-        animationManager = new AnimationManager(this);
-        animationManager.setFab(fab);
-        animationManager.setMap(mapData.getMapView());
-        animationManager.setBottomSheet(bottomSheetLayout);
-        animationManager.setBottomSheetBehavior(bottomSheetBehavior);
-    }
-
-    private void setupBroadcastManager() {
-        broadcastManager = new BroadcastManager(this) {
-            @Override
-            public void onServiceStatusChanged(int serviceStatus) {
-                switch (serviceStatus) {
-                    case ForegroundConstants.STATUS_ACTIVE:
-                        morphingFab.open();
-                        break;
-                    case ForegroundConstants.STATUS_INACTIVE:
-                        morphingFab.close();
-                        break;
-                }
-            }
-
-            @Override
-            public void onDataTransferredToLongTerm(int totalRows, int deletedAccelRows, int deletedGpsRows) {
-                this.askToUpdateTripList();
-            }
-
-            @Override
-            public void onTripListReceived(JSONArray tripList) {
-                setupBottomSheetRecyclerView(tripList);
-                findViewById(R.id.progress_bar_bottom_sheet).setVisibility(View.INVISIBLE);
-                findViewById(R.id.recycler_view_bottom_sheet).setVisibility(View.VISIBLE);
-                refreshButton.removeCallbacks(refreshButtonRunnable);
-                refreshButton.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onTripDataReceived(JSONObject tripData) {
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                ActivityMain.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
-                int screenWidth = displayMetrics.widthPixels;
-                int mapHeight = screenHeight - bottomSheetLayout.getHeight();
-                mapData.putTripDataOnMap(tripData, screenWidth, mapHeight);
-                setProperFabStartingPosition();
-            }
-        };
-    }
-
-    //
-    // END OF SETUP FUNCTIONS
-    //
-
-    private void setProperFabStartingPosition() {
-        if (mapData.isShowingData()) {
-            animationManager.setFabStartPositionAtBottomSheet();
-        } else {
-            animationManager.setFabStartPositionAtScreenCenter();
-        }
-    }
-
     private void fabClicked() {
         Intent service = new Intent(ActivityMain.this, ForegroundService.class);
         if (!ForegroundService.IS_SERVICE_RUNNING) {
@@ -320,34 +325,12 @@ public class ActivityMain extends AppCompatActivity {
         startService(service);
     }
 
-    void bumpBottomSheet() {
-        bumpBottomSheet(1);
-    }
-
-    private void bumpBottomSheet(final int numberOfTimes) {
-        if (numberOfTimes == 0) return;
-        final int bumpHeight = 50;
-        bottomSheetLayout.animate()
-                .yBy(-bumpHeight)
-                .setDuration(200)
-                .setInterpolator(new OvershootInterpolator())
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        bottomSheetLayout.animate()
-                                .yBy(bumpHeight)
-                                .setDuration(200)
-                                .setInterpolator(new OvershootInterpolator())
-                                .withEndAction(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        bumpBottomSheet(numberOfTimes - 1);
-                                    }
-                                })
-                                .start();
-                    }
-                })
-                .start();
+    private void setProperFabStartingPosition() {
+        if (mapData.isShowingData()) {
+            animationManager.setFabStartPositionAtBottomSheet();
+        } else {
+            animationManager.setFabStartPositionAtScreenCenter();
+        }
     }
 
     public void toggleBottomSheet(View view) {
@@ -476,14 +459,45 @@ public class ActivityMain extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        broadcastManager.onResume();
+        if (broadcastManager != null) broadcastManager.onResume();
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        broadcastManager.onPause();
+        if (broadcastManager != null) broadcastManager.onPause();
         super.onPause();
+    }
+
+    private void transitionToIntro() {
+        layout = findViewById(R.id.layout_content_frame);
+        final View child = getLayoutInflater().inflate(R.layout.intro_slide_1, layout);
+        child.setVisibility(View.INVISIBLE);
+
+        morphingFab = new MorphingFab(this,
+                fab,
+                child,
+                R.id.iv_road,
+                R.drawable.avd_play_to_road_96dp,
+                R.drawable.avd_road_animation) {
+            @Override
+            public boolean onFabClick() {
+                return false;
+            }
+        };
+        child.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                morphingFab.open();
+                child.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent introActivityIntent = new Intent(getApplicationContext(), ActivityIntro.class);
+                        startActivity(introActivityIntent);
+                    }
+                }, 300);
+            }
+        }, 1000);
     }
 
 }

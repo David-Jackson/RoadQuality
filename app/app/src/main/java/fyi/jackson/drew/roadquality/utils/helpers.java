@@ -1,7 +1,10 @@
 package fyi.jackson.drew.roadquality.utils;
 
+import android.Manifest;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -13,6 +16,13 @@ import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.data.migrations.Migrations;
 
 public class helpers {
+
+    public static boolean isIntroNeeded(Context context) {
+        boolean permissionGranted = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+        return !permissionGranted;
+    }
 
     public static AppDatabase getAppDatabase(Context context) {
         return Room.databaseBuilder(context,
