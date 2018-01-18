@@ -268,7 +268,7 @@ public class ActivityMain extends AppCompatActivity {
         refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
 
         // Bottom sheet ready, load trip list
-        //broadcastManager.askToUpdateTripList();
+        broadcastManager.askToUpdateTripList();
     }
 
     private void setupAnimations() {
