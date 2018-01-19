@@ -24,7 +24,6 @@ import android.transition.Fade;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -46,7 +45,6 @@ import java.io.OutputStream;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
-import fyi.jackson.drew.roadquality.animation.listeners.FabPositionListener;
 import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
@@ -54,10 +52,9 @@ import fyi.jackson.drew.roadquality.service.ServiceConstants;
 import fyi.jackson.drew.roadquality.service.TripLoaderService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 import fyi.jackson.drew.roadquality.utils.MapData;
-import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
+import fyi.jackson.drew.roadquality.recycler.RecentTripsAdapter;
 import fyi.jackson.drew.roadquality.utils.helpers;
 
-import static fyi.jackson.drew.roadquality.data.AppDatabase.DATABASE_NAME;
 import static fyi.jackson.drew.roadquality.utils.helpers.getStatusBarHeight;
 
 

@@ -1,4 +1,4 @@
-package fyi.jackson.drew.roadquality.utils;
+package fyi.jackson.drew.roadquality.recycler;
 
 import android.animation.Animator;
 import android.content.res.Resources;
@@ -21,6 +21,11 @@ import java.util.ArrayList;
 
 import fyi.jackson.drew.roadquality.R;
 import fyi.jackson.drew.roadquality.animation.listeners.EndAnimatorListener;
+import fyi.jackson.drew.roadquality.recycler.holders.NoTripsViewHolder;
+import fyi.jackson.drew.roadquality.recycler.holders.ShareViewHolder;
+import fyi.jackson.drew.roadquality.recycler.holders.TripViewHolder;
+import fyi.jackson.drew.roadquality.utils.OnClickListenerWithCoordinates;
+import fyi.jackson.drew.roadquality.utils.helpers;
 
 
 public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -30,41 +35,6 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     private int activeTripPosition = -1;
 
     private static final int TRIP = 0, SHARE = 1, NO_TRIPS = 2;
-
-    public class TripViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewDate, textViewTime, textViewPoints;
-        private final View tripLineTop, tripLineBottom, bottomDividerLine, backgroundSelected;
-        private final View layout;
-
-        public TripViewHolder(View v) {
-            super(v);
-            layout = v;
-            textViewDate = v.findViewById(R.id.tv_date);
-            textViewTime = v.findViewById(R.id.tv_time);
-            textViewPoints = v.findViewById(R.id.tv_points);
-            tripLineTop = v.findViewById(R.id.view_trip_line_top);
-            tripLineBottom = v.findViewById(R.id.view_trip_line_bottom);
-            bottomDividerLine = v.findViewById(R.id.bottom_divider_line);
-            backgroundSelected = v.findViewById(R.id.row_background_selected);
-        }
-    }
-
-    public class ShareViewHolder extends RecyclerView.ViewHolder {
-        private final View layout;
-        private final ImageButton shareButton, settingsButton;
-        public ShareViewHolder(View v) {
-            super(v);
-            layout = v;
-            shareButton = v.findViewById(R.id.share_button);
-            settingsButton = v.findViewById(R.id.settings_button);
-        }
-    }
-
-    public class NoTripsViewHolder extends RecyclerView.ViewHolder {
-        public NoTripsViewHolder(View v) {
-            super(v);
-        }
-    }
 
     // Provide a suitable constructor (depends on the kind of data set)
     public RecentTripsAdapter(JSONArray myDataSet) {
