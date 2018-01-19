@@ -14,7 +14,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +50,8 @@ import fyi.jackson.drew.roadquality.animation.listeners.FabPositionListener;
 import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
+import fyi.jackson.drew.roadquality.service.ServiceConstants;
+import fyi.jackson.drew.roadquality.service.TripLoaderService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 import fyi.jackson.drew.roadquality.utils.MapData;
 import fyi.jackson.drew.roadquality.utils.RecentTripsAdapter;
@@ -286,9 +290,10 @@ public class ActivityMain extends AppCompatActivity {
         RecyclerView.Adapter adapter = new RecentTripsAdapter(tripData) {
             @Override
             public void onRowClicked(long tripId) {
-                if (broadcastManager != null) {
-                    broadcastManager.askToGetTripData(tripId);
-                }
+//                if (broadcastManager != null) {
+//                    broadcastManager.askToGetTripData(tripId);
+//                }
+                startTripLoader(tripId);
                 setProperFabStartingPosition();
             }
 
@@ -500,4 +505,36 @@ public class ActivityMain extends AppCompatActivity {
         }, 1000);
     }
 
+    private void startTripLoader(long tripId) {
+        int LOADER_TASK_ID = 5421;
+        Bundle taskBundle = new Bundle();
+        taskBundle.putLong(ServiceConstants.TRIP_ID, tripId);
+        getSupportLoaderManager().restartLoader(LOADER_TASK_ID, taskBundle, new LoaderManager.LoaderCallbacks<JSONObject>() {
+            @Override
+            public Loader<JSONObject> onCreateLoader(final int id, final Bundle args) {
+                long tripId = args.getLong(ServiceConstants.TRIP_ID, -1);
+                if (tripId == -1) {
+                    return null;
+                }
+                return new TripLoaderService(ActivityMain.this, tripId);
+            }
+
+            @Override
+            public void onLoadFinished(final Loader<JSONObject> loader, final JSONObject tripData) {
+                if (tripData == null) return;
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                ActivityMain.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
+                int screenWidth = displayMetrics.widthPixels;
+                int mapHeight = screenHeight - bottomSheetLayout.getHeight();
+                mapData.putTripDataOnMap(tripData, screenWidth, mapHeight);
+                setProperFabStartingPosition();
+            }
+
+            @Override
+            public void onLoaderReset(final Loader<JSONObject> loader) {
+            }
+        });
+    }
 }
