@@ -182,17 +182,6 @@ public class ActivityMain extends AppCompatActivity {
                 refreshButton.removeCallbacks(refreshButtonRunnable);
                 refreshButton.setVisibility(View.INVISIBLE);
             }
-
-            @Override
-            public void onTripDataReceived(JSONObject tripData) {
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                ActivityMain.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int screenHeight = displayMetrics.heightPixels - getStatusBarHeight(ActivityMain.this);
-                int screenWidth = displayMetrics.widthPixels;
-                int mapHeight = screenHeight - bottomSheetLayout.getHeight();
-                mapData.putTripDataOnMap(tripData, screenWidth, mapHeight);
-                setProperFabStartingPosition();
-            }
         };
     }
 
@@ -290,9 +279,6 @@ public class ActivityMain extends AppCompatActivity {
         RecyclerView.Adapter adapter = new RecentTripsAdapter(tripData) {
             @Override
             public void onRowClicked(long tripId) {
-//                if (broadcastManager != null) {
-//                    broadcastManager.askToGetTripData(tripId);
-//                }
                 startTripLoader(tripId);
                 setProperFabStartingPosition();
             }

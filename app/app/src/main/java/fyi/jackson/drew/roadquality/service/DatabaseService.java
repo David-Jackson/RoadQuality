@@ -55,10 +55,6 @@ public class DatabaseService extends IntentService {
                 Log.d(TAG, "onHandleIntent: Process: Get all Trips");
                 getAllTrips(intent);
                 break;
-            case ServiceConstants.PROCESS_GET_ALL_POINTS_FROM_TRIP:
-                Log.d(TAG, "onHandleIntent: Process: Get all Points from Trip");
-                getAllPointsFromTrip(intent);
-                break;
             case ServiceConstants.PROCESS_GET_ALL_GPS_ROAD_POINTS:
                 Log.d(TAG, "onHandleIntent: Process: Get all GPS Points");
                 getAllGpsPoints(intent);
@@ -131,40 +127,6 @@ public class DatabaseService extends IntentService {
 
         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_TRIPS);
         broadcastIntent.putExtra(ServiceConstants.TRIP_JSON_ARRAY_STRING, tripsJsonExtra);
-        sendBroadcast(broadcastIntent);
-
-        db.close();
-    }
-
-    private void getAllPointsFromTrip(Intent intent) {
-        long tripId = intent.getLongExtra(ServiceConstants.TRIP_ID, -1);
-        if (tripId == -1) {
-            Log.e(TAG, "getAllPointsFromTrip: tripId was not set in intent");
-            return;
-        }
-        AppDatabase db = helpers.getAppDatabase(this);
-
-        List<RoadPoint> tripRoadPoints = db.roadPointDao().getAllFromTrip(tripId);
-
-        JSONObject response = new JSONObject();
-
-        try {
-            JSONObject trip = new JSONObject();
-            JSONArray coordinates = new JSONArray();
-            for (RoadPoint roadPoint : tripRoadPoints) {
-                maps.LatLng coord = new maps.LatLng(
-                        roadPoint.getLatitude(), roadPoint.getLongitude());
-                coordinates.put(coord.toJSON());
-            }
-            trip.put("id", tripId);
-            trip.put("coordinates", coordinates);
-            response.put("trip", trip);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_TRIP_DATA);
-        broadcastIntent.putExtra(ServiceConstants.TRIP_DATA_JSON_STRING, response.toString());
         sendBroadcast(broadcastIntent);
 
         db.close();

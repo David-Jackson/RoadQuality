@@ -22,7 +22,6 @@ public abstract class BroadcastManager {
     private BroadcastReceiver serviceStatusReceiver;
     private BroadcastReceiver longTermDataReceiver;
     private BroadcastReceiver tripListReceiver;
-    private BroadcastReceiver tripDataReceiver;
     private final Context context;
 
     public BroadcastManager (Context context) {
@@ -71,21 +70,6 @@ public abstract class BroadcastManager {
             }
         };
 
-        tripDataReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String tripDataJsonString = intent.getStringExtra(
-                        ServiceConstants.TRIP_DATA_JSON_STRING);
-                try {
-                    JSONObject tripsJson = new JSONObject(tripDataJsonString);
-                    onTripDataReceived(tripsJson);
-                } catch (JSONException e) {
-                    Log.d(TAG, "tripDataReceiver: JSON Data Error parsing string.");
-                    e.printStackTrace();
-                }
-            }
-        };
-
         register();
     }
 
@@ -101,17 +85,12 @@ public abstract class BroadcastManager {
         IntentFilter tripListDataFilter = new IntentFilter(ServiceConstants.PROCESS_GET_ALL_TRIPS);
         tripListDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
         this.context.registerReceiver(tripListReceiver, tripListDataFilter);
-
-        IntentFilter tripDataFilter = new IntentFilter(ServiceConstants.PROCESS_GET_TRIP_DATA);
-        tripDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        this.context.registerReceiver(tripDataReceiver, tripDataFilter);
     }
 
     public void unregister() {
         this.context.unregisterReceiver(serviceStatusReceiver);
         this.context.unregisterReceiver(longTermDataReceiver);
         this.context.unregisterReceiver(tripListReceiver);
-        this.context.unregisterReceiver(tripDataReceiver);
     }
 
     public void onResume() {
@@ -130,20 +109,10 @@ public abstract class BroadcastManager {
 
     public abstract void onTripListReceived(JSONArray tripList);
 
-    public abstract void onTripDataReceived(JSONObject tripData);
-
     public void askToUpdateTripList() {
         Intent getTripsListIntent = new Intent(context, DatabaseService.class);
         getTripsListIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_GET_ALL_TRIPS);
         Log.d(TAG, "askToUpdateTripList: Getting all trips");
         context.startService(getTripsListIntent);
-    }
-
-    public void askToGetTripData(long tripId) {
-        Intent getTripDataIntent = new Intent(context, DatabaseService.class);
-        getTripDataIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_GET_ALL_POINTS_FROM_TRIP);
-        getTripDataIntent.putExtra(ServiceConstants.TRIP_ID, tripId);
-        Log.d(TAG, "askToGetTripData: Getting trip data for tripId # " + tripId);
-        context.startService(getTripDataIntent);
     }
 }
