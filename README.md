@@ -21,7 +21,7 @@ From there, you should be all set to run the app on your device or emulator. If 
 
 ## Progress
 
-![](https://raw.githubusercontent.com/David-Jackson/RoadQuality/master/images/device-2018-01-11-131710.gif)
+![](https://raw.githubusercontent.com/David-Jackson/RoadQuality/master/images/device-2018-01-20-122051.gif)
 
 This app is still very much a work in progress, but this is what is implemented so far:
 - [X] Detects and records bumps with accelerometer
