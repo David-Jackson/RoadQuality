@@ -27,7 +27,10 @@ public class helpers {
     public static AppDatabase getAppDatabase(Context context) {
         return Room.databaseBuilder(context,
                 AppDatabase.class, AppDatabase.DATABASE_NAME)
-                .addMigrations(Migrations.MIGRATION_7_8, Migrations.MIGRATION_8_9)
+                .addMigrations(
+                        Migrations.MIGRATION_7_8,
+                        Migrations.MIGRATION_8_9,
+                        Migrations.MIGRATION_9_10)
                 .build();
     }
 

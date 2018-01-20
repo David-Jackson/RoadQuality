@@ -71,4 +71,15 @@ public class Migrations {
         }
     };
 
+    public static final Migration MIGRATION_9_10 = new Migration(9, 10) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE `Upload` (" +
+                    "`trip_id` INTEGER NOT NULL," +
+                    "`reference_id` TEXT," +
+                    "PRIMARY KEY(`trip_id`)" +
+                    ");");
+        }
+    };
+
 }
