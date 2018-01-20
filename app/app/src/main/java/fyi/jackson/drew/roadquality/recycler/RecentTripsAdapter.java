@@ -184,7 +184,6 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (onRowClickedAgain(data.getLong("tripId"))) {
                     clearActiveTrips(clickX, clickY);
                     activeTripPosition = -1;
-                    notifyDataSetChanged();
                 }
             } else {
                 clearActiveTrips(-1, -1);
