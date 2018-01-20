@@ -18,12 +18,16 @@ public class Trip {
     @ColumnInfo(name = "number_of_points")
     public int numberOfPoints;
 
+    @ColumnInfo(name = "reference_id")
+    public String referenceId;
+
     public JSONObject toJSON() throws JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("tripId", tripId);
         jsonObject.put("startTime", startTime);
         jsonObject.put("endTime", endTime);
         jsonObject.put("numberOfPoints", numberOfPoints);
+        jsonObject.put("reference_id", referenceId);
         return jsonObject;
     }
 
@@ -32,7 +36,8 @@ public class Trip {
                 "'tripId':" + tripId + "," +
                 "'startTime':" + startTime + "," +
                 "'endTime':" + endTime + "," +
-                "'numberOfPoints':" + numberOfPoints +
+                "'numberOfPoints':" + numberOfPoints + "," +
+                "'referenceId':" + referenceId +
                 "}";
     }
 }

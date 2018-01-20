@@ -28,13 +28,16 @@ public interface RoadPointDao {
     @Query("SELECT DISTINCT trip_id from roadpoint ORDER BY trip_id ASC")
     List<Long> getAllTripIds();
 
-    @Query("SELECT trip_id" +
-            ", min(timestamp) AS timestamp_start" +
-            ", max(timestamp) AS timestamp_end" +
+    @Query("SELECT rp.trip_id " +
+            ", min(rp.timestamp) AS timestamp_start " +
+            ", max(rp.timestamp) AS timestamp_end " +
             ", count(*) AS number_of_points " +
-            "FROM roadpoint " +
-            "GROUP BY trip_id " +
-            "ORDER BY trip_id DESC")
+            ", u.reference_id " +
+            "FROM roadpoint AS rp " +
+            "LEFT OUTER JOIN upload AS u " +
+            "ON rp.trip_id = u.trip_id " +
+            "GROUP BY rp.trip_id " +
+            "ORDER BY rp.trip_id DESC")
     List<Trip> getAllTrips();
 
     @Insert
