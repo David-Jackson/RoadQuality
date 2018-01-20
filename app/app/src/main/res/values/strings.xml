@@ -33,6 +33,8 @@
     <string name="google_play_uri" translatable="false">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
     <string name="gps_permission_denied_snackbar_text">Location access is required for use of this app.</string>
     <string name="refresh">Refresh</string>
+    <string name="upload">Upload</string>
+
 
     <!-- Accessibility strings -->
     <string name="content_desc_fab_reveal">Pause trip</string>

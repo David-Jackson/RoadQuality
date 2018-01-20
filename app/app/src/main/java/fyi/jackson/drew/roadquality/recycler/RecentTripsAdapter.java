@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,6 +34,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     private final ArrayList<Object> values;
     private TripViewHolder activeTripViewHolder = null;
     private int activeTripPosition = -1;
+    private ViewGroup viewGroup;
 
     private static final int TRIP = 0, SHARE = 1, NO_TRIPS = 2;
 
@@ -56,6 +58,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        viewGroup = parent;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder viewHolder;
         switch (viewType) {
@@ -158,10 +161,18 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             e.printStackTrace();
         }
 
+        final boolean isExpanded = position == activeTripPosition;
+        holder.uploadButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+        holder.layout.setActivated(isExpanded);
+
         holder.layout.setOnTouchListener(new OnClickListenerWithCoordinates() {
             @Override
             public void onClick(float clickX, float clickY) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition(viewGroup);
+                }
                 rowClicked(holder, position, clickX, clickY);
+                notifyDataSetChanged();
             }
         });
     }
@@ -172,6 +183,8 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             if (activeTripViewHolder != null && position == activeTripViewHolder.getAdapterPosition()) {
                 if (onRowClickedAgain(data.getLong("tripId"))) {
                     clearActiveTrips(clickX, clickY);
+                    activeTripPosition = -1;
+                    notifyDataSetChanged();
                 }
             } else {
                 clearActiveTrips(-1, -1);
@@ -179,14 +192,14 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     // Get the distance from the click location to the bottom or top of the view,
                     // whichever is largest
-                    float cx = holder.backgroundSelected.getWidth() +
-                            holder.backgroundSelected.getX() -
-                            (-clickX + (holder.backgroundSelected.getWidth() / 2));
+                    float cx = holder.layout.getWidth() +
+                            holder.layout.getX() -
+                            (-clickX + (holder.layout.getWidth() / 2));
                     // Get the distance from the click location to the left or right of the view,
                     // whichever is largest
-                    float cy = holder.backgroundSelected.getHeight() +
-                            holder.backgroundSelected.getY() -
-                            (-clickY + (holder.backgroundSelected.getHeight() / 2));
+                    float cy = holder.layout.getHeight() +
+                            holder.layout.getY() -
+                            (-clickY + (holder.layout.getHeight() / 2));
                     ViewAnimationUtils.createCircularReveal(holder.backgroundSelected,
                             (int) clickX,
                             (int) clickY,
@@ -220,14 +233,14 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             } else {
                 // Get the distance from the click location to the bottom or top of the view,
                 // whichever is largest
-                float cx = activeTripViewHolder.backgroundSelected.getWidth() +
-                        activeTripViewHolder.backgroundSelected.getX() -
-                        (-clickX + (activeTripViewHolder.backgroundSelected.getWidth() / 2));
+                float cx = activeTripViewHolder.layout.getWidth() +
+                        activeTripViewHolder.layout.getX() -
+                        (-clickX + (activeTripViewHolder.layout.getWidth() / 2));
                 // Get the distance from the click location to the left or right of the view,
                 // whichever is largest
-                float cy = activeTripViewHolder.backgroundSelected.getHeight() +
-                        activeTripViewHolder.backgroundSelected.getY() -
-                        (-clickY + (activeTripViewHolder.backgroundSelected.getHeight() / 2));
+                float cy = activeTripViewHolder.layout.getHeight() +
+                        activeTripViewHolder.layout.getY() -
+                        (-clickY + (activeTripViewHolder.layout.getHeight() / 2));
 
                 Animator animator = ViewAnimationUtils
                         .createCircularReveal(activeTripViewHolder.backgroundSelected,
