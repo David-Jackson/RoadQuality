@@ -3,21 +3,33 @@ package fyi.jackson.drew.roadquality.service;
 import android.app.IntentService;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 import fyi.jackson.drew.roadquality.data.entities.Trip;
-import fyi.jackson.drew.roadquality.data.migrations.Migrations;
 import fyi.jackson.drew.roadquality.utils.helpers;
 import fyi.jackson.drew.roadquality.utils.maps;
 
@@ -58,6 +70,10 @@ public class DatabaseService extends IntentService {
             case ServiceConstants.PROCESS_GET_ALL_GPS_ROAD_POINTS:
                 Log.d(TAG, "onHandleIntent: Process: Get all GPS Points");
                 getAllGpsPoints(intent);
+                break;
+            case ServiceConstants.PROCESS_UPLOAD_TRIP:
+                Log.d(TAG, "onHandleIntent: Process: Uploading Trip");
+                uploadTrip(intent);
                 break;
         }
     }
@@ -144,5 +160,51 @@ public class DatabaseService extends IntentService {
         sendBroadcast(broadcastIntent);
 
         db.close();
+    }
+
+    private void uploadTrip(Intent intent) {
+        long tripId = intent.getLongExtra(ServiceConstants.TRIP_ID, -1);
+        if (tripId == -1) return;
+
+        AppDatabase db = helpers.getAppDatabase(this);
+
+        List<RoadPoint> roadPoints = db.roadPointDao().getAllFromTrip(tripId);
+
+        List<Object> trimmedRoadPoints = new ArrayList<>();
+
+        for (RoadPoint roadPoint : roadPoints) {
+            trimmedRoadPoints.add(roadPoint.toHashMap());
+        }
+
+        HashMap<String, Object> uploadMap = new HashMap<>();
+        uploadMap.put("points", trimmedRoadPoints);
+
+        FirebaseApp.initializeApp(this);
+
+        FirebaseFirestore fireDb = FirebaseFirestore.getInstance();
+
+        fireDb.collection("roadPoints")
+                .add(uploadMap)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String docId = documentReference.getId();
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + docId);
+                        Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_UPLOAD_TRIP);
+                        broadcastIntent.putExtra(ServiceConstants.UPLOAD_TRIP_STATUS,
+                                ServiceConstants.UPLOAD_TRIP_SUCCESS);
+                        broadcastIntent.putExtra(ServiceConstants.UPLOAD_TRIP_REFERNCE_ID, docId);
+                        sendBroadcast(broadcastIntent);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                        Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_UPLOAD_TRIP);
+                        broadcastIntent.putExtra(ServiceConstants.UPLOAD_TRIP_STATUS,
+                                ServiceConstants.UPLOAD_TRIP_FAILURE);
+                        sendBroadcast(broadcastIntent);
+                    }
+                });
     }
 }

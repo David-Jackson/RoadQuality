@@ -179,6 +179,11 @@ public class ActivityMain extends AppCompatActivity {
                 refreshButton.removeCallbacks(refreshButtonRunnable);
                 refreshButton.setVisibility(View.INVISIBLE);
             }
+
+            @Override
+            public void onTripUploadReceived(int status, String referenceId) {
+
+            }
         };
     }
 

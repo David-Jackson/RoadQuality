@@ -11,6 +11,11 @@ public class ServiceConstants {
 
     public static final String TRIP_JSON_ARRAY_STRING = "TRIP_JSON_ARRAY_STRING";
 
+    public static final String UPLOAD_TRIP_STATUS = "UPLOAD_TRIP_STATUS";
+    public static final int UPLOAD_TRIP_SUCCESS = 8273;
+    public static final int UPLOAD_TRIP_FAILURE = 6234;
+    public static final String UPLOAD_TRIP_REFERNCE_ID = "UPLOAD_TRIP_REFERNCE_ID";
+
     public static final String SERVICE_PROCESS_TAG = "IntentServiceProcess";
 
     public static final String PROCESS_NOT_DEFINED = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_NOT_DEFINED";
@@ -19,6 +24,7 @@ public class ServiceConstants {
     public static final String PROCESS_GET_ALL_TRIP_IDS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_TRIP_IDS";
     public static final String PROCESS_GET_ALL_TRIPS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_TRIPS";
     public static final String PROCESS_GET_ALL_GPS_ROAD_POINTS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_GPS_ROAD_POINTS";
+    public static final String PROCESS_UPLOAD_TRIP = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_UPLOAD_TRIP";
 
 
 }

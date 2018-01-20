@@ -4,20 +4,17 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import fyi.jackson.drew.roadquality.utils.maps.LatLng;
 
+// A RoadPoint with only the Accelerometer bits
+
 @Entity
-public class RoadPoint {
+public class RoadPointAccelerometer {
 
     // REQUIRED COLUMNS
-
-    @PrimaryKey(autoGenerate = true)
-    private int uid;
-
-    @ColumnInfo(name = "trip_id")
-    private long tripId;
 
     @ColumnInfo(name = "interpolated")
     private boolean interpolated;
@@ -33,15 +30,6 @@ public class RoadPoint {
 
 
     // OPTIONAL COLUMNS
-
-    @ColumnInfo(name = "provider")
-    private String provider;
-
-    @ColumnInfo(name = "accuracy")
-    private Float accuracy;
-
-    @ColumnInfo(name = "altitude")
-    private Double altitude;
 
     @ColumnInfo(name = "ax")
     private Float ax;
@@ -70,70 +58,47 @@ public class RoadPoint {
     @ColumnInfo(name = "speed")
     private Double speed;
 
+    public RoadPointAccelerometer() {}
 
-    // RoadPoint GENERATORS
-    public static RoadPoint fromGps(Gps gps, long tripId) {
-        RoadPoint roadPoint = new RoadPoint();
 
-        roadPoint.setTripId(tripId);
-        roadPoint.setInterpolated(false);
-        roadPoint.setTimestamp(gps.getTimestamp());
-        roadPoint.setLatitude(gps.getLatitude());
-        roadPoint.setLongitude(gps.getLongitude());
+    // RoadPointAccelerometer GENERATORS
+    public static RoadPointAccelerometer fromRoadPoint(RoadPoint rp) {
+        RoadPointAccelerometer r = new RoadPointAccelerometer();
 
-        roadPoint.setProvider(gps.getProvider());
-        roadPoint.setAccuracy(gps.getAccuracy());
-        roadPoint.setAltitude(gps.getAltitude());
-        roadPoint.setSpeed(gps.getSpeed());
+        r.setInterpolated(rp.isInterpolated());
+        r.setTimestamp(rp.getTimestamp());
+        r.setLongitude(rp.getLongitude());
+        r.setLatitude(rp.getLatitude());
 
-        return roadPoint;
+        r.setAx(rp.getAx());
+        r.setAy(rp.getAy());
+        r.setAz(rp.getAz());
+        r.setGx(rp.getGx());
+        r.setGy(rp.getGy());
+        r.setGz(rp.getGz());
+        r.setDuration(rp.getDuration());
+        r.setDistance(rp.getDistance());
+        r.setSpeed(rp.getSpeed());
+
+        return r;
     }
 
-    public static RoadPoint fromAccelerometer(Accelerometer accelerometer,
-                                              LatLng latLng, long tripId, float duration, float distance, double speed) {
-        RoadPoint roadPoint = new RoadPoint();
-
-        roadPoint.setTripId(tripId);
-        roadPoint.setInterpolated(true);
-        roadPoint.setTimestamp(accelerometer.getTimestamp());
-        roadPoint.setLatitude(latLng.lat());
-        roadPoint.setLongitude(latLng.lng());
-
-        roadPoint.setAx(accelerometer.getAx());
-        roadPoint.setAy(accelerometer.getAy());
-        roadPoint.setAz(accelerometer.getAz());
-        roadPoint.setGx(accelerometer.getGx());
-        roadPoint.setGy(accelerometer.getGy());
-        roadPoint.setGz(accelerometer.getGz());
-        roadPoint.setDuration(duration);
-        roadPoint.setDistance(distance);
-        roadPoint.setSpeed(speed);
-
-        return roadPoint;
-    }
-
-    public Map<String, Object> toHashMap() {
-        if (interpolated) {
-            return RoadPointAccelerometer.fromRoadPoint(this).toHashMap();
-        } else {
-            return RoadPointGps.fromRoadPoint(this).toHashMap();
-        }
-    }
-
-    public int getUid() {
-        return uid;
-    }
-
-    public void setUid(int uid) {
-        this.uid = uid;
-    }
-
-    public long getTripId() {
-        return tripId;
-    }
-
-    public void setTripId(long tripId) {
-        this.tripId = tripId;
+    Map<String, Object> toHashMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("interpolated", interpolated);
+        map.put("timestamp", timestamp);
+        map.put("latitude", latitude);
+        map.put("longitude", longitude);
+        map.put("ax", ax);
+        map.put("ay", ay);
+        map.put("az", az);
+        map.put("gx", gx);
+        map.put("gy", gy);
+        map.put("gz", gz);
+        map.put("duration", duration);
+        map.put("distance", distance);
+        map.put("speed", speed);
+        return map;
     }
 
     public boolean isInterpolated() {
@@ -166,30 +131,6 @@ public class RoadPoint {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getProvider() {
-        return provider;
-    }
-
-    public void setProvider(String provider) {
-        this.provider = provider;
-    }
-
-    public Float getAccuracy() {
-        return accuracy;
-    }
-
-    public void setAccuracy(Float accuracy) {
-        this.accuracy = accuracy;
-    }
-
-    public Double getAltitude() {
-        return altitude;
-    }
-
-    public void setAltitude(Double altitude) {
-        this.altitude = altitude;
     }
 
     public Float getAx() {

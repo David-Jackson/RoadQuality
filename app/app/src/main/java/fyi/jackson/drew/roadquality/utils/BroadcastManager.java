@@ -22,6 +22,7 @@ public abstract class BroadcastManager {
     private BroadcastReceiver serviceStatusReceiver;
     private BroadcastReceiver longTermDataReceiver;
     private BroadcastReceiver tripListReceiver;
+    private BroadcastReceiver tripUploadReceiver;
     private final Context context;
 
     public BroadcastManager (Context context) {
@@ -70,6 +71,15 @@ public abstract class BroadcastManager {
             }
         };
 
+        tripUploadReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int status = intent.getIntExtra(ServiceConstants.UPLOAD_TRIP_STATUS, -1);
+                String refId = intent.getStringExtra(ServiceConstants.UPLOAD_TRIP_REFERNCE_ID);
+                onTripUploadReceived(status, refId);
+            }
+        };
+
         register();
     }
 
@@ -85,12 +95,17 @@ public abstract class BroadcastManager {
         IntentFilter tripListDataFilter = new IntentFilter(ServiceConstants.PROCESS_GET_ALL_TRIPS);
         tripListDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
         this.context.registerReceiver(tripListReceiver, tripListDataFilter);
+
+        IntentFilter tripUploadFilter = new IntentFilter(ServiceConstants.PROCESS_UPLOAD_TRIP);
+        tripListDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        this.context.registerReceiver(tripUploadReceiver, tripUploadFilter);
     }
 
     public void unregister() {
         this.context.unregisterReceiver(serviceStatusReceiver);
         this.context.unregisterReceiver(longTermDataReceiver);
         this.context.unregisterReceiver(tripListReceiver);
+        this.context.unregisterReceiver(tripUploadReceiver);
     }
 
     public void onResume() {
@@ -109,10 +124,19 @@ public abstract class BroadcastManager {
 
     public abstract void onTripListReceived(JSONArray tripList);
 
+    public abstract void onTripUploadReceived(int status, String referenceId);
+
     public void askToUpdateTripList() {
         Intent getTripsListIntent = new Intent(context, DatabaseService.class);
         getTripsListIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_GET_ALL_TRIPS);
         Log.d(TAG, "askToUpdateTripList: Getting all trips");
         context.startService(getTripsListIntent);
+    }
+
+    public void askToUploadTrip(long tripId) {
+        Intent uploadIntent = new Intent(context, DatabaseService.class);
+        uploadIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_UPLOAD_TRIP);
+        uploadIntent.putExtra(ServiceConstants.TRIP_ID, tripId);
+        context.startService(uploadIntent);
     }
 }
