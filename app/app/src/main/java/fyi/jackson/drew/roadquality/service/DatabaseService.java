@@ -1,6 +1,7 @@
 package fyi.jackson.drew.roadquality.service;
 
 import android.app.IntentService;
+import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -30,6 +31,7 @@ import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 import fyi.jackson.drew.roadquality.data.entities.Trip;
+import fyi.jackson.drew.roadquality.data.entities.Upload;
 import fyi.jackson.drew.roadquality.utils.helpers;
 import fyi.jackson.drew.roadquality.utils.maps;
 
@@ -74,6 +76,10 @@ public class DatabaseService extends IntentService {
             case ServiceConstants.PROCESS_UPLOAD_TRIP:
                 Log.d(TAG, "onHandleIntent: Process: Uploading Trip");
                 uploadTrip(intent);
+                break;
+            case ServiceConstants.PROCESS_SAVE_UPLOAD_TRIP:
+                Log.d(TAG, "onHandleIntent: Process: Saving Uploaded Trip");
+                saveUploadToDatabase(intent);
                 break;
         }
     }
@@ -163,7 +169,7 @@ public class DatabaseService extends IntentService {
     }
 
     private void uploadTrip(Intent intent) {
-        long tripId = intent.getLongExtra(ServiceConstants.TRIP_ID, -1);
+        final long tripId = intent.getLongExtra(ServiceConstants.TRIP_ID, -1);
         if (tripId == -1) return;
 
         AppDatabase db = helpers.getAppDatabase(this);
@@ -183,6 +189,7 @@ public class DatabaseService extends IntentService {
 
         FirebaseFirestore fireDb = FirebaseFirestore.getInstance();
 
+        Log.d(TAG, "uploadTrip: Trying to add to Firestore... tripId: " + tripId + ", " + trimmedRoadPoints.size() + " points");
         fireDb.collection("roadPoints")
                 .add(uploadMap)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -190,6 +197,13 @@ public class DatabaseService extends IntentService {
                     public void onSuccess(DocumentReference documentReference) {
                         String docId = documentReference.getId();
                         Log.d(TAG, "DocumentSnapshot added with ID: " + docId);
+
+                        Intent saveUploadIntent = new Intent(DatabaseService.this, DatabaseService.class);
+                        saveUploadIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_SAVE_UPLOAD_TRIP);
+                        saveUploadIntent.putExtra(ServiceConstants.TRIP_ID, tripId);
+                        saveUploadIntent.putExtra(ServiceConstants.UPLOAD_TRIP_REFERNCE_ID, docId);
+                        startService(saveUploadIntent);
+
                         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_UPLOAD_TRIP);
                         broadcastIntent.putExtra(ServiceConstants.UPLOAD_TRIP_STATUS,
                                 ServiceConstants.UPLOAD_TRIP_SUCCESS);
@@ -199,12 +213,25 @@ public class DatabaseService extends IntentService {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
+                        Log.d(TAG, "Error adding document", e);
                         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_UPLOAD_TRIP);
                         broadcastIntent.putExtra(ServiceConstants.UPLOAD_TRIP_STATUS,
                                 ServiceConstants.UPLOAD_TRIP_FAILURE);
                         sendBroadcast(broadcastIntent);
                     }
                 });
+    }
+
+    void saveUploadToDatabase(Intent intent) {
+        long tripId = intent.getLongExtra(ServiceConstants.TRIP_ID, -1);
+        if (tripId == -1) return;
+        String refId = intent.getStringExtra(ServiceConstants.UPLOAD_TRIP_REFERNCE_ID);
+
+        AppDatabase db = helpers.getAppDatabase(this);
+
+        Upload upload = new Upload();
+        upload.setTripId(tripId);
+        upload.setReferenceId(refId);
+        db.uploadDao().insertAll(upload);
     }
 }
