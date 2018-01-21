@@ -182,7 +182,7 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onTripUploadReceived(int status, String referenceId) {
-
+                askToUpdateTripList();
             }
         };
     }
@@ -290,6 +290,11 @@ public class ActivityMain extends AppCompatActivity {
                 mapData.clearMap();
                 setProperFabStartingPosition();
                 return true;
+            }
+
+            @Override
+            public void onUploadButtonClicked(long tripId) {
+                broadcastManager.askToUploadTrip(tripId);
             }
 
             @Override

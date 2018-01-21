@@ -137,10 +137,13 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.backgroundSelected.setVisibility(View.VISIBLE);
         }
         try {
-            JSONObject obj = (JSONObject) values.get(position);
+            final JSONObject obj = (JSONObject) values.get(position);
+            final long tripId = obj.getLong("tripId");
             long startEpoch = obj.getLong("startTime");
             long endEpoch = obj.getLong("endTime");
             int points = obj.getInt("numberOfPoints");
+            Log.d(TAG, "onBindTripViewHolder: referenceId: " + obj.getString("referenceId"));
+            boolean uploaded = !obj.getString("referenceId").equals("null");
 
             Resources res = holder.layout.getResources();
             String dateString = helpers.epochToDateString(endEpoch);
@@ -154,6 +157,19 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.textViewDate.setText(dateString);
             holder.textViewTime.setText(durationString);
             holder.textViewPoints.setText(numberOfPoints);
+
+            String btnText = (uploaded ?
+                    res.getString(R.string.uploaded) :
+                    res.getString(R.string.upload));
+            holder.uploadButton.setText(btnText);
+            holder.uploadButton.setEnabled(!uploaded);
+
+            holder.uploadButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onUploadButtonClicked(tripId);
+                }
+            });
         } catch (JSONException e) {
             Resources res = holder.layout.getResources();
             String parseErrorString = String.format(res.getString(R.string.points_parse_error), position);
@@ -218,6 +234,8 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     public abstract void onRowClicked(long tripId);
 
     public abstract boolean onRowClickedAgain(long tripId);
+
+    public abstract void onUploadButtonClicked(long tripId);
 
     public abstract void onShareButtonClick();
 
