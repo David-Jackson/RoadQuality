@@ -33,9 +33,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,6 +44,7 @@ import java.util.List;
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
 import fyi.jackson.drew.roadquality.data.AppDatabase;
+import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 import fyi.jackson.drew.roadquality.data.entities.Trip;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
@@ -496,9 +494,9 @@ public class ActivityMain extends AppCompatActivity {
         int LOADER_TASK_ID = 5421;
         Bundle taskBundle = new Bundle();
         taskBundle.putLong(ServiceConstants.TRIP_ID, tripId);
-        getSupportLoaderManager().restartLoader(LOADER_TASK_ID, taskBundle, new LoaderManager.LoaderCallbacks<JSONObject>() {
+        getSupportLoaderManager().restartLoader(LOADER_TASK_ID, taskBundle, new LoaderManager.LoaderCallbacks<List<RoadPoint>>() {
             @Override
-            public Loader<JSONObject> onCreateLoader(final int id, final Bundle args) {
+            public Loader<List<RoadPoint>> onCreateLoader(final int id, final Bundle args) {
                 long tripId = args.getLong(ServiceConstants.TRIP_ID, -1);
                 if (tripId == -1) {
                     return null;
@@ -507,7 +505,7 @@ public class ActivityMain extends AppCompatActivity {
             }
 
             @Override
-            public void onLoadFinished(final Loader<JSONObject> loader, final JSONObject tripData) {
+            public void onLoadFinished(final Loader<List<RoadPoint>> loader, final List<RoadPoint> tripData) {
                 if (tripData == null) return;
 
                 DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -520,7 +518,7 @@ public class ActivityMain extends AppCompatActivity {
             }
 
             @Override
-            public void onLoaderReset(final Loader<JSONObject> loader) {
+            public void onLoaderReset(final Loader<List<RoadPoint>> loader) {
             }
         });
     }

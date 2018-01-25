@@ -1,6 +1,5 @@
 package fyi.jackson.drew.roadquality.utils;
 
-import android.graphics.Color;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -13,12 +12,10 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.android.gms.maps.model.TileProvider;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 
 
 public class MapData implements OnMapReadyCallback {
@@ -72,42 +69,43 @@ public class MapData implements OnMapReadyCallback {
         isShowingData = false;
     }
 
-    public void putTripDataOnMap(JSONObject tripData, int mapWidth, int mapHeight) {
+    public void putTripDataOnMap(List<RoadPoint> roadPoints, int mapWidth, int mapHeight) {
         clearMap();
-        try {
-            JSONArray coordinates =
-                    tripData.getJSONObject("trip").getJSONArray("coordinates");
-            PolylineOptions polylineOptions = new PolylineOptions();
-            LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-            List<LatLng> latLngs = new ArrayList<>();
 
-            for (int i = 0; i < coordinates.length(); i++) {
-                JSONObject c = coordinates.getJSONObject(i);
-                LatLng latLng = new LatLng(
-                        c.getDouble("lat"), c.getDouble("lng"));
+        PolylineOptions polylineOptions = new PolylineOptions();
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        List<LatLng> latLngs = new ArrayList<>();
+
+        for (RoadPoint roadPoint : roadPoints) {
+            LatLng latLng = new LatLng(
+                    roadPoint.getLatitude(), roadPoint.getLongitude());
+            if (roadPoint.isInterpolated()) {
+                // Add interpolated points to LatLng list to be shown on heatmap
+                latLngs.add(latLng);
+            } else {
+                // Add GPS to polyline and bounds
+                // All interpolated points will be in between GPS points,
+                // so both the polyline and bounds will enclose all points
                 polylineOptions.add(latLng);
                 boundsBuilder.include(latLng);
-                latLngs.add(latLng);
             }
-
-            TileProvider mProvider = new HeatmapTileProvider.Builder()
-                    .data(latLngs)
-                    .build();
-
-            googleMap.addPolyline(polylineOptions);
-            googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-
-            googleMap.animateCamera(
-                    CameraUpdateFactory.newLatLngBounds(
-                            boundsBuilder.build(),
-                            mapWidth,
-                            mapHeight,
-                            30));
-
-            isShowingData = true;
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
+
+        TileProvider mProvider = new HeatmapTileProvider.Builder()
+                .data(latLngs)
+                .build();
+
+        googleMap.addPolyline(polylineOptions);
+        googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+        googleMap.animateCamera(
+                CameraUpdateFactory.newLatLngBounds(
+                        boundsBuilder.build(),
+                        mapWidth,
+                        mapHeight,
+                        30));
+
+        isShowingData = true;
     }
 
     public boolean isShowingData() {
