@@ -5,14 +5,10 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -142,7 +138,6 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             long startEpoch = obj.getLong("startTime");
             long endEpoch = obj.getLong("endTime");
             int points = obj.getInt("numberOfPoints");
-            Log.d(TAG, "onBindTripViewHolder: referenceId: " + obj.getString("referenceId"));
             boolean uploaded = !obj.getString("referenceId").equals("null");
 
             Resources res = holder.layout.getResources();
@@ -196,8 +191,9 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     public void rowClicked(TripViewHolder holder, int position, float clickX, float clickY) {
         try {
             JSONObject data = (JSONObject) values.get(position);
-            if (activeTripViewHolder != null && position == activeTripViewHolder.getAdapterPosition()) {
+            if (activeTripViewHolder != null && position == activeTripPosition) {
                 if (onRowClickedAgain(data.getLong("tripId"))) {
+                    activeTripViewHolder = holder;
                     clearActiveTrips(clickX, clickY);
                     activeTripPosition = -1;
                 }
