@@ -185,7 +185,7 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onTripUploadReceived(int status, String referenceId) {
-                askToUpdateTripList();
+                startTripListLoader();
             }
         };
     }
@@ -266,7 +266,7 @@ public class ActivityMain extends AppCompatActivity {
         refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
 
         // Bottom sheet ready, load trip list
-        broadcastManager.askToUpdateTripList();
+        startTripListLoader();
     }
 
     private void setupAnimations() {
@@ -277,7 +277,7 @@ public class ActivityMain extends AppCompatActivity {
         animationManager.setBottomSheetBehavior(bottomSheetBehavior);
     }
 
-    private void setupBottomSheetRecyclerView(JSONArray tripData) {
+    private void setupBottomSheetRecyclerView(List<Trip> tripData) {
 
         recyclerView = findViewById(R.id.recycler_view_bottom_sheet);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -343,7 +343,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void onRefreshButtonClick() {
-        broadcastManager.askToUpdateTripList();
+        startTripListLoader();
         refreshButton.setVisibility(View.INVISIBLE);
         refreshButton.postDelayed(refreshButtonRunnable, refreshButtonRunnableDelay);
     }

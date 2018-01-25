@@ -8,13 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import fyi.jackson.drew.roadquality.R;
+import fyi.jackson.drew.roadquality.data.entities.Trip;
 import fyi.jackson.drew.roadquality.recycler.holders.NoTripsViewHolder;
 import fyi.jackson.drew.roadquality.recycler.holders.ShareViewHolder;
 import fyi.jackson.drew.roadquality.recycler.holders.TripViewHolder;
@@ -32,18 +30,15 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int TRIP = 0, SHARE = 1, NO_TRIPS = 2;
 
     // Provide a suitable constructor (depends on the kind of data set)
-    public RecentTripsAdapter(JSONArray myDataSet) {
+    public RecentTripsAdapter(List<Trip> tripList) {
+        //setHasStableIds(true);
         values = new ArrayList<>();
-        if (myDataSet.length() == 0) {
+        if (tripList.size() == 0) {
             values.add(NO_TRIPS);
         }
 
-        try {
-            for (int i = 0; i < myDataSet.length(); i++) {
-                values.add(myDataSet.get(i));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for (Trip trip : tripList) {
+            values.add(trip);
         }
 
         values.add(SHARE);
@@ -73,10 +68,19 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        if (values.get(position) instanceof JSONObject) {
+        if (values.get(position) instanceof Trip) {
             return TRIP;
         } else {
             return (int) values.get(position);
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (getItemViewType(position) == TRIP) {
+            return ((Trip) values.get(position)).tripId;
+        } else {
+            return super.getItemId(position);
         }
     }
 
@@ -125,45 +129,36 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.tripLineBottom.setVisibility(View.INVISIBLE);
             holder.bottomDividerLine.setVisibility(View.INVISIBLE);
         }
-        try {
-            final JSONObject obj = (JSONObject) values.get(position);
-            final long tripId = obj.getLong("tripId");
-            long startEpoch = obj.getLong("startTime");
-            long endEpoch = obj.getLong("endTime");
-            int points = obj.getInt("numberOfPoints");
-            boolean uploaded = !obj.getString("referenceId").equals("null");
 
-            Resources res = holder.layout.getResources();
-            String dateString = helpers.epochToDateString(endEpoch);
-            String durationString = String.format(
-                    res.getString(R.string.duration_string),
-                    helpers.epochToTimeString(startEpoch),
-                    helpers.epochToTimeString(endEpoch)
-            );
-            String numberOfPoints = res.getQuantityString(R.plurals.number_of_points, points, points);
+        final Trip trip = (Trip) values.get(position);
+        boolean uploaded = !(trip.referenceId == null);
 
-            holder.textViewDate.setText(dateString);
-            holder.textViewTime.setText(durationString);
-            holder.textViewPoints.setText(numberOfPoints);
+        Resources res = holder.layout.getResources();
+        String dateString = helpers.epochToDateString(trip.endTime);
+        String durationString = String.format(
+                res.getString(R.string.duration_string),
+                helpers.epochToTimeString(trip.startTime),
+                helpers.epochToTimeString(trip.endTime)
+        );
+        String numberOfPoints = res.getQuantityString(
+                R.plurals.number_of_points, trip.numberOfPoints, trip.numberOfPoints);
 
-            String btnText = (uploaded ?
-                    res.getString(R.string.uploaded) :
-                    res.getString(R.string.upload));
-            holder.uploadButton.setText(btnText);
-            holder.uploadButton.setEnabled(!uploaded);
+        holder.textViewDate.setText(dateString);
+        holder.textViewTime.setText(durationString);
+        holder.textViewPoints.setText(numberOfPoints);
 
-            holder.uploadButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onUploadButtonClicked(tripId);
-                }
-            });
-        } catch (JSONException e) {
-            Resources res = holder.layout.getResources();
-            String parseErrorString = String.format(res.getString(R.string.points_parse_error), position);
-            holder.textViewDate.setText(parseErrorString);
-            e.printStackTrace();
-        }
+        String btnText = (uploaded ?
+                res.getString(R.string.uploaded) :
+                res.getString(R.string.upload));
+        holder.uploadButton.setText(btnText);
+        holder.uploadButton.setEnabled(!uploaded);
+
+        holder.uploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onUploadButtonClicked(trip.tripId);
+            }
+        });
 
         final boolean isExpanded = position == activeTripPosition;
         holder.uploadButton.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -182,20 +177,16 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public void rowClicked(TripViewHolder holder, int position, float clickX, float clickY) {
-        try {
-            JSONObject data = (JSONObject) values.get(position);
-            if (activeTripViewHolder != null && position == activeTripPosition) {
-                if (onRowClickedAgain(data.getLong("tripId"))) {
-                    activeTripViewHolder = holder;
-                    activeTripPosition = -1;
-                }
-            } else {
-                onRowClicked(data.getLong("tripId"));
+        Trip trip = (Trip) values.get(position);
+        if (activeTripViewHolder != null && position == activeTripPosition) {
+            if (onRowClickedAgain(trip.tripId)) {
                 activeTripViewHolder = holder;
-                activeTripPosition = position;
+                activeTripPosition = -1;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else {
+            onRowClicked(trip.tripId);
+            activeTripViewHolder = holder;
+            activeTripPosition = position;
         }
     }
 
