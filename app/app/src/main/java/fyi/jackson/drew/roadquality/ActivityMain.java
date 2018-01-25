@@ -42,13 +42,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 import fyi.jackson.drew.roadquality.animation.AnimationManager;
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
 import fyi.jackson.drew.roadquality.data.AppDatabase;
+import fyi.jackson.drew.roadquality.data.entities.Trip;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;
 import fyi.jackson.drew.roadquality.service.ForegroundService;
 import fyi.jackson.drew.roadquality.service.ServiceConstants;
+import fyi.jackson.drew.roadquality.service.TripListLoaderService;
 import fyi.jackson.drew.roadquality.service.TripLoaderService;
 import fyi.jackson.drew.roadquality.utils.BroadcastManager;
 import fyi.jackson.drew.roadquality.utils.MapData;
@@ -529,5 +532,33 @@ public class ActivityMain extends AppCompatActivity {
             public void onLoaderReset(final Loader<JSONObject> loader) {
             }
         });
+    }
+
+    private void startTripListLoader() {
+        int LOADER_TASK_ID = 5422;
+
+        getSupportLoaderManager().restartLoader(
+                LOADER_TASK_ID,
+                null,
+                new LoaderManager.LoaderCallbacks<List<Trip>>() {
+                    @Override
+                    public Loader<List<Trip>> onCreateLoader(int id, Bundle args) {
+                        return new TripListLoaderService(ActivityMain.this);
+                    }
+
+                    @Override
+                    public void onLoadFinished(Loader<List<Trip>> loader, List<Trip> data) {
+                        setupBottomSheetRecyclerView(data);
+                        findViewById(R.id.progress_bar_bottom_sheet).setVisibility(View.INVISIBLE);
+                        findViewById(R.id.recycler_view_bottom_sheet).setVisibility(View.VISIBLE);
+                        refreshButton.removeCallbacks(refreshButtonRunnable);
+                        refreshButton.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onLoaderReset(Loader<List<Trip>> loader) {
+
+                    }
+                });
     }
 }
