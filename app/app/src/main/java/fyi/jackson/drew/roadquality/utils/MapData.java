@@ -91,12 +91,14 @@ public class MapData implements OnMapReadyCallback {
             }
         }
 
-        TileProvider mProvider = new HeatmapTileProvider.Builder()
-                .data(latLngs)
-                .build();
-
         googleMap.addPolyline(polylineOptions);
-        googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+
+        if (latLngs.size() > 0) {
+            TileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .data(latLngs)
+                    .build();
+            googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+        }
 
         googleMap.animateCamera(
                 CameraUpdateFactory.newLatLngBounds(
