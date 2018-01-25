@@ -1,13 +1,11 @@
 package fyi.jackson.drew.roadquality.recycler;
 
-import android.animation.Animator;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 
 import org.json.JSONArray;
@@ -17,7 +15,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import fyi.jackson.drew.roadquality.R;
-import fyi.jackson.drew.roadquality.animation.listeners.EndAnimatorListener;
 import fyi.jackson.drew.roadquality.recycler.holders.NoTripsViewHolder;
 import fyi.jackson.drew.roadquality.recycler.holders.ShareViewHolder;
 import fyi.jackson.drew.roadquality.recycler.holders.TripViewHolder;
@@ -30,7 +27,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     private final ArrayList<Object> values;
     private TripViewHolder activeTripViewHolder = null;
     private int activeTripPosition = -1;
-    private ViewGroup viewGroup;
+    private ViewGroup viewGroup = null;
 
     private static final int TRIP = 0, SHARE = 1, NO_TRIPS = 2;
 
@@ -54,7 +51,7 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        viewGroup = parent;
+        if (viewGroup == null) viewGroup = parent;
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder viewHolder;
         switch (viewType) {
@@ -121,16 +118,12 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
         holder.tripLineTop.setVisibility(View.VISIBLE);
         holder.tripLineBottom.setVisibility(View.VISIBLE);
         holder.bottomDividerLine.setVisibility(View.VISIBLE);
-        holder.backgroundSelected.setVisibility(View.INVISIBLE);
         if (position == 0) {
             holder.tripLineTop.setVisibility(View.INVISIBLE);
         }
         if (position == getItemCount() - 2) {
             holder.tripLineBottom.setVisibility(View.INVISIBLE);
             holder.bottomDividerLine.setVisibility(View.INVISIBLE);
-        }
-        if (position == activeTripPosition) {
-            holder.backgroundSelected.setVisibility(View.VISIBLE);
         }
         try {
             final JSONObject obj = (JSONObject) values.get(position);
@@ -194,30 +187,9 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
             if (activeTripViewHolder != null && position == activeTripPosition) {
                 if (onRowClickedAgain(data.getLong("tripId"))) {
                     activeTripViewHolder = holder;
-                    clearActiveTrips(clickX, clickY);
                     activeTripPosition = -1;
                 }
             } else {
-                clearActiveTrips(-1, -1);
-                holder.backgroundSelected.setVisibility(View.VISIBLE);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    // Get the distance from the click location to the bottom or top of the view,
-                    // whichever is largest
-                    float cx = holder.layout.getWidth() +
-                            holder.layout.getX() -
-                            (-clickX + (holder.layout.getWidth() / 2));
-                    // Get the distance from the click location to the left or right of the view,
-                    // whichever is largest
-                    float cy = holder.layout.getHeight() +
-                            holder.layout.getY() -
-                            (-clickY + (holder.layout.getHeight() / 2));
-                    ViewAnimationUtils.createCircularReveal(holder.backgroundSelected,
-                            (int) clickX,
-                            (int) clickY,
-                            0,
-                            (float) Math.hypot(cx, cy))
-                            .start();
-                }
                 onRowClicked(data.getLong("tripId"));
                 activeTripViewHolder = holder;
                 activeTripPosition = position;
@@ -236,43 +208,6 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     public abstract void onShareButtonClick();
 
     public abstract void onSettingsButtonClick();
-
-    public void clearActiveTrips(float clickX, float clickY) {
-        if (activeTripViewHolder != null) {
-            if ((clickX == -1 && clickY == -1) || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                activeTripViewHolder.backgroundSelected.setVisibility(View.INVISIBLE);
-                activeTripViewHolder = null;
-                activeTripPosition = -1;
-            } else {
-                // Get the distance from the click location to the bottom or top of the view,
-                // whichever is largest
-                float cx = activeTripViewHolder.layout.getWidth() +
-                        activeTripViewHolder.layout.getX() -
-                        (-clickX + (activeTripViewHolder.layout.getWidth() / 2));
-                // Get the distance from the click location to the left or right of the view,
-                // whichever is largest
-                float cy = activeTripViewHolder.layout.getHeight() +
-                        activeTripViewHolder.layout.getY() -
-                        (-clickY + (activeTripViewHolder.layout.getHeight() / 2));
-
-                Animator animator = ViewAnimationUtils
-                        .createCircularReveal(activeTripViewHolder.backgroundSelected,
-                                (int) clickX,
-                                (int) clickY,
-                                (float) Math.hypot(cx, cy),
-                                0);
-                animator.addListener(new EndAnimatorListener() {
-                    @Override
-                    public void onAnimationEnd(Animator animator) {
-                        activeTripViewHolder.backgroundSelected.setVisibility(View.INVISIBLE);
-                        activeTripViewHolder = null;
-                        activeTripPosition = -1;
-                    }
-                });
-                animator.start();
-            }
-        }
-    }
 
     @Override
     public int getItemCount() {
