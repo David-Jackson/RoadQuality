@@ -1,14 +1,5 @@
 package fyi.jackson.drew.roadquality.utils;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.PolylineOptions;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,28 +138,6 @@ public class maps {
             return this.x;
         }
 
-        public JSONObject toJSON() {
-            JSONObject latLng = new JSONObject();
-            try {
-                latLng.put("lat", this.lat());
-                latLng.put("lng", this.lng());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return latLng;
-        }
-
-        public JSONArray toGeoJSON() {
-            JSONArray latLng = new JSONArray();
-            try {
-                latLng.put(this.lng());
-                latLng.put(this.lat());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return latLng;
-        }
-
         public String toString() {
             return"(" + this.lat() + ", " + this.lng() + ")";
         }
@@ -238,16 +207,16 @@ public class maps {
 
     public static class webservices {
 
-        public JSONObject snapToRoad(JSONArray path, boolean interpolate, String apiKey) {
-
-            return null;
-        }
-        public JSONObject snapToRoad(JSONArray path, boolean interpolate) {
-            return this.snapToRoad(path, interpolate, API_KEY);
-        }
-        public JSONObject snapToRoad(JSONArray path) {
-            return this.snapToRoad(path, true);
-        }
+//        public JSONObject snapToRoad(JSONArray path, boolean interpolate, String apiKey) {
+//
+//            return null;
+//        }
+//        public JSONObject snapToRoad(JSONArray path, boolean interpolate) {
+//            return this.snapToRoad(path, interpolate, API_KEY);
+//        }
+//        public JSONObject snapToRoad(JSONArray path) {
+//            return this.snapToRoad(path, true);
+//        }
 
     }
 

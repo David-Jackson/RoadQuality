@@ -4,11 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import fyi.jackson.drew.roadquality.service.DatabaseService;
 import fyi.jackson.drew.roadquality.service.ForegroundConstants;

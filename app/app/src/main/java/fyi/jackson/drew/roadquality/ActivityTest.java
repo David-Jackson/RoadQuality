@@ -1,24 +1,10 @@
 package fyi.jackson.drew.roadquality;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.json.JSONArray;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import fyi.jackson.drew.roadquality.animation.MorphingFab;
 import fyi.jackson.drew.roadquality.service.ServiceConstants;
