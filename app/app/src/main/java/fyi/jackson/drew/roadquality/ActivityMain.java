@@ -171,16 +171,7 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onDataTransferredToLongTerm(int totalRows, int deletedAccelRows, int deletedGpsRows) {
-                this.askToUpdateTripList();
-            }
-
-            @Override
-            public void onTripListReceived(JSONArray tripList) {
-                setupBottomSheetRecyclerView(tripList);
-                findViewById(R.id.progress_bar_bottom_sheet).setVisibility(View.INVISIBLE);
-                findViewById(R.id.recycler_view_bottom_sheet).setVisibility(View.VISIBLE);
-                refreshButton.removeCallbacks(refreshButtonRunnable);
-                refreshButton.setVisibility(View.INVISIBLE);
+                startTripListLoader();
             }
 
             @Override

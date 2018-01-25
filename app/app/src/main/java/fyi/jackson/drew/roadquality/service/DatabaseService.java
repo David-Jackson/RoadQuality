@@ -65,10 +65,6 @@ public class DatabaseService extends IntentService {
                 Log.d(TAG, "onHandleIntent: Process: Get all Trip Ids");
                 getAllTripIds(intent);
                 break;
-            case ServiceConstants.PROCESS_GET_ALL_TRIPS:
-                Log.d(TAG, "onHandleIntent: Process: Get all Trips");
-                getAllTrips(intent);
-                break;
             case ServiceConstants.PROCESS_GET_ALL_GPS_ROAD_POINTS:
                 Log.d(TAG, "onHandleIntent: Process: Get all GPS Points");
                 getAllGpsPoints(intent);
@@ -128,27 +124,6 @@ public class DatabaseService extends IntentService {
 
         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_TRIP_IDS);
         broadcastIntent.putExtra(ServiceConstants.TRIP_IDS_COUNT, tripIdsCount);
-        sendBroadcast(broadcastIntent);
-
-        db.close();
-    }
-
-    private void getAllTrips(Intent intent) {
-        AppDatabase db = helpers.getAppDatabase(this);
-
-        List<Trip> trips = db.roadPointDao().getAllTrips();
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("[");
-        for (int i = 0; i < trips.size(); i++) {
-                stringBuilder.append(trips.get(i).toJSONString());
-                if (i < trips.size() - 1) stringBuilder.append(",");
-        }
-        stringBuilder.append("]");
-        String tripsJsonExtra = stringBuilder.toString();
-
-        Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_TRIPS);
-        broadcastIntent.putExtra(ServiceConstants.TRIP_JSON_ARRAY_STRING, tripsJsonExtra);
         sendBroadcast(broadcastIntent);
 
         db.close();

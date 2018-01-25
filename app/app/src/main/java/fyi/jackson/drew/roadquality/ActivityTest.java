@@ -60,11 +60,6 @@ public class ActivityTest extends AppCompatActivity {
             }
 
             @Override
-            public void onTripListReceived(JSONArray tripList) {
-
-            }
-
-            @Override
             public void onTripUploadReceived(int status, String referenceId) {
                 String statusStr = (status == ServiceConstants.UPLOAD_TRIP_SUCCESS ? "Success" : "Failure") + ": ";
                 statusStr += (referenceId == null ? "null" : referenceId);

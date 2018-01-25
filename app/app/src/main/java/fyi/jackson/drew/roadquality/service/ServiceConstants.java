@@ -22,7 +22,6 @@ public class ServiceConstants {
     public static final String PROCESS_SERVICE_STATUS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_SERVICE_STATUS";
     public static final String PROCESS_LONG_TERM_STORAGE = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_LONG_TERM_STORAGE";
     public static final String PROCESS_GET_ALL_TRIP_IDS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_TRIP_IDS";
-    public static final String PROCESS_GET_ALL_TRIPS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_TRIPS";
     public static final String PROCESS_GET_ALL_GPS_ROAD_POINTS = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_GET_ALL_GPS_ROAD_POINTS";
     public static final String PROCESS_UPLOAD_TRIP = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_UPLOAD_TRIP";
     public static final String PROCESS_SAVE_UPLOAD_TRIP = "fyi.jackson.drew.roadquality.service.DatabaseService.PROCESS_SAVE_UPLOAD_TRIP";

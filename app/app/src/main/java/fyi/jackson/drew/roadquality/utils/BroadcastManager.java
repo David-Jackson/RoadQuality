@@ -21,7 +21,6 @@ public abstract class BroadcastManager {
 
     private BroadcastReceiver serviceStatusReceiver;
     private BroadcastReceiver longTermDataReceiver;
-    private BroadcastReceiver tripListReceiver;
     private BroadcastReceiver tripUploadReceiver;
     private final Context context;
 
@@ -56,21 +55,6 @@ public abstract class BroadcastManager {
             }
         };
 
-        tripListReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String tripsJsonString = intent.getStringExtra(
-                        ServiceConstants.TRIP_JSON_ARRAY_STRING);
-                try {
-                    JSONArray tripsJson = new JSONArray(tripsJsonString);
-                    onTripListReceived(tripsJson);
-                } catch (JSONException e) {
-                    Log.d(TAG, "tripListReceiver: JSON Array Error parsing string.");
-                    e.printStackTrace();
-                }
-            }
-        };
-
         tripUploadReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -92,19 +76,14 @@ public abstract class BroadcastManager {
         longTermDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
         this.context.registerReceiver(longTermDataReceiver, longTermDataFilter);
 
-        IntentFilter tripListDataFilter = new IntentFilter(ServiceConstants.PROCESS_GET_ALL_TRIPS);
-        tripListDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        this.context.registerReceiver(tripListReceiver, tripListDataFilter);
-
         IntentFilter tripUploadFilter = new IntentFilter(ServiceConstants.PROCESS_UPLOAD_TRIP);
-        tripListDataFilter.addCategory(Intent.CATEGORY_DEFAULT);
+        tripUploadFilter.addCategory(Intent.CATEGORY_DEFAULT);
         this.context.registerReceiver(tripUploadReceiver, tripUploadFilter);
     }
 
     public void unregister() {
         this.context.unregisterReceiver(serviceStatusReceiver);
         this.context.unregisterReceiver(longTermDataReceiver);
-        this.context.unregisterReceiver(tripListReceiver);
         this.context.unregisterReceiver(tripUploadReceiver);
     }
 
@@ -122,16 +101,7 @@ public abstract class BroadcastManager {
                                                      int deletedAccelRows,
                                                      int deletedGpsRows);
 
-    public abstract void onTripListReceived(JSONArray tripList);
-
     public abstract void onTripUploadReceived(int status, String referenceId);
-
-    public void askToUpdateTripList() {
-        Intent getTripsListIntent = new Intent(context, DatabaseService.class);
-        getTripsListIntent.putExtra(ServiceConstants.SERVICE_PROCESS_TAG, ServiceConstants.PROCESS_GET_ALL_TRIPS);
-        Log.d(TAG, "askToUpdateTripList: Getting all trips");
-        context.startService(getTripsListIntent);
-    }
 
     public void askToUploadTrip(long tripId) {
         Intent uploadIntent = new Intent(context, DatabaseService.class);
