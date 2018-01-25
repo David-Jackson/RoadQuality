@@ -170,8 +170,10 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     TransitionManager.beginDelayedTransition(viewGroup);
                 }
+                int oldActiveTripPosition = activeTripPosition;
                 rowClicked(holder, position, clickX, clickY);
-                notifyDataSetChanged();
+                int minPosition = Math.min(activeTripPosition, oldActiveTripPosition);
+                notifyItemRangeChanged(minPosition, values.size() - minPosition);
             }
         });
     }
