@@ -21,7 +21,6 @@ import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
 import fyi.jackson.drew.roadquality.data.entities.Upload;
-import fyi.jackson.drew.roadquality.utils.helpers;
 import fyi.jackson.drew.roadquality.utils.maps;
 
 
@@ -70,7 +69,7 @@ public class DatabaseService extends IntentService {
     }
 
     private void longTermStorage(Intent intent) {
-        AppDatabase db = helpers.getAppDatabase(this);
+        AppDatabase db = AppDatabase.getInstance(this);
 
         List<Accelerometer> accelerometerList = db.accelerometerDao().getAll();
         List<Gps> gpsList = db.gpsDao().getAll();
@@ -96,12 +95,10 @@ public class DatabaseService extends IntentService {
         broadcastIntent.putExtra(ServiceConstants.LONG_TERM_DATA_SERVICE_DELETED_GPS_ENTRIES_COUNT, deletedGpsEntries);
         broadcastIntent.putExtra(ServiceConstants.LONG_TERM_DATA_SERVICE_ROAD_POINT_ENTRIES_COUNT, allRoadPointEntries);
         sendBroadcast(broadcastIntent);
-
-        db.close();
     }
 
     private void getAllTripIds(Intent intent) {
-        AppDatabase db = helpers.getAppDatabase(this);
+        AppDatabase db = AppDatabase.getInstance(this);
 
         List<Long> tripIds = db.roadPointDao().getAllTripIds();
 
@@ -114,12 +111,10 @@ public class DatabaseService extends IntentService {
         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_TRIP_IDS);
         broadcastIntent.putExtra(ServiceConstants.TRIP_IDS_COUNT, tripIdsCount);
         sendBroadcast(broadcastIntent);
-
-        db.close();
     }
 
     private void getAllGpsPoints(Intent intent) {
-        AppDatabase db = helpers.getAppDatabase(this);
+        AppDatabase db = AppDatabase.getInstance(this);
 
         List<RoadPoint> gpsRoadPoints = db.roadPointDao().getAllGpsPoints();
 
@@ -128,15 +123,13 @@ public class DatabaseService extends IntentService {
         Intent broadcastIntent = new Intent(ServiceConstants.PROCESS_GET_ALL_GPS_ROAD_POINTS);
         broadcastIntent.putExtra(ServiceConstants.TRIP_IDS_COUNT, gpsRoadPointCount);
         sendBroadcast(broadcastIntent);
-
-        db.close();
     }
 
     private void uploadTrip(Intent intent) {
         final long tripId = intent.getLongExtra(ServiceConstants.TRIP_ID, -1);
         if (tripId == -1) return;
 
-        AppDatabase db = helpers.getAppDatabase(this);
+        AppDatabase db = AppDatabase.getInstance(this);
 
         List<RoadPoint> roadPoints = db.roadPointDao().getAllFromTrip(tripId);
 
@@ -191,7 +184,7 @@ public class DatabaseService extends IntentService {
         if (tripId == -1) return;
         String refId = intent.getStringExtra(ServiceConstants.UPLOAD_TRIP_REFERNCE_ID);
 
-        AppDatabase db = helpers.getAppDatabase(this);
+        AppDatabase db = AppDatabase.getInstance(this);
 
         Upload upload = new Upload();
         upload.setTripId(tripId);

@@ -7,7 +7,6 @@ import java.util.List;
 
 import fyi.jackson.drew.roadquality.data.AppDatabase;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
-import fyi.jackson.drew.roadquality.utils.helpers;
 
 public class TripLoaderService extends AsyncTaskLoaderEx<List<RoadPoint>> {
 
@@ -21,11 +20,10 @@ public class TripLoaderService extends AsyncTaskLoaderEx<List<RoadPoint>> {
     @Nullable
     @Override
     public List<RoadPoint> loadInBackground() {
-        AppDatabase db = helpers.getAppDatabase(getContext());
+        AppDatabase db = AppDatabase.getInstance(getContext());
 
         List<RoadPoint> tripRoadPoints = db.roadPointDao().getAllFromTrip(tripId);
 
-        db.close();
         return tripRoadPoints;
     }
 

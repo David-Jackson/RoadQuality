@@ -1,7 +1,6 @@
 package fyi.jackson.drew.roadquality.data;
 
 
-import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.location.Location;
 import android.widget.Toast;
@@ -11,9 +10,7 @@ import java.util.List;
 import fyi.jackson.drew.roadquality.data.entities.Accelerometer;
 import fyi.jackson.drew.roadquality.data.entities.Gps;
 import fyi.jackson.drew.roadquality.data.entities.RoadPoint;
-import fyi.jackson.drew.roadquality.data.migrations.Migrations;
 import fyi.jackson.drew.roadquality.utils.Vector3D;
-import fyi.jackson.drew.roadquality.utils.helpers;
 import fyi.jackson.drew.roadquality.utils.maps;
 
 public class AsynchronousDatabase {
@@ -23,7 +20,7 @@ public class AsynchronousDatabase {
     public long gpsDbRowId = -1;
 
     public AsynchronousDatabase(Context context) {
-        db = helpers.getAppDatabase(context);
+        db = AppDatabase.getInstance(context);
     }
 
     public void addAccelerometerEntry(Vector3D a, Vector3D g) {
