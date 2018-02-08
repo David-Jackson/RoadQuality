@@ -57,6 +57,9 @@
     <string name="pref_bluetooth_device_summary_on">Recording start when connected to $s</string>
     <string name="pref_recording_deadzone_title">Set Recording Deadzone</string>
     <string name="pref_recording_deadzone_summary">Set a region where nothing will be recorded</string>
+    <string name="pref_activity_recognition_title">Automatic Recording</string>
+    <string name="pref_activity_recognition_summary_off">Start recording whenever you are in a vehicle</string>
+    <string name="pref_activity_recognition_summary_on">We will notify you when you are in a vehicle</string>
 
 
     <string-array name="pref_example_list_titles">
