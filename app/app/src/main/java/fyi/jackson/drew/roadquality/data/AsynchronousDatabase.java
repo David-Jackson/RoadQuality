@@ -64,28 +64,4 @@ public class AsynchronousDatabase {
         }).start();
     }
 
-    public void transferIntoTripDatabase(final Context context) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<Gps> gpsList = db.gpsDao().getAll();
-                List<Accelerometer> accelerometerList = db.accelerometerDao().getAll();
-                List<RoadPoint> roadPointList = maps.utils.interpolateAccelerometerAndGpsData(
-                        accelerometerList, gpsList);
-
-                RoadPoint[] roadPointArray = new RoadPoint[roadPointList.size()];
-
-                for (int i = 0; i < roadPointList.size(); i++) {
-                    roadPointArray[i] = roadPointList.get(i);
-                }
-
-                db.roadPointDao().insertAll(roadPointArray);
-                int deletedAccelerometerEntries = db.accelerometerDao().deleteAll();
-                int deletedGpsEntries = db.gpsDao().deleteAll();
-                Toast.makeText(context, deletedAccelerometerEntries + " Accel Deleted", Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, deletedGpsEntries + " GPS Deleted", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 }

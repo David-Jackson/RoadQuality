@@ -150,10 +150,6 @@ public class ForegroundService extends Service {
 
         accelerometerSensor.stop();
         locationSensor.stop();
-
-        // TODO: See if below line is doing anything? Do I still need AsyncDb?
-        //database.transferIntoTripDatabase(this);
-
     }
 
     @Override
