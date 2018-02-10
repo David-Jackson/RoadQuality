@@ -119,16 +119,12 @@ public abstract class RecentTripsAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     private void onBindTripViewHolder(final TripViewHolder holder, final int position) {
-        holder.tripLineTop.setVisibility(View.VISIBLE);
-        holder.tripLineBottom.setVisibility(View.VISIBLE);
-        holder.bottomDividerLine.setVisibility(View.VISIBLE);
-        if (position == 0) {
-            holder.tripLineTop.setVisibility(View.INVISIBLE);
-        }
-        if (position == getItemCount() - 2) {
-            holder.tripLineBottom.setVisibility(View.INVISIBLE);
-            holder.bottomDividerLine.setVisibility(View.INVISIBLE);
-        }
+        boolean isFistTrip = position == 0;
+        boolean isLastTrip = position == getItemCount() - 2;
+
+        holder.tripLineTop.setVisibility(isFistTrip ? View.INVISIBLE : View.VISIBLE);
+        holder.tripLineBottom.setVisibility(isLastTrip ? View.INVISIBLE : View.VISIBLE);
+        holder.bottomDividerLine.setVisibility(isLastTrip ? View.INVISIBLE : View.VISIBLE);
 
         final Trip trip = (Trip) values.get(position);
         boolean uploaded = !(trip.referenceId == null);
