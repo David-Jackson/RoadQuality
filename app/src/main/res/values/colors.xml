@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primaryColor">#fafafa</color>
+    <color name="primaryLightColor">#ffffff</color>
+    <color name="primaryDarkColor">#c7c7c7</color>
+    <color name="secondaryColor">#ff9800</color>
+    <color name="secondaryLightColor">#ffc947</color>
+    <color name="secondaryDarkColor">#c66900</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#000000</color>
+
+    <color name="bottom_sheet_background">@color/primaryLightColor</color>
+
+    <color name="colorPrimary">@color/primaryColor</color>
+    <color name="colorPrimaryLight">@color/primaryLightColor</color>
+    <color name="colorPrimaryDark">@color/primaryDarkColor</color>
+    <color name="colorPrimaryText">@color/primaryTextColor</color>
+    <color name="colorAccent">@color/secondaryColor</color>
+    <color name="colorAccentDark">@color/secondaryDarkColor</color>
+    <color name="colorBlue">#2962ff</color>
+    <color name="colorBlueLight">#6ec6ff</color>
+
+
+    <color name="darkOverlay">#80000000</color>
+    <color name="darkOverlaySoft">#40000000</color>
+    <color name="whiteOverlay">#40FFFFFF</color>
+</resources>
