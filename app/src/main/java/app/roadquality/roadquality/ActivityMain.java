@@ -486,6 +486,7 @@ public class ActivityMain extends AppCompatActivity {
                     public void run() {
                         Intent introActivityIntent = new Intent(getApplicationContext(), ActivityIntro.class);
                         startActivity(introActivityIntent);
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                     }
                 }, 300);
             }
