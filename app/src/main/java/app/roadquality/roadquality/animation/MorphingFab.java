@@ -4,6 +4,7 @@ package app.roadquality.roadquality.animation;
 import android.animation.Animator;
 import android.content.Context;
 import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -18,6 +19,7 @@ public abstract class MorphingFab {
     private View viewBefore; // fab
 
     private AnimatedVectorDrawable avdIn, avdOut;
+    private Drawable closedDrawable, openDrawable;
 
     private ImageView sharedElement;
 
@@ -32,12 +34,14 @@ public abstract class MorphingFab {
                        View viewAfter,
                        int sharedElementId,
                        int avdInId,
-                       int avdOutId) {
+                       int avdOutId,
+                       int closedId,
+                       int openId) {
         this.context = context;
         this.setFab(fab);
         this.setViewAfter(viewAfter);
         this.setSharedElement(sharedElementId);
-        this.setAvd(avdInId, avdOutId);
+        this.setDrawables(avdInId, avdOutId, closedId, openId);
     }
 
     public abstract boolean onFabClick(); // returning true morphs FAB, false does not
@@ -71,19 +75,17 @@ public abstract class MorphingFab {
         this.sharedElement = this.viewAfter.findViewById(id);
     }
 
-    public void setAvd(int inId, int outId) {
-        AnimatedVectorDrawable in = (AnimatedVectorDrawable)
-                context.getResources().getDrawable(inId);
-        AnimatedVectorDrawable out = (AnimatedVectorDrawable)
-                context.getResources().getDrawable(outId);
-        this.avdIn = in;
-        this.avdOut = out;
+    public void setDrawables(int inId, int outId, int closedId, int openId) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            AnimatedVectorDrawable in = (AnimatedVectorDrawable) context.getDrawable(inId);
+            AnimatedVectorDrawable out = (AnimatedVectorDrawable) context.getDrawable(outId);
+            this.avdIn = in;
+            this.avdOut = out;
+        } else {
+            this.closedDrawable = context.getResources().getDrawable(closedId);
+            this.openDrawable = context.getResources().getDrawable(openId);
+        }
     }
-
-    public void setAvd(int avdId) {
-        this.setAvd(avdId, avdId);
-    }
-
 
     private void setImageInitialPosition() {
         sharedElement.setX(
@@ -95,8 +97,8 @@ public abstract class MorphingFab {
     }
 
     public void open() {
+        setImageInitialPosition();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            setImageInitialPosition();
             Animator circularReveal = ViewAnimationUtils.createCircularReveal(
                     viewAfter,
                     (int) (viewBefore.getX() + (viewBefore.getWidth() / 2) - viewAfter.getX()),
@@ -104,19 +106,21 @@ public abstract class MorphingFab {
                     viewBefore.getWidth() / 2,
                     (float) Math.hypot(viewAfter.getWidth(), viewAfter.getHeight())
             );
-            viewAfter.setVisibility(View.VISIBLE);
-            viewBefore.setVisibility(View.INVISIBLE);
             sharedElement.setImageDrawable(avdIn);
             avdIn.start();
-            sharedElement.animate()
-                    .x(((viewAfter.getWidth() - sharedElement.getWidth()) / 2))
-                    .y(((viewAfter.getHeight() - sharedElement.getHeight()) / 2))
-                    .start();
 
             circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
             circularReveal.start();
-            state = false;
+        } else {
+//            sharedElement.setImageDrawable(openDrawable);
         }
+        sharedElement.animate()
+                .x(((viewAfter.getWidth() - sharedElement.getWidth()) / 2))
+                .y(((viewAfter.getHeight() - sharedElement.getHeight()) / 2))
+                .start();
+        viewAfter.setVisibility(View.VISIBLE);
+        viewBefore.setVisibility(View.INVISIBLE);
+        state = false;
     }
 
     public void close() {
@@ -152,15 +156,19 @@ public abstract class MorphingFab {
             });
             sharedElement.setImageDrawable(avdOut);
             avdOut.start();
-            sharedElement.animate()
-                    .x((viewBefore.getX()) - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2) - viewAfter.getX())
-                    .y((viewBefore.getY()) - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2) - viewAfter.getY())
-                    .start();
 
             circularReveal.setInterpolator(new AccelerateDecelerateInterpolator());
             circularReveal.start();
-            state = true;
+        } else {
+//            sharedElement.setImageDrawable(closedDrawable);
+            viewAfter.setVisibility(View.GONE);
+            viewBefore.setVisibility(View.VISIBLE);
         }
+        sharedElement.animate()
+                .x((viewBefore.getX()) - ((sharedElement.getWidth() - viewBefore.getWidth()) / 2) - viewAfter.getX())
+                .y((viewBefore.getY()) - ((sharedElement.getHeight() - viewBefore.getHeight()) / 2) - viewAfter.getY())
+                .start();
+        state = true;
     }
 
     public boolean isOpen() {

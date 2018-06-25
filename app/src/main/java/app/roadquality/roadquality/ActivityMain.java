@@ -116,7 +116,9 @@ public class ActivityMain extends AppCompatActivity {
                 findViewById(R.id.fab_reveal),
                 R.id.fab_reveal_image,
                 R.drawable.avd_play_to_pause_96dp,
-                R.drawable.avd_pause_to_play_96dp) {
+                R.drawable.avd_pause_to_play_96dp,
+                R.drawable.ic_play,
+                R.drawable.ic_pause_96dp) {
             @Override
             public boolean onFabClick() {
                 fabClicked();
@@ -471,7 +473,9 @@ public class ActivityMain extends AppCompatActivity {
                 child,
                 R.id.iv_road,
                 R.drawable.avd_play_to_road_96dp,
-                R.drawable.avd_road_animation) {
+                R.drawable.avd_road_animation,
+                R.drawable.ic_play,
+                R.drawable.ic_road_variant_white_112dp) {
             @Override
             public boolean onFabClick() {
                 return false;
